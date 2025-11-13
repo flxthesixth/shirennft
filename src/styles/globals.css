@@ -4,7 +4,7 @@
 
 html {
   font-size: 10px;
-  direction: rtl;
+  direction: ltr;
 }
 
 body {
@@ -13,6 +13,363 @@ body {
 }
 
 .section1Background {
-  background-image: url('/Background.jpg');
+  background-image: url('/fsociety3.jpg');
   background-size: cover;
+}
+
+.banner{
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+.banner .slider{
+    position: absolute;
+    width: 200px;
+    height: 250px;
+    top: 10%;
+    left: calc(50% - 100px);
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    animation: autoRun 20s linear infinite;
+    z-index: 40; /* bring slider above dark overlay */
+}
+@keyframes autoRun{
+    from{
+        transform: perspective(1000px) rotateX(-16deg) rotateY(0deg);
+    }to{
+        transform: perspective(1000px) rotateX(-16deg) rotateY(360deg);
+    }
+}
+
+.banner .slider .item{
+    position: absolute;
+    inset: 0 0 0 0;
+    transform: 
+        rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg))
+        translateZ(550px);
+}
+.banner .slider .item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* soft bright aura around each card */
+    box-shadow: 0 40px 120px rgba(255,255,255,0.06), 0 10px 30px rgba(255,255,255,0.04) inset;
+    transition: transform 320ms cubic-bezier(.22,.61,.36,1), filter 320ms cubic-bezier(.22,.61,.36,1), box-shadow 320ms cubic-bezier(.22,.61,.36,1);
+}
+
+.banner .slider .item::after{
+    /* subtle colored aura (cyan-ish) centered on each card, invisible by default */
+    content: '';
+    position: absolute;
+    inset: -12% -20% -12% -20%;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 40%, rgba(64,224,255,0.045), rgba(64,224,255,0.015) 35%, transparent 40%);
+    filter: blur(18px);
+    opacity: 0;
+    transition: opacity 260ms cubic-bezier(.22,.61,.36,1), transform 260ms cubic-bezier(.22,.61,.36,1);
+    z-index: 0;
+}
+
+.banner .slider .item:hover::after{
+    opacity: 0.45; /* reduced glow intensity on hover */
+    transform: scale(1.01);
+}
+
+.banner .slider .item:hover img{
+    transform: scale(1.05);
+    filter: brightness(1.18) saturate(1.05) contrast(1.01);
+    box-shadow: 0 40px 120px rgba(64,224,255,0.08), 0 12px 36px rgba(255,255,255,0.04) inset;
+}
+
+/* pause rotation while hovering slider or any card */
+/* slider should keep rotating even on hover; no pause rule */
+.banner .content{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(1400px, 100vw);
+    height: max-content;
+    padding-bottom: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+}
+.banner .content h1{
+    font-family: 'ICA Rubrik';
+    font-size: 16em;
+    line-height: 1em;
+    color: #25283B;
+    position: relative;
+}
+.banner .content h1::after{
+    position: absolute;
+    inset: 0 0 0 0;
+    content: attr(data-content);
+    z-index: 2;
+    -webkit-text-stroke: 2px #d2d2d2;
+    color: transparent;
+}
+.banner .content .author{
+    font-family: Poppins;
+    text-align: right;
+    max-width: 200px;
+}
+.banner .content h2{
+    font-size: 3em;
+}
+
+/* Orb GIF centered behind the rotating cards in Section2 */
+.banner .orb{
+    width: 420px;
+    height: 420px;
+    display: block;
+    pointer-events: none;
+    filter: drop-shadow(0 30px 60px rgba(0,0,0,0.25));
+}
+@media screen and (max-width: 1023px) {
+    .banner .orb{
+        width: 320px;
+        height: 320px;
+    }
+}
+@media screen and (max-width: 767px) {
+    .banner .orb{
+        width: 220px;
+        height: 220px;
+    }
+}
+
+/* Animated gradient + glow for "Coming Soon" */
+.glow-text{
+    display: inline-block;
+    background: linear-gradient(90deg, #ff6b6b, #ffd166, #6bffb3, #6bd1ff, #b06bff);
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: gradientShift 6s linear infinite, glowPulse 2.5s ease-in-out infinite alternate;
+    text-shadow: 0 0 8px rgba(176,107,255,0.45), 0 0 20px rgba(107,209,255,0.12);
+}
+
+@keyframes gradientShift{
+    0%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
+    100%{ background-position: 0% 50%; }
+}
+
+@keyframes glowPulse{
+    0%{ text-shadow: 0 0 6px rgba(255,107,107,0.12), 0 0 18px rgba(176,107,255,0.08); }
+    50%{ text-shadow: 0 0 18px rgba(255,214,102,0.28), 0 0 36px rgba(107,209,255,0.16); }
+    100%{ text-shadow: 0 0 6px rgba(255,107,107,0.12), 0 0 18px rgba(176,107,255,0.08); }
+}
+.banner .content .model{
+    /* background-image: url(images/model.png); */
+    width: 100%;
+    height: 75vh;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-size: auto 130%;
+    background-repeat: no-repeat;
+    background-position: top center;
+    z-index: 1;
+}
+@media screen and (max-width: 1023px) {
+    .banner .slider{
+        width: 160px;
+        height: 200px;
+        left: calc(50% - 80px);
+    }
+    .banner .slider .item{
+        transform: 
+            rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg))
+            translateZ(300px);
+    }
+    .banner .content h1{
+        text-align: center;
+        width: 100%;
+        text-shadow: 0 10px 20px #000;
+        font-size: 7em;
+    }
+    .banner .content .author{
+        color: #fff;
+        padding: 20px;
+        text-shadow: 0 10px 20px #000;
+        z-index: 2;
+        max-width: unset;
+        width: 100%;
+        text-align: center;
+        padding: 0 30px;
+    }
+}
+@media screen and (max-width: 767px) {
+    .banner .slider{
+        width: 100px;
+        height: 150px;
+        left: calc(50% - 50px);
+    }
+    .banner .slider .item{
+        transform: 
+            rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg))
+            translateZ(180px);
+    }
+    .banner .content h1{
+        font-size: 5em;
+    }
+}
+
+/* Flex card hover styles for Section3 */
+.flex-cards {
+    display: flex;
+    gap: 1rem;
+}
+.flex-card {
+    flex: 1 1 0%;
+    position: relative;
+    transition: all 500ms cubic-bezier(0.29, -0.81, 0.42, 1.68);
+    min-height: 0;
+    overflow: hidden;
+    display: block;
+    will-change: flex, transform, filter;
+    filter: blur(4px);
+}
+
+.flex-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: all 500ms cubic-bezier(0.29, -0.81, 0.42, 1.68);
+}
+
+.flex-card::after {
+    /* default dark overlay */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    transition: background 500ms cubic-bezier(.22,.61,.36,1);
+}
+
+.flex-card .absolute p,
+.flex-card .absolute h3,
+.flex-card .absolute .icon-x {
+    transition: all 500ms cubic-bezier(0.29, -0.81, 0.42, 1.68);
+}
+
+/* hide title, description and icon by default (standby) */
+.flex-card .absolute p,
+.flex-card .absolute h3,
+.flex-card .absolute .icon-x {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.flex-card {
+    filter: blur(4px);
+    transition: filter 500ms cubic-bezier(.22,.61,.36,1);
+}
+
+.flex-card:hover {
+    flex: 4.5 1 0%;
+    transform: scale(1.02);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+    filter: blur(0);
+}
+.flex-card:hover::after {
+    background: rgba(0,0,0,0.08);
+}
+.flex-card:hover img {
+    filter: brightness(1.18) saturate(1.05);
+    transform: scale(1.025);
+}
+.flex-card:hover .absolute p,
+.flex-card:hover .absolute h3,
+.flex-card:hover .absolute .icon-x {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Custom faucet glow button (used in wallet sidebar) */
+.faucet-glow {
+    --glow-color: rgb(217, 176, 255);
+    /* reduced spread intensity to avoid overpowering the UI */
+    --glow-spread-color: rgba(191, 123, 255, 0.36);
+    --enhanced-glow-color: rgb(231, 206, 255);
+    --btn-color: rgb(100, 61, 136);
+    border: 0.12em solid var(--glow-color);
+    padding: 0.6em 1.2em; /* smaller footprint */
+    color: var(--glow-color);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    background-color: var(--btn-color);
+        /* match rounding of other buttons (rounded-md) */
+        border-radius: 0.5rem;
+    outline: none;
+    box-shadow: 0 0 0.6em 0.12em var(--glow-color),
+        0 0 1.5em 0.5em var(--glow-spread-color),
+        inset 0 0 0.3em 0.12em var(--glow-color);
+        /* use white text for better contrast */
+        color: #fff;
+        text-shadow: none;
+    position: relative;
+    transition: all 0.24s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.faucet-glow::after {
+    pointer-events: none;
+    content: "";
+    position: absolute;
+    top: 105%;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--glow-spread-color);
+    filter: blur(1.2em);
+    opacity: 0.4;
+    transform: perspective(1.5em) rotateX(35deg) scale(1, 0.6);
+}
+
+.faucet-glow:hover {
+    color: var(--btn-color);
+    background-color: var(--glow-color);
+    box-shadow: 0 0 0.8em 0.12em var(--glow-color),
+        0 0 2.5em 0.8em var(--glow-spread-color),
+        inset 0 0 0.45em 0.12em var(--glow-color);
+}
+
+.faucet-glow:active {
+    box-shadow: 0 0 0.45em 0.12em var(--glow-color),
+        0 0 1.2em 0.8em var(--glow-spread-color),
+        inset 0 0 0.25em 0.12em var(--glow-color);
+}
+
+/* show decorative stars when faucet button is hovered */
+.faucet-glow .stars {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -2.2rem;
+    pointer-events: none;
+}
+.faucet-glow:hover .stars {
+    display: block;
+    filter: drop-shadow(0 0 10px #fffdef);
+    animation: faucet-stars 900ms ease-out both;
+}
+@keyframes faucet-stars {
+    0% { opacity: 0; transform: translateX(-50%) translateY(6px) scale(0.9); }
+    60% { opacity: 1; transform: translateX(-50%) translateY(-2px) scale(1.05); }
+ 100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
 }
