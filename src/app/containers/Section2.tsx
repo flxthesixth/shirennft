@@ -21,26 +21,26 @@ export default function Section2({ onBack }: Props) {
         </div>
 
         <div className="slider" style={{ '--quantity': 7 } as any}>
-          <div className="item" style={{ '--position': 1 } as any}>
-            <Image src="/SHIREN%20NFT/thaiji.png" alt="Thaiji" width={200} height={250} />
+          <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 1 } as any}>
+            <Image src="/SHIREN%20NFT/thaiji.png" alt="Thaiji" fill className="object-cover" />
           </div>
-          <div className="item" style={{ '--position': 2 } as any}>
-            <Image src="/SHIREN%20NFT/samb.png" alt="Sam" width={200} height={250} />
+          <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 2 } as any}>
+            <Image src="/SHIREN%20NFT/samb.png" alt="Sam" fill className="object-cover" />
           </div>
-          <div className="item" style={{ '--position': 3 } as any}>
-            <Image src="/SHIREN%20NFT/hainguyen.png" alt="Hai Nguyen" width={200} height={250} />
+          <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 3 } as any}>
+            <Image src="/SHIREN%20NFT/hainguyen.png" alt="Hai Nguyen" fill className="object-cover" />
           </div>
-          <div className="item" style={{ '--position': 4 } as any}>
-            <Image src="/SHIREN%20NFT/safetybot.png" alt="Safety Bot" width={200} height={250} />
+          <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 4 } as any}>
+            <Image src="/SHIREN%20NFT/safetybot.png" alt="Safety Bot" fill className="object-cover" />
           </div>
-          <div className="item" style={{ '--position': 5 } as any}>
-            <Image src="/SHIREN%20NFT/ripdoteth.png" alt="Rip dot eth" width={200} height={250} />
+          <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 5 } as any}>
+            <Image src="/SHIREN%20NFT/ripdoteth.png" alt="Rip dot eth" fill className="object-cover" />
           </div>
-          <div className="item" style={{ '--position': 6 } as any}>
-            <Image src="/SHIREN%20NFT/sasha.png" alt="Rip dot eth" width={200} height={250} />
+          <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 6 } as any}>
+            <Image src="/SHIREN%20NFT/sasha.png" alt="Rip dot eth" fill className="object-cover" />
           </div>
-          <div className="item" style={{ '--position': 7 } as any}>
-            <Image src="/SHIREN%20NFT/samarth.png" alt="Kucing" width={200} height={250} />
+          <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 7 } as any}>
+            <Image src="/SHIREN%20NFT/samarth.png" alt="Kucing" fill className="object-cover" />
           </div>
   </div>
 

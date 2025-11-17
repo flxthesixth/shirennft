@@ -20,10 +20,10 @@ export default function Section3({ onBack }: Props) {
   { id: 1, title: 'FLX.', img: '/SHIREN%20NFT/felixxx.png', desc: 'Janitor', link: 'https://x.com/flxthesixth' },
   { id: 2, title: 'Jun', img: '/SHIREN%20NFT/jun.png', desc: 'Chief Executive Officer', link: 'https://x.com/lsdjun' },
   { id: 3, title: 'Krisnaf', img: '/SHIREN%20NFT/krisna.png', desc: 'Artist', link: 'https://x.com/Krisnaf_' },
-  { id: 4, title: 'Ryu J', img: '/SHIREN%20NFT/safetybot.png', desc: 'Artist', link: 'https://x.com/drunkenryu1' },
-  { id: 5, title: 'KucingNKL', img: '/SHIREN%20NFT/Kucing.png', desc: 'Community Manager', link: 'https://x.com/rizkibahari_66' },
-  { id: 6, title: 'AzrTen4', img: '/SHIREN%20NFT/sasha.png', desc: 'Community Manager', link: 'https://x.com/Azuraten4' },
-  { id: 7, title: 'Damm', img: '/SHIREN%20NFT/samarth.png', desc: 'Community Manager', link: 'https://x.com/0xdamm28' },
+  { id: 4, title: 'Ryu J', img: '/SHIREN%20NFT/ryuji.png', desc: 'Artist', link: 'https://x.com/drunkenryu1' },
+  { id: 5, title: 'KucingNKL', img: '/SHIREN%20NFT/Kucingg.png', desc: 'Community Manager', link: 'https://x.com/rizkibahari_66' },
+  { id: 6, title: 'AzrTen4', img: '/SHIREN%20NFT/azura.png', desc: 'Community Manager', link: 'https://x.com/Azuraten4' },
+  { id: 7, title: 'Damm', img: '/SHIREN%20NFT/dam.png', desc: 'Community Manager', link: 'https://x.com/0xdamm28' },
   ]
 
   return (
@@ -112,7 +112,11 @@ export default function Section3({ onBack }: Props) {
 
           /* on small screens, make the expansion less aggressive */
           @media (max-width: 768px) {
-            .flex-card:hover { flex: 0 0 calc(50vw); }
+            /* Convert to a horizontally scrollable list on mobile to prevent overflow and tall layout */
+            .flex-cards { height: auto; display: flex; overflow-x: auto; padding-bottom: 0.75rem; }
+            .flex-card { flex: 0 0 auto; min-width: 60vw; border-radius: 10px; }
+            .flex-card:hover { flex: 0 0 60vw; transform: none; }
+            .flex-cards:not(:hover) .flex-card { transform: none; }
           }
         `}</style>
 

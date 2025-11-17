@@ -43,6 +43,9 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const [srnCollection, setSrnCollection] = useState<Array<{ tokenId: string; name?: string; image?: string }>>([])
   const [srnCount, setSrnCount] = useState<number | null>(null)
   const [showSrnModal, setShowSrnModal] = useState(false)
+  // Featured images for slideshow (uses public/SHIREN NFT)
+  const [featuredImages, setFeaturedImages] = useState<string[]>(['/SHIREN%20NFT/felixxx.png'])
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
 
   // wallet connect handler — now that rise-wallet is installed we can import normally
   async function connectToWallet() {
@@ -258,7 +261,37 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const nftCardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Dynamically import ScrollReveal on the client to avoid SSR evaluation
+    // Fetch list of images from API (server reads public/SHIREN NFT)
+    let mounted = true
+    ;(async () => {
+      try {
+        const res = await fetch('/api/shiren-files')
+        const j = await res.json()
+        if (!mounted) return
+        if (Array.isArray(j?.images) && j.images.length > 0) {
+          setFeaturedImages(j.images)
+          setCurrentImageIndex(0)
+        }
+      } catch (e) {
+        // ignore, keep default image
+        // console.debug('shiren-files fetch failed', e)
+      }
+    })()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  // Slideshow interval (10 seconds)
+  useEffect(() => {
+    if (!featuredImages || featuredImages.length <= 1) return
+    const iv = setInterval(() => {
+      setCurrentImageIndex((i) => (i + 1) % featuredImages.length)
+    }, 10_000)
+    return () => clearInterval(iv)
+  }, [featuredImages])
+  // Dynamically import ScrollReveal on the client to avoid SSR evaluation
+  useEffect(() => {
     let srInstance: any = null
     ;(async () => {
       try {
@@ -791,33 +824,34 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
 
               {/* Right content - Featured NFT */}
               <div ref={nftCardRef} className="relative">
-                <div className="aspect-square rounded-xl overflow-hidden relative">
+                {/* On small screens use a fixed height to avoid overly tall cards; on md+ keep square aspect */}
+                <div className="rounded-xl overflow-hidden relative h-64 md:aspect-square md:h-auto">
                   <img
-                    src="/SHIREN%20NFT/felixxx.png"
+                    src={featuredImages[currentImageIndex] ?? '/SHIREN%20NFT/felixxx.png'}
                     alt="Featured NFT"
                     className="w-full h-full object-cover rounded-xl"
                   />
                   {/* NFT Details overlay */}
-                  <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                  <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                     <div className="flex justify-between items-end">
                       <div className="text-left">
-                        <h3 className="text-xl font-semibold text-white">Starts Sale in</h3>
-                        <div className="flex gap-6 text-[hsla(0, 0%, 100%, 1.00)]">
-                          <div className="flex flex-col items-center">
-                            <p className="text-2xl md:text-3xl font-bold">{String((timeLeft as any).days).padStart(2, '0')}</p>
-                            <p className="text-sm text-[hsl(203,8%,80%)]">days</p>
+                        <h3 className="text-lg md:text-xl font-semibold text-white">Starts Sale in</h3>
+                        <div className="flex gap-4 md:gap-6 text-white text-sm md:text-base flex-wrap">
+                          <div className="flex flex-col items-center px-2">
+                            <p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).days).padStart(2, '0')}</p>
+                            <p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">days</p>
                           </div>
-                          <div className="flex flex-col items-center">
-                            <p className="text-2xl md:text-3xl font-bold">{String((timeLeft as any).hours).padStart(2, '0')}</p>
-                            <p className="text-sm text-[hsl(203,8%,80%)]">hours</p>
+                          <div className="flex flex-col items-center px-2">
+                            <p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).hours).padStart(2, '0')}</p>
+                            <p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">hours</p>
                           </div>
-                          <div className="flex flex-col items-center">
-                            <p className="text-2xl md:text-3xl font-bold">{String((timeLeft as any).minutes).padStart(2, '0')}</p>
-                            <p className="text-sm text-[hsl(203,8%,80%)]">minutes</p>
+                          <div className="flex flex-col items-center px-2">
+                            <p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).minutes).padStart(2, '0')}</p>
+                            <p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">minutes</p>
                           </div>
-                          <div className="flex flex-col items-center">
-                            <p className="text-2xl md:text-3xl font-bold">{String((timeLeft as any).seconds).padStart(2, '0')}</p>
-                            <p className="text-sm text-[hsl(203,8%,80%)]">seconds</p>
+                          <div className="flex flex-col items-center px-2">
+                            <p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).seconds).padStart(2, '0')}</p>
+                            <p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">seconds</p>
                           </div>
                         </div>
                       </div>
