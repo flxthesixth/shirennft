@@ -8,8 +8,16 @@ const vazirmatn = Vazirmatn({
 })
 
 export const metadata: Metadata = {
-  title: 'SHIREN',
-  description: 'SHIREN by flxthesixth',
+  title: {
+    default: 'SHIREN',
+    template: '%s | SHIREN'
+  },
+  description: 'find your orb, collect your shiren',
+  icons: {
+    icon: '/SHIREN_NEW_LOGO_WHITE.png',
+    shortcut: '/SHIREN_NEW_LOGO_WHITE.png',
+    apple: '/SHIREN_NEW_LOGO_WHITE.png',
+  }
 }
 
 export default function RootLayout({
