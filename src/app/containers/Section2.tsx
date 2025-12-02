@@ -11,7 +11,7 @@ export default function Section2({ onBack }: Props) {
   
 
   return (
-    <div className="min-h-screen relative z-20 bg-black overflow-hidden">
+    <div className="relative z-20 bg-black overflow-visible md:overflow-hidden md:min-h-screen">
       <div className="banner relative">
         {/* overlay is transparent on white background */}
         <div className="absolute inset-0 bg-transparent pointer-events-none z-20" />

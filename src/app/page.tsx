@@ -58,7 +58,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0, transition: { duration: 0.4 } }}
             exit={{ opacity: 0, y: -8, transition: { duration: 0.3 } }}
-            className="min-h-screen"
+            className="md:min-h-screen"
           >
             {active === 'home' && (
               <Section1

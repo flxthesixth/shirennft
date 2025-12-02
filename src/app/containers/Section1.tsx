@@ -496,12 +496,12 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   }, [])
 
   return (
-    <div className="relative w-full min-h-screen z-10 overflow-hidden bg-[url('/bg3.jpg')] bg-cover bg-center">
+    <div className="relative w-full md:min-h-screen z-10 overflow-visible md:overflow-hidden bg-[url('/bg3.jpg')] bg-cover bg-center">
       {/* <Frame /> removed as requested */}
   {/* Loading is handled at the page level to control initial handoff; do not render Loading here */}
 
-      <div className="container mx-auto px-4 py-6 flex items-center justify-center min-h-screen">
-  <div ref={containerRef} className="relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-hidden p-6 md:p-8">
+        <div className="container mx-auto px-4 py-6 flex items-center justify-center md:min-h-screen">
+      <div ref={containerRef} className="relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible md:overflow-hidden p-6 md:p-8">
           {/* 50% overlay over bg3.jpg */}
           <div className="absolute inset-0 bg-black/50 rounded-3xl pointer-events-none" />
           {/* Navigation Bar */}

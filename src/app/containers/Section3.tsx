@@ -27,7 +27,7 @@ export default function Section3({ onBack }: Props) {
   ]
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center z-20 bg-[#1a1a1a]">
+    <div className="flex flex-col items-center justify-center z-20 bg-[#1a1a1a] md:min-h-screen">
       <div className="w-full max-w-6xl px-6 py-16">
         <div className="mb-8 text-center">
           <h2 className="text-4xl font-bold text-white">MEET THE TEAM</h2>
@@ -37,7 +37,7 @@ export default function Section3({ onBack }: Props) {
         </div>
 
         {/* Flex cards container */}
-        <div className="flex-cards flex gap-4 h-[60vh]">
+        <div className="flex-cards flex gap-4 h-auto md:h-[60vh]">
           {cards.map((c) => (
             <div key={c.id} className="flex-card relative overflow-hidden">
               <Image
