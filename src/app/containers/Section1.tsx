@@ -506,7 +506,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
           <div className="absolute inset-0 bg-black/50 rounded-3xl pointer-events-none" />
           {/* Navigation Bar */}
           <nav className="border-b border-white/10 relative z-10">
-            <div className="flex justify-between items-center h-20 px-8">
+            <div className="flex justify-between items-center h-20 px-4 md:px-8 flex-wrap">
               {/* Logo */}
               <div className="text-4xl font-bold text-[#ffa0f2]">
                 <a href="https://x.com/shiren_NFT" target="_blank" rel="noopener noreferrer" className="hover:opacity-90 transition-opacity">
@@ -515,20 +515,20 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
               </div>
 
               {/* Navigation Menu */}
-              <div className="flex items-center gap-6">
-                <div className="flex gap-12 text-white">
-                  <a href="#" className="text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">
+              <div className="flex items-center gap-4 md:gap-6">
+                <div className="flex flex-wrap gap-4 md:gap-12 text-white items-center">
+                  <a href="#" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">
                     Home
                   </a>
                   <button
                     onClick={() => onSelect?.('pass')}
-                    className="text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
+                    className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
                   >
                     Collection
                   </button>
                   <button
                     onClick={() => onSelect?.('about')}
-                    className="text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
+                    className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
                   >
                     Team
                   </button>
@@ -536,14 +536,14 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                     href={discordUrl ?? '#'}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
+                    className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
                   >
                     Community
                   </a>
                 </div>
 
                 {/* Connect button placed at the far right of the nav group */}
-                <div className="ml-6">
+                <div className="ml-2 md:ml-6">
                   <button
                     ref={openBtnRef}
                     onClick={() => {
@@ -585,7 +585,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                       }
                       setShowWalletSidebar(true)
                     }}
-                    className="group text-2xl font-medium px-3 py-1 rounded-md transform transition duration-200 ease-out hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[hsl(203,71%,60%)]/30 hover:text-[hsl(203,71%,60%)] inline-flex items-center gap-2"
+                    className="group text-base md:text-2xl font-medium px-3 py-1 rounded-md transform transition duration-200 ease-out hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[hsl(203,71%,60%)]/30 hover:text-[hsl(203,71%,60%)] inline-flex items-center gap-2"
                     aria-haspopup="dialog"
                   >
                     <span className="transform transition-transform duration-200 group-hover:-translate-y-0.5" aria-hidden>
@@ -800,7 +800,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                 <h1 className="text-5xl md:text-7xl font-bold leading-tight">
                   <span className="text-[#ffa0f2]">Explore</span> <br />
                   Find and <br />
-                  Collect your SRNs.
+                  Collect your SHRNs.
                 </h1>
                 <p className="text-[hsl(203,8%,80%)] text-lg md:text-xl whitespace-nowrap overflow-x-auto">
                   Seeking love from her is like collecting Orbs to get SHIREN in its entirety.
@@ -808,11 +808,11 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                 {/* Stats */}
                 <div ref={statsRef} className="grid grid-cols-3 gap-8 py-8 text-left">
                   <div>
-                    <h3 className="text-3xl font-bold text-[#ffa0f2]">2,222</h3>
+                    <h3 className="text-3xl font-bold text-[#ffa0f2]">X,XXX</h3>
                     <p className="text-[hsl(203,8%,80%)]">Collection</p>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-bold text-[#ffa0f2]">69</h3>
+                    <h3 className="text-3xl font-bold text-[#ffa0f2]">XX</h3>
                     <p className="text-[hsl(203,8%,80%)]">Legendary</p>
                   </div>
                   <div>
