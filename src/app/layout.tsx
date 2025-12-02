@@ -29,6 +29,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Explicit favicons (cache-busted) to avoid stale icons on deploy */}
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" type="image/png" sizes="32x32" href="/SHIREN_NEW_LOGO_WHITE.png?v=2" />
         <link rel="icon" type="image/png" sizes="16x16" href="/SHIREN_NEW_LOGO_WHITE.png?v=2" />
         <link rel="shortcut icon" href="/SHIREN_NEW_LOGO_WHITE.png?v=2" />
