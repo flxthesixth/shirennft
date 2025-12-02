@@ -17,7 +17,7 @@ type Card = {
 
 export default function Section3({ onBack }: Props) {
   const cards: Card[] = [
-  { id: 1, title: 'FLX.', img: '/SHIREN%20NFT/felixxx.png', desc: 'Janitor', link: 'https://x.com/flxthesixth' },
+  { id: 1, title: 'FLX.', img: '/SHIREN%20NFT/felixnew.png', desc: 'Janitor', link: 'https://x.com/flxthesixth' },
   { id: 2, title: 'Jun', img: '/SHIREN%20NFT/jun.png', desc: 'Chief Executive Officer', link: 'https://x.com/lsdjun' },
   { id: 3, title: 'Krisnaf', img: '/SHIREN%20NFT/krisna.png', desc: 'Artist', link: 'https://x.com/Krisnaf_' },
   { id: 4, title: 'Ryu J', img: '/SHIREN%20NFT/ryuji.png', desc: 'Artist', link: 'https://x.com/drunkenryu1' },
