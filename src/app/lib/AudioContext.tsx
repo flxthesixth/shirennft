@@ -38,9 +38,14 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [autoplayBlocked, setAutoplayBlocked] = useState(false)
 
   const defaultPlaylist: Track[] = [
-    // Use encodeURIComponent to ensure special characters (like '&') are encoded
-    // so the file path resolves correctly from `public/`.
-    { title: 'Bintang 5 (8D)', artist: 'Tenxi & Jemsii', src: '/' + encodeURIComponent('Tenxi & Jemsii - Bintang 5 (8D AUDIO).mp3') },
+    // Populate playlist from known public audio files. Use `encodeURIComponent`
+    // to ensure special characters (like '&' or brackets) are encoded so
+    // the file path resolves correctly from `public/` when served at '/'.
+    { title: 'Sam Feldt - Show Me Love (EDX\'s Indian Summer Remix)', src: '/' + encodeURIComponent("Sam Feldt - Show Me Love (EDX's Indian Summer Remix) [Official Video].mp3") },
+    { title: 'Tenxi & Jemsii - Bintang 5 (8D)', artist: 'Tenxi & Jemsii', src: '/' + encodeURIComponent('Tenxi & Jemsii - Bintang 5 (8D AUDIO).mp3') },
+    { title: 'YOASOBI - Racing Into The Night', src: '/' + encodeURIComponent('YOASOBI - Racing Into The Night Lyrics (JPNROMENG).mp3') },
+    { title: 'ZHU - Cocaine Model', src: '/' + encodeURIComponent('ZHU - Cocaine Model [OFFICIAL VIDEO HD].mp3') },
+    { title: 'ZHU - Working for It (feat. Skrillex)', src: '/' + encodeURIComponent('ZHU - Working for It (feat. Skrillex).mp3') },
   ]
   const [playlist] = useState<Track[]>(defaultPlaylist)
 
