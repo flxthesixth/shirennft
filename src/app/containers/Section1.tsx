@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Frame from '../components/Frame'
+import MusicPlayer from '../components/MusicPlayer'
 import Loading from './Loading'
 
 type Props = {
@@ -805,6 +806,11 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                 <p className="text-[hsl(203,8%,80%)] text-lg md:text-xl whitespace-nowrap overflow-x-auto">
                   Seeking love from her is like collecting Orbs to get SHIREN in its entirety.
                 </p>
+
+                <div className="mt-4">
+                  <MusicPlayer />
+                </div>
+
                 {/* Stats */}
                 <div ref={statsRef} className="grid grid-cols-3 gap-8 py-8 text-left">
                   <div>
