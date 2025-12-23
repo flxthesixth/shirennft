@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Vazirmatn } from 'next/font/google'
 import '../styles/globals.css'
+import { AudioProvider } from './lib/AudioContext'
 
 const vazirmatn = Vazirmatn({
   subsets: ['latin'],
@@ -36,7 +37,9 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/SHIREN_NEW_LOGO_WHITE.png?v=2" />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className={vazirmatn.className}>{children}</body>
+      <body className={vazirmatn.className}>
+        <AudioProvider>{children}</AudioProvider>
+      </body>
     </html>
   )
 }

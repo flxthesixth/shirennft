@@ -1,107 +1,59 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useAudio } from '../lib/AudioContext'
 
-type Track = { title: string; src: string; artist?: string }
-
-const encode = (s: string) => encodeURI(s)
-
-export default function MusicPlayer({ playlist }: { playlist?: Track[] }) {
-  const defaultPlaylist: Track[] = playlist ?? [
-    { title: 'Bintang 5 (8D)', artist: 'Tenxi & Jemsii', src: encode('/Tenxi & Jemsii - Bintang 5 (8D AUDIO).mp3') },
-  ]
-
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const [index, setIndex] = useState(0)
-  const [playing, setPlaying] = useState(false)
+export default function MusicPlayer() {
+  const ctx = useAudio()
+  const { playing, toggle, next, prev, setVolume, muted, setMuted, playlist, index } = ctx
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [volume, setVolume] = useState(0.9)
-  const [muted, setMuted] = useState(false)
 
   useEffect(() => {
-    const a = audioRef.current
+    let mounted = true
+    const a = (document.querySelector('audio') as HTMLAudioElement | null)
     if (!a) return
-
-    const onTime = () => setProgress(a.currentTime)
-    const onLoaded = () => setDuration(a.duration || 0)
-    const onEnd = () => handleNext()
-
+    const onTime = () => { if (!mounted) return; setProgress(a.currentTime) }
+    const onLoaded = () => { if (!mounted) return; setDuration(a.duration || 0) }
     a.addEventListener('timeupdate', onTime)
     a.addEventListener('loadedmetadata', onLoaded)
-    a.addEventListener('ended', onEnd)
-    return () => {
-      a.removeEventListener('timeupdate', onTime)
-      a.removeEventListener('loadedmetadata', onLoaded)
-      a.removeEventListener('ended', onEnd)
-    }
+    return () => { mounted = false; a.removeEventListener('timeupdate', onTime); a.removeEventListener('loadedmetadata', onLoaded) }
   }, [index])
-
-  useEffect(() => {
-    const a = audioRef.current
-    if (!a) return
-    a.volume = volume
-    a.muted = muted
-  }, [volume, muted])
-
-  useEffect(() => {
-    const a = audioRef.current
-    if (!a) return
-    a.src = defaultPlaylist[index].src
-    a.load()
-    // if playing was true, try to resume
-    if (playing) {
-      const p = a.play()
-      if (p && typeof (p as any).catch === 'function') (p as any).catch(() => setPlaying(false))
-    }
-    setProgress(0)
-    setDuration(0)
-  }, [index])
-
-  const togglePlay = async () => {
-    const a = audioRef.current
-    if (!a) return
-    if (playing) {
-      a.pause()
-      setPlaying(false)
-    } else {
-      try {
-        await a.play()
-        setPlaying(true)
-      } catch (e) {
-        setPlaying(false)
-      }
-    }
-  }
-
-  const handleNext = () => setIndex((i) => (i + 1) % defaultPlaylist.length)
-  const handlePrev = () => setIndex((i) => (i - 1 + defaultPlaylist.length) % defaultPlaylist.length)
 
   const seek = (t: number) => {
-    const a = audioRef.current
+    const a = (document.querySelector('audio') as HTMLAudioElement | null)
     if (!a) return
     a.currentTime = t
     setProgress(t)
   }
 
   return (
-    <div className="w-full max-w-xl bg-white/5 p-3 rounded-md text-white">
-      <audio ref={audioRef} preload="metadata" />
+    <div className={`w-full max-w-xl bg-white/5 p-3 rounded-md text-white ${playing ? 'playing' : ''}`}>
+      <style>{`
+        .song-title-container{ overflow:hidden; max-width:220px; }
+        .song-title{ display:inline-block; white-space:nowrap; animation: marquee 10s linear infinite; }
+        .song-title:hover{ animation-play-state:paused; }
+        @keyframes marquee{ 0%{ transform: translateX(100%);} 100%{ transform: translateX(-100%);} }
+        .playing .play-btn{ animation: pulse 1s infinite; }
+        @keyframes pulse{ 0%{ box-shadow: 0 0 0 rgba(255,160,242,0.6);} 70%{ box-shadow: 0 0 10px rgba(255,160,242,0.0);} 100%{ box-shadow: 0 0 0 rgba(255,160,242,0);} }
+      `}</style>
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="font-semibold">{defaultPlaylist[index]?.title}</div>
-          {defaultPlaylist[index]?.artist && <div className="text-sm text-white/70">{defaultPlaylist[index].artist}</div>}
+          <div className="font-semibold song-title-container">
+            <div className="song-title">{playlist[index]?.title}</div>
+          </div>
+          {playlist[index]?.artist && <div className="text-sm text-white/70">{playlist[index].artist}</div>}
         </div>
 
         <div className="flex items-center gap-2">
-          <button onClick={handlePrev} className="px-3 py-1 rounded bg-white/6">Prev</button>
-          <button onClick={togglePlay} className="px-4 py-1 rounded bg-white/8">{playing ? 'Pause' : 'Play'}</button>
-          <button onClick={handleNext} className="px-3 py-1 rounded bg-white/6">Next</button>
+          <button onClick={prev} className="px-3 py-1 rounded bg-white/6">Prev</button>
+          <button onClick={() => toggle()} className="px-4 py-1 rounded bg-white/8 play-btn">{playing ? 'Pause' : 'Play'}</button>
+          <button onClick={next} className="px-3 py-1 rounded bg-white/6">Next</button>
         </div>
 
         <div className="flex items-center gap-2">
-          <input aria-label="volume" type="range" min={0} max={1} step={0.01} value={volume} onChange={(e) => setVolume(Number(e.target.value))} className="w-24" />
-          <button onClick={() => setMuted((m) => !m)} className="px-2 py-1 rounded bg-white/6">{muted ? 'Unmute' : 'Mute'}</button>
+          <input aria-label="volume" type="range" min={0} max={1} step={0.01} defaultValue={0.9} onChange={(e) => setVolume(Number(e.target.value))} className="w-24" />
+          <button onClick={() => setMuted(!muted)} className="px-2 py-1 rounded bg-white/6">{muted ? 'Unmute' : 'Mute'}</button>
         </div>
       </div>
 
