@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 type Props = {
   onBack?: () => void
@@ -16,14 +17,15 @@ type Card = {
 }
 
 export default function Section3({ onBack }: Props) {
+  const router = useRouter()
   const cards: Card[] = [
-  { id: 1, title: 'FLX.', img: '/SHIREN%20NFT/felixnew.png', desc: 'Janitor', link: 'https://x.com/flxthesixth' },
+  { id: 1, title: 'FLX.', img: '/SHIREN%20NFT/felixnew.png', desc: 'President', link: 'https://x.com/flxthesixth' },
   { id: 2, title: 'Jun', img: '/SHIREN%20NFT/jun.png', desc: 'Chief Executive Officer', link: 'https://x.com/lsdjun' },
   { id: 3, title: 'Krisnaf', img: '/SHIREN%20NFT/krisna.png', desc: 'Artist', link: 'https://x.com/Krisnaf_' },
   { id: 4, title: 'Ryu J', img: '/SHIREN%20NFT/ryuji.png', desc: 'Artist', link: 'https://x.com/drunkenryu1' },
-  { id: 5, title: 'KucingNKL', img: '/SHIREN%20NFT/Kucingg.png', desc: 'Community Manager', link: 'https://x.com/rizkibahari_66' },
+  { id: 5, title: 'KucingNKL', img: '/SHIREN%20NFT/Kucingg.png', desc: 'Social Media Manager', link: 'https://x.com/rizkibahari_66' },
   { id: 6, title: 'AzrTen4', img: '/SHIREN%20NFT/azura.png', desc: 'Community Manager', link: 'https://x.com/Azuraten4' },
-  { id: 7, title: 'Damm', img: '/SHIREN%20NFT/dam.png', desc: 'Community Manager', link: 'https://x.com/0xdamm28' },
+  // { id: 7, title: 'Damm', img: '/SHIREN%20NFT/dam.png', desc: 'Community Manager', link: 'https://x.com/0xdamm28' },
   ]
 
   return (
@@ -120,13 +122,22 @@ export default function Section3({ onBack }: Props) {
           }
         `}</style>
 
-        {/* Back text centered below cards */}
-        <div className="w-full flex justify-center mt-8">
+        {/* Back button centered below cards */}
+        <div className="w-full flex justify-center mt-10 ticket-pass-header">
           <button
-            onClick={onBack}
-            className="text-white text-2xl hover:text-gray-300 transition-colors"
+            onClick={() => {
+              if (typeof onBack === 'function') return onBack()
+              router.push('/')
+            }}
+            className="back-btn"
+            aria-label="Back"
+            type="button"
           >
-            Back
+            <span className="outline" aria-hidden>
+              <svg className="svg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+              </svg>
+            </span>
           </button>
         </div>
       </div>

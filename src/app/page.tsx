@@ -7,6 +7,7 @@ import { useState } from 'react'
 import Section2 from './containers/Section2'
 import Section3 from './containers/Section3'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect } from 'react'
 
 // NOTE: ganti ini dengan URL Discord kamu yang sebenarnya
 const DISCORD_URL = 'https://discord.gg/mDsMXCUDXy'
@@ -17,6 +18,18 @@ export default function Home() {
   const [isFirstVisit, setIsFirstVisit] = useState(true)
   // State to track initial page load
   const [isInitialPageLoad, setIsInitialPageLoad] = useState(true)
+
+  // If the user has already visited the app during this session, skip the
+  // initial loading animation so client-side navigations (e.g. back from
+  // `/ticket-pass`) don't show the loading screen again.
+  useEffect(() => {
+    try {
+      const had = sessionStorage.getItem('hadInitialLoad')
+      if (had) setIsInitialPageLoad(false)
+    } catch (e) {
+      // ignore sessionStorage errors
+    }
+  }, [])
 
   // Effect to handle initial page load
   // NOTE: we no longer auto-clear the initial page load flag on mount
@@ -33,7 +46,18 @@ export default function Home() {
         <div className="fixed inset-0 z-50 bg-white" aria-hidden />
       )}
       {/* keep loading visible until Loading calls onFinished */}
-      {isInitialPageLoad && <Loading onFinished={() => setIsInitialPageLoad(false)} />}
+      {isInitialPageLoad && (
+        <Loading
+          onFinished={() => {
+            try {
+              sessionStorage.setItem('hadInitialLoad', '1')
+            } catch (e) {
+              /* ignore */
+            }
+            setIsInitialPageLoad(false)
+          }}
+        />
+      )}
 
       {/*
         When we're in the initial page load, render Section1 directly (no motion)

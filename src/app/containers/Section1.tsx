@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import Frame from '../components/Frame'
 import MusicPlayer from '../components/MusicPlayer'
 import Loading from './Loading'
@@ -260,6 +261,8 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const homeRef = useRef<HTMLDivElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
   const nftCardRef = useRef<HTMLDivElement>(null)
+  const playerInlineRef = useRef<HTMLDivElement>(null)
+  const playerAbsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Fetch list of images from API (server reads public/SHIREN NFT)
@@ -308,6 +311,8 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
         if (homeRef.current) srInstance.reveal(homeRef.current, { origin: 'left' })
         if (statsRef.current) srInstance.reveal(statsRef.current, { origin: 'bottom', delay: 800 })
         if (nftCardRef.current) srInstance.reveal(nftCardRef.current, { origin: 'right', delay: 600 })
+        if (playerInlineRef.current) srInstance.reveal(playerInlineRef.current, { origin: 'bottom', delay: 900 })
+        if (playerAbsRef.current) srInstance.reveal(playerAbsRef.current, { origin: 'bottom', delay: 900 })
       } catch (e) {
         // If ScrollReveal fails to load on server or in test env, ignore silently
         console.warn('ScrollReveal failed to load', e)
@@ -518,9 +523,12 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
               {/* Navigation Menu */}
               <div className="flex items-center gap-4 md:gap-6">
                 <div className="flex flex-wrap gap-4 md:gap-12 text-white items-center">
-                  <a href="#" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">
+                  <Link href="/" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">
                     Home
-                  </a>
+                  </Link>
+                  <Link href="/ticket-pass" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">
+                    Ticket Pass
+                  </Link>
                   <button
                     onClick={() => onSelect?.('pass')}
                     className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
@@ -824,7 +832,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                 </div>
 
                 {/* Music player: inline on small screens, absolutely positioned near bottom on md+ so text doesn't move */}
-                <div className="mt-8 md:hidden">
+                <div ref={playerInlineRef} className="mt-8 md:hidden">
                   <MusicPlayer />
                 </div>
               </div>
@@ -872,7 +880,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
               {/* Absolutely positioned player for md+ screens: placed at the bottom-left half of the grid container
                   so it visually aligns with the bottom of the NFT image without changing text layout. */}
               <div className="hidden md:block md:col-start-1 md:col-end-2">
-                <div className="md:absolute md:bottom-20 md:left-6 md:w-[calc(50%-48px)] md:z-20 md:pointer-events-auto">
+                <div ref={playerAbsRef} className="md:absolute md:bottom-20 md:left-6 md:w-[calc(50%-48px)] md:z-20 md:pointer-events-auto">
                   <MusicPlayer />
                 </div>
               </div>
