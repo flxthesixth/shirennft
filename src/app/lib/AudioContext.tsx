@@ -17,6 +17,7 @@ type AudioContextValue = {
   setVolume: (v: number) => void
   muted: boolean
   setMuted: (m: boolean) => void
+  autoplayBlocked: boolean
 }
 
 const AudioCtx = createContext<AudioContextValue | null>(null)
