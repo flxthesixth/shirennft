@@ -795,9 +795,9 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
           )}
 
           <div className="px-8 py-12 relative z-10">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="grid md:grid-cols-2 gap-8 items-stretch">
               {/* Left content */}
-              <div ref={homeRef} className="welcome text-white space-y-6 text-left">
+              <div ref={homeRef} className="welcome text-white space-y-4 text-left md:flex md:flex-col md:justify-center md:transform md:-translate-y-4">
                 <h1 className="text-5xl md:text-7xl font-bold leading-tight">
                   <span className="text-[#ffa0f2]">Explore</span> <br />
                   Find and <br />
@@ -807,12 +807,8 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   Seeking love from her is like collecting Orbs to get SHIREN in its entirety.
                 </p>
 
-                <div className="mt-4">
-                  <MusicPlayer />
-                </div>
-
                 {/* Stats */}
-                <div ref={statsRef} className="grid grid-cols-3 gap-8 py-8 text-left">
+                <div ref={statsRef} className="grid grid-cols-3 gap-6 py-4 text-left mt-4 md:mt-6">
                   <div>
                     <h3 className="text-3xl font-bold text-[#ffa0f2]">X,XXX</h3>
                     <p className="text-[hsl(203,8%,80%)]">Collection</p>
@@ -825,6 +821,11 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                     <h3 className="text-3xl font-bold text-[#ffa0f2]">RISE</h3>
                     <p className="text-[hsl(203,8%,80%)]">Chain</p>
                   </div>
+                </div>
+
+                {/* Music player: inline on small screens, absolutely positioned near bottom on md+ so text doesn't move */}
+                <div className="mt-8 md:hidden">
+                  <MusicPlayer />
                 </div>
               </div>
 
@@ -863,6 +864,16 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                       </div>
                     </div>
                   </div>
+                </div>
+
+                
+              </div>
+
+              {/* Absolutely positioned player for md+ screens: placed at the bottom-left half of the grid container
+                  so it visually aligns with the bottom of the NFT image without changing text layout. */}
+              <div className="hidden md:block md:col-start-1 md:col-end-2">
+                <div className="md:absolute md:bottom-20 md:left-6 md:w-[calc(50%-48px)] md:z-20 md:pointer-events-auto">
+                  <MusicPlayer />
                 </div>
               </div>
             </div>
