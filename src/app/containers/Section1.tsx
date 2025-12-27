@@ -6,6 +6,10 @@ import Frame from '../components/Frame'
 import MusicPlayer from '../components/MusicPlayer'
 import AnimatedBeamMultipleOutputDemo from '@/components/AnimatedBeamMultipleOutputDemo'
 import { AnimatedBeam } from '@/components/ui/animated-beam'
+import {
+  ScrollVelocityContainer,
+  ScrollVelocityRow,
+} from '@/registry/magicui/scroll-based-velocity'
 import Loading from './Loading'
 
 type Props = {
@@ -13,6 +17,23 @@ type Props = {
   discordUrl?: string
   skipIntroDelay?: boolean
   isInitialLoad?: boolean
+}
+
+export function ScrollBasedVelocityDemo() {
+  return (
+    <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
+      <ScrollVelocityContainer className="text-4xl font-bold tracking-[-0.02em] md:text-7xl md:leading-[5rem]">
+        <ScrollVelocityRow baseVelocity={20} direction={1}>
+          Velocity Scroll
+        </ScrollVelocityRow>
+        <ScrollVelocityRow baseVelocity={20} direction={-1}>
+          Velocity Scroll
+        </ScrollVelocityRow>
+      </ScrollVelocityContainer>
+      <div className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r"></div>
+      <div className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l"></div>
+    </div>
+  )
 }
 
 function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad = true }: Props) {
@@ -51,6 +72,24 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   // Featured images for slideshow (uses public/SHIREN NFT)
   const [featuredImages, setFeaturedImages] = useState<string[]>(['/SHIREN%20NFT/felixxx.png'])
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
+
+  // Small demo component for scroll-based velocity text
+  function ScrollBasedVelocityDemo() {
+    return (
+      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
+        <ScrollVelocityContainer className="text-4xl font-bold tracking-[-0.02em] md:text-7xl md:leading-[5rem]">
+          <ScrollVelocityRow baseVelocity={20} direction={1}>
+            Velocity Scroll
+          </ScrollVelocityRow>
+          <ScrollVelocityRow baseVelocity={20} direction={-1}>
+            Velocity Scroll
+          </ScrollVelocityRow>
+        </ScrollVelocityContainer>
+        <div className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r"></div>
+        <div className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l"></div>
+      </div>
+    )
+  }
 
   // wallet connect handler — now that rise-wallet is installed we can import normally
   async function connectToWallet() {
@@ -877,18 +916,6 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                     </div>
                   </div>
                 </div>
-
-                {/* AnimatedBeamMultipleOutputDemo inserted under the NFT card */}
-                  <div className="mt-6">
-                    <AnimatedBeamMultipleOutputDemo />
-                  </div>
-
-                  {/* Invisible beam endpoint positioned outside the main NFT card so the card height doesn't grow */}
-                  <div
-                    ref={beamEndRef}
-                    aria-hidden
-                    className="absolute -right-10 top-1/2 transform -translate-y-1/2 w-2 h-2 pointer-events-none"
-                  />
               </div>
 
                 {/* Absolutely positioned player for md+ screens: placed at the bottom-left half of the grid container
@@ -898,25 +925,17 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   <MusicPlayer />
                 </div>
               </div>
-              {/* Animated beam overlay: render as an overlay anchored to the NFT card and an external endpoint so
-                  the NFT card size doesn't change. The endpoint is absolutely positioned outside the card. */}
-              {containerRef.current && nftCardRef.current && beamEndRef.current && (
-                <AnimatedBeam
-                  containerRef={containerRef}
-                  fromRef={nftCardRef}
-                  toRef={beamEndRef}
-                  curvature={60}
-                  pathWidth={3}
-                  pathOpacity={0.18}
-                  gradientStartColor="#ffaa40"
-                  gradientStopColor="#9c40ff"
-                  duration={5}
-                />
-              )}
             </div>
           </div>
         </div>
       </div>
+      <div className="mt-6">
+        <div className="mt-6">
+          <ScrollBasedVelocityDemo />
+        </div>
+      <div className="mt-6">
+                    <AnimatedBeamMultipleOutputDemo />
+                  </div>
     </div>
   )
 }
