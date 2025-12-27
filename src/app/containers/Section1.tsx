@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Frame from '../components/Frame'
 import MusicPlayer from '../components/MusicPlayer'
-import { AnimatedBeam } from '../../components/ui/animated-beam'
+import AnimatedBeamMultipleOutputDemo from '@/components/AnimatedBeamMultipleOutputDemo'
 import Loading from './Loading'
 
 type Props = {
@@ -30,7 +30,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const sidebarRef = useRef<HTMLDivElement>(null)
   const openBtnRef = useRef<HTMLButtonElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const beamEndRef = useRef<HTMLDivElement | null>(null)
+  // beamEndRef is no longer needed when using multiple-output demo
   // Sidebar vertical anchor (keep top dynamic) and computed height to match card
   const [sidebarStartTop, setSidebarStartTop] = useState<string | null>(null)
   const [sidebarHeight, setSidebarHeight] = useState<string | null>(null)
@@ -876,9 +876,10 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   </div>
                 </div>
 
-                {/* Invisible endpoint for AnimatedBeam placed slightly below the NFT card */}
-                <div ref={beamEndRef} className="w-full h-6" aria-hidden />
-                
+                {/* AnimatedBeamMultipleOutputDemo inserted under the NFT card */}
+                <div className="mt-6">
+                  <AnimatedBeamMultipleOutputDemo />
+                </div>
               </div>
 
                 {/* Absolutely positioned player for md+ screens: placed at the bottom-left half of the grid container
