@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Frame from '../components/Frame'
 import MusicPlayer from '../components/MusicPlayer'
+import { AnimatedBeam } from '../../components/ui/animated-beam'
 import Loading from './Loading'
 
 type Props = {
@@ -29,6 +30,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const sidebarRef = useRef<HTMLDivElement>(null)
   const openBtnRef = useRef<HTMLButtonElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const beamEndRef = useRef<HTMLDivElement | null>(null)
   // Sidebar vertical anchor (keep top dynamic) and computed height to match card
   const [sidebarStartTop, setSidebarStartTop] = useState<string | null>(null)
   const [sidebarHeight, setSidebarHeight] = useState<string | null>(null)
@@ -502,12 +504,12 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   }, [])
 
   return (
-    <div className="relative w-full md:min-h-screen z-10 overflow-visible md:overflow-hidden bg-[url('/bg3.jpg')] bg-cover bg-center">
+    <div className="relative w-full md:min-h-screen z-10 overflow-visible bg-[url('/bg3.jpg')] bg-cover bg-center">
       {/* <Frame /> removed as requested */}
   {/* Loading is handled at the page level to control initial handoff; do not render Loading here */}
 
         <div className="container mx-auto px-4 py-6 flex items-center justify-center md:min-h-screen">
-      <div ref={containerRef} className="relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible md:overflow-hidden p-6 md:p-8">
+      <div ref={containerRef} className="relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-6 md:p-8">
           {/* 50% overlay over bg3.jpg */}
           <div className="absolute inset-0 bg-black/50 rounded-3xl pointer-events-none" />
           {/* Navigation Bar */}
@@ -874,16 +876,32 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   </div>
                 </div>
 
+                {/* Invisible endpoint for AnimatedBeam placed slightly below the NFT card */}
+                <div ref={beamEndRef} className="w-full h-6" aria-hidden />
                 
               </div>
 
-              {/* Absolutely positioned player for md+ screens: placed at the bottom-left half of the grid container
+                {/* Absolutely positioned player for md+ screens: placed at the bottom-left half of the grid container
                   so it visually aligns with the bottom of the NFT image without changing text layout. */}
               <div className="hidden md:block md:col-start-1 md:col-end-2">
                 <div ref={playerAbsRef} className="md:absolute md:bottom-20 md:left-6 md:w-[calc(50%-48px)] md:z-20 md:pointer-events-auto">
                   <MusicPlayer />
                 </div>
               </div>
+              {/* Animated beam overlay: draws between the NFT card and the invisible endpoint below it */}
+              {containerRef.current && (
+                <AnimatedBeam
+                  containerRef={containerRef}
+                  fromRef={nftCardRef}
+                  toRef={beamEndRef}
+                  curvature={60}
+                  pathWidth={3}
+                  pathOpacity={0.18}
+                  gradientStartColor="#ffaa40"
+                  gradientStopColor="#9c40ff"
+                  duration={5}
+                />
+              )}
             </div>
           </div>
         </div>
