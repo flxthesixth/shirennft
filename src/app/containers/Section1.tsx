@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Frame from '../components/Frame'
 import MusicPlayer from '../components/MusicPlayer'
 import AnimatedBeamMultipleOutputDemo from '@/components/AnimatedBeamMultipleOutputDemo'
+import { AnimatedBeam } from '@/components/ui/animated-beam'
 import Loading from './Loading'
 
 type Props = {
@@ -263,6 +264,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const homeRef = useRef<HTMLDivElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
   const nftCardRef = useRef<HTMLDivElement>(null)
+  const beamEndRef = useRef<HTMLDivElement>(null)
   const playerInlineRef = useRef<HTMLDivElement>(null)
   const playerAbsRef = useRef<HTMLDivElement>(null)
 
@@ -877,9 +879,16 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                 </div>
 
                 {/* AnimatedBeamMultipleOutputDemo inserted under the NFT card */}
-                <div className="mt-6">
-                  <AnimatedBeamMultipleOutputDemo />
-                </div>
+                  <div className="mt-6">
+                    <AnimatedBeamMultipleOutputDemo />
+                  </div>
+
+                  {/* Invisible beam endpoint positioned outside the main NFT card so the card height doesn't grow */}
+                  <div
+                    ref={beamEndRef}
+                    aria-hidden
+                    className="absolute -right-10 top-1/2 transform -translate-y-1/2 w-2 h-2 pointer-events-none"
+                  />
               </div>
 
                 {/* Absolutely positioned player for md+ screens: placed at the bottom-left half of the grid container
@@ -889,7 +898,21 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   <MusicPlayer />
                 </div>
               </div>
-              {/* Animated beam overlay removed — using AnimatedBeamMultipleOutputDemo above */}
+              {/* Animated beam overlay: render as an overlay anchored to the NFT card and an external endpoint so
+                  the NFT card size doesn't change. The endpoint is absolutely positioned outside the card. */}
+              {containerRef.current && nftCardRef.current && beamEndRef.current && (
+                <AnimatedBeam
+                  containerRef={containerRef}
+                  fromRef={nftCardRef}
+                  toRef={beamEndRef}
+                  curvature={60}
+                  pathWidth={3}
+                  pathOpacity={0.18}
+                  gradientStartColor="#ffaa40"
+                  gradientStopColor="#9c40ff"
+                  duration={5}
+                />
+              )}
             </div>
           </div>
         </div>
