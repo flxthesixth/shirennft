@@ -889,20 +889,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   <MusicPlayer />
                 </div>
               </div>
-              {/* Animated beam overlay: draws between the NFT card and the invisible endpoint below it */}
-              {containerRef.current && (
-                <AnimatedBeam
-                  containerRef={containerRef}
-                  fromRef={nftCardRef}
-                  toRef={beamEndRef}
-                  curvature={60}
-                  pathWidth={3}
-                  pathOpacity={0.18}
-                  gradientStartColor="#ffaa40"
-                  gradientStopColor="#9c40ff"
-                  duration={5}
-                />
-              )}
+              {/* Animated beam overlay removed — using AnimatedBeamMultipleOutputDemo above */}
             </div>
           </div>
         </div>
