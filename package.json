@@ -10,11 +10,15 @@
     "format:fix": "npx prettier --write ."
   },
   "dependencies": {
+    "@react-three/drei": "^8.20.2",
+    "@react-three/fiber": "8",
+    "@react-three/rapier": "^2.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.2.12",
     "gsap": "^3.12.5",
     "lucide-react": "^0.562.0",
+    "meshline": "^3.3.1",
     "motion": "^12.23.26",
     "next": "14.2.4",
     "react": "^18",
@@ -22,7 +26,8 @@
     "rise-wallet": "^0.2.29",
     "scrollreveal": "^4.0.9",
     "tailwind-merge": "^3.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.182.0"
   },
   "devDependencies": {
     "@types/node": "^20",

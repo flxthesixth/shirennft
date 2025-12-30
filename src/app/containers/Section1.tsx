@@ -767,13 +767,13 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
           <div className="md:flex-1 md:flex md:flex-col md:justify-center md:items-center text-center">
             <h5 className="text-3xl md:text-4xl font-semibold mb-1 max-w-4xl">
               <br/>
-              where SHIREN positions itself as a community in RISE
+              where <span className="text-[#ffa0f2]">SHIREN</span> positions itself as a community in <span className="text-[#ffa0f2]">RISE</span>
             </h5>
           </div>
           <div className="mt-6"><AnimatedBeamMultipleOutputDemo /></div>
           <div className="md:flex-1 md:flex md:flex-col md:justify-center md:items-center text-center">
             <h5 className="text-3xl md:text-4xl font-semibold mb-1 max-w-4xl">   
-              because RISE is our home, and SHIREN is our love.
+              because <span className="text-[#ffa0f2]">RISE</span>  is our home, and <span className="text-[#ffa0f2]">SHIREN</span> is our love.
             </h5>
           </div>
         </div>

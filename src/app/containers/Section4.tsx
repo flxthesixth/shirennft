@@ -1,8 +1,9 @@
 "use client"
 
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import TiltCard from '../components/TiltCard'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 
 export default function Section4() {
   const router = useRouter()
@@ -29,18 +30,13 @@ export default function Section4() {
 
           {/* Back button centered below cards */}
           <div className="w-full flex justify-center mt-8 ticket-pass-header">
-            <button
-              onClick={() => router.push('/')}
-              className="back-btn"
-              aria-label="Back"
-              type="button"
-            >
+            <Link href="/" className="back-btn" aria-label="Back">
               <span className="outline" aria-hidden>
                 <svg className="svg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                   <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
                 </svg>
               </span>
-            </button>
+            </Link>
           </div>
         </motion.div>
     </main>
