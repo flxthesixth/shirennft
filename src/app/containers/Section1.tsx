@@ -24,10 +24,10 @@ export function ScrollBasedVelocityDemo() {
     <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
       <ScrollVelocityContainer className="text-4xl font-bold tracking-[-0.02em] md:text-7xl md:leading-[5rem]">
         <ScrollVelocityRow baseVelocity={20} direction={1}>
-          Velocity Scroll
+          SHIREN
         </ScrollVelocityRow>
         <ScrollVelocityRow baseVelocity={20} direction={-1}>
-          Velocity Scroll
+          RISE
         </ScrollVelocityRow>
       </ScrollVelocityContainer>
       <div className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r"></div>
@@ -531,71 +531,41 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   return (
     <div className="relative w-full md:min-h-screen z-10 overflow-visible bg-[url('/bg3.jpg')] bg-cover bg-center">
       {/* <Frame /> removed as requested */}
-  {/* Loading is handled at the page level to control initial handoff; do not render Loading here */}
+      {/* Loading is handled at the page level to control initial handoff; do not render Loading here */}
 
-        <div className="container mx-auto px-4 py-6 flex items-center justify-center md:min-h-screen">
-      <div ref={containerRef} className="relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-6 md:p-8">
-          {/* 50% overlay over bg3.jpg */}
+      <div className="container mx-auto px-4 py-6 flex items-center justify-center md:min-h-screen">
+        <div ref={containerRef} className="relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-6 md:p-8">
           <div className="absolute inset-0 bg-black/50 rounded-3xl pointer-events-none" />
+
           {/* Navigation Bar */}
           <nav className="border-b border-white/10 relative z-10">
             <div className="flex justify-between items-center h-20 px-4 md:px-8 flex-wrap">
-              {/* Logo */}
               <div className="text-4xl font-bold text-[#ffa0f2]">
                 <a href="https://x.com/shiren_NFT" target="_blank" rel="noopener noreferrer" className="hover:opacity-90 transition-opacity">
                   SHIRΞN
                 </a>
               </div>
 
-              {/* Navigation Menu */}
               <div className="flex items-center gap-4 md:gap-6">
                 <div className="flex flex-wrap gap-4 md:gap-12 text-white items-center">
-                  <Link href="/" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">
-                    Home
-                  </Link>
-                  <Link href="/ticket-pass" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">
-                    Ticket Pass
-                  </Link>
-                  <button
-                    onClick={() => onSelect?.('pass')}
-                    className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
-                  >
-                    Collection
-                  </button>
-                  <button
-                    onClick={() => onSelect?.('about')}
-                    className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
-                  >
-                    Team
-                  </button>
-                  <a
-                    href={discordUrl ?? '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium"
-                  >
-                    Community
-                  </a>
+                  <Link href="/" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Home</Link>
+                  <Link href="/ticket-pass" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Ticket Pass</Link>
+                  <button onClick={() => onSelect?.('pass')} className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Collection</button>
+                  <button onClick={() => onSelect?.('about')} className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Team</button>
+                  <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Community</a>
                 </div>
 
-                {/* Connect button placed at the far right of the nav group */}
                 <div className="ml-2 md:ml-6">
                   <button
                     ref={openBtnRef}
                     onClick={() => {
-                      // measure the button to compute a vertical position for the sidebar
                       try {
                         if (openBtnRef.current) {
                           const r = openBtnRef.current.getBoundingClientRect()
-                          // position the top near the button (align with top of button) but keep inside viewport
-                          // Prefer aligning the sidebar near the top of the card so it looks
-                          // like it's anchored to the card. Move it a little upward for visual balance.
                           if (containerRef.current) {
                             const cr = containerRef.current.getBoundingClientRect()
                             const topPos = Math.max(8, Math.round(cr.top + 8))
                             setSidebarStartTop(`${topPos}px`)
-                            // set sidebar height to roughly the card height (slightly larger than before)
-                            // clamp so it never overflows the viewport.
                             const preferred = Math.round(cr.height - 8)
                             const minH = 300
                             const maxH = Math.max(240, Math.round(window.innerHeight - 32))
@@ -607,12 +577,6 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                             const startTop = `${Math.min(preferredTop, maxTop)}px`
                             setSidebarStartTop(startTop)
                           }
-
-                          // compute right offset relative to the main card container so the sidebar
-                          // visually emerges from that card (fixes Safari being too far right)
-                          // no container anchoring for now; keep horizontal anchored to viewport edge
-
-                          // ensure styles apply before opening: use rAF for more deterministic timing
                           window.requestAnimationFrame(() => setShowWalletSidebar(true))
                           return
                         }
@@ -624,13 +588,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                     className="group text-base md:text-2xl font-medium px-3 py-1 rounded-md transform transition duration-200 ease-out hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[hsl(203,71%,60%)]/30 hover:text-[hsl(203,71%,60%)] inline-flex items-center gap-2"
                     aria-haspopup="dialog"
                   >
-                    <span className="transform transition-transform duration-200 group-hover:-translate-y-0.5" aria-hidden>
-                      {/* <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 1v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M5 7h14v10a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V7z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <circle cx="12" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.5" />
-                      </svg> */}
-                    </span>
+                    <span className="transform transition-transform duration-200 group-hover:-translate-y-0.5" aria-hidden />
                     <span>{connected ? (address ? `${address.slice(0, 6)}...` : 'Connected') : 'Connect'}</span>
                   </button>
                 </div>
@@ -641,16 +599,14 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
           {/* Overlay when sidebar is open (lighter so underlying cards remain visible) */}
           <div
             className={`fixed inset-0 z-40 transition-all duration-300 ${
-              showWalletSidebar
-                ? 'opacity-100 pointer-events-auto bg-black/60 backdrop-blur-md'
-                : 'opacity-0 pointer-events-none bg-transparent backdrop-blur-0'
+              showWalletSidebar ? 'opacity-100 pointer-events-auto bg-black/60 backdrop-blur-md' : 'opacity-0 pointer-events-none bg-transparent backdrop-blur-0'
             }`}
             aria-hidden={!showWalletSidebar}
             onClick={() => setShowWalletSidebar(false)}
             style={{ WebkitBackdropFilter: showWalletSidebar ? 'blur(8px)' : 'none', backdropFilter: showWalletSidebar ? 'blur(8px)' : 'none' }}
           />
 
-          {/* Wallet sliding sidebar (right) - now animates from the top-right card (scale + fade) */}
+          {/* Wallet sidebar */}
           <aside
             ref={sidebarRef}
             className={`fixed h-auto w-[300px] md:w-[380px] max-w-[92vw] bg-transparent z-50 transition-transform duration-300 ease-out shadow-2xl ${
@@ -658,29 +614,15 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
             }`}
             role="dialog"
             aria-hidden={!showWalletSidebar}
-            // anchor to viewport right edge; vertical top/height are computed from the card
             style={{ right: '16px', top: sidebarStartTop ?? '64px', height: sidebarHeight ?? 'auto', willChange: 'transform, opacity' }}
           >
-            {/* translucent overlay to improve contrast over the background image */}
-            <div
-              className={`absolute inset-0 transition-all duration-300 ${
-                showWalletSidebar ? 'bg-black/60 backdrop-blur-md opacity-100' : 'bg-black/10 backdrop-blur-[2px] opacity-0'
-              } pointer-events-none`}
-              aria-hidden
-              style={{ WebkitBackdropFilter: showWalletSidebar ? 'blur(8px)' : 'none', backdropFilter: showWalletSidebar ? 'blur(8px)' : 'none' }}
-            />
+            <div className={`absolute inset-0 transition-all duration-300 ${showWalletSidebar ? 'bg-black/60 backdrop-blur-md opacity-100' : 'bg-black/10 backdrop-blur-[2px] opacity-0' } pointer-events-none`} aria-hidden style={{ WebkitBackdropFilter: showWalletSidebar ? 'blur(8px)' : 'none', backdropFilter: showWalletSidebar ? 'blur(8px)' : 'none' }} />
             <div className="h-full flex flex-col relative z-10">
-        <div className="pt-8 px-6 pb-6 border-b border-white/6 flex items-center justify-between">
-          <h3 className="text-2xl font-semibold tracking-tight">Wallet</h3>
+              <div className="pt-8 px-6 pb-6 border-b border-white/6 flex items-center justify-between">
+                <h3 className="text-2xl font-semibold tracking-tight">Wallet</h3>
                 <div className="flex items-center gap-3">
                   {connecting && <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-                  <button
-                    onClick={() => setShowWalletSidebar(false)}
-                    className="text-sm text-white/80 p-2 rounded-md hover:text-white hover:bg-white/5 transform transition duration-150 ease-out active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/20"
-                    aria-label="Close wallet sidebar"
-                  >
-                    ×
-                  </button>
+                  <button onClick={() => setShowWalletSidebar(false)} className="text-sm text-white/80 p-2 rounded-md hover:text-white hover:bg-white/5 transform transition duration-150 ease-out active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/20" aria-label="Close wallet sidebar">×</button>
                 </div>
               </div>
 
@@ -692,13 +634,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   <p className="text-lg text-white/70 mb-1">Address</p>
                   <div className="flex items-center gap-3">
                     <code className="truncate font-mono text-lg bg-white/6 p-2 rounded w-full">{address ?? '-'}</code>
-                    <button onClick={copyAddressToClipboard} className="text-lg px-3 py-2 bg-white/5 rounded transform transition duration-150 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/20 inline-flex items-center gap-2">
-                      <svg className="w-4 h-4 text-white/90 transform transition-transform duration-150 group-hover:translate-x-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                        <path d="M16 3H8a2 2 0 0 0-2 2v12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <rect x="8" y="7" width="10" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
-                      </svg>
-                      <span>Copy</span>
-                    </button>
+                    <button onClick={copyAddressToClipboard} className="text-lg px-3 py-2 bg-white/5 rounded transform transition duration-150 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/20 inline-flex items-center gap-2">Copy</button>
                   </div>
                   {copyStatus && <div className="mt-2 text-sm text-green-300">{copyStatus}</div>}
                 </div>
@@ -707,90 +643,28 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   <p className="text-lg text-white/70 mb-1">Balance</p>
                   <div className="flex items-center gap-5">
                     <div className="text-3xl font-bold">{balance ? `${balance} RISE` : '-'}</div>
-                    {loadingBalance && (
-                      <div
-                        className="h-7 w-7 border-2 border-white border-t-transparent rounded-full animate-spin self-center transform -translate-y-1"
-                        aria-hidden
-                      />
-                    )}
+                    {loadingBalance && <div className="h-7 w-7 border-2 border-white border-t-transparent rounded-full animate-spin self-center transform -translate-y-1" aria-hidden />}
                   </div>
                 </div>
 
-                {/* SRN Collection summary */}
                 <div className="mb-6">
                   <p className="text-lg text-white/70 mb-1">SRN Collection</p>
                   <div className="flex items-center gap-3">
                     <div className="text-2xl font-semibold">{srnCount !== null ? srnCount : '-'}</div>
-                    <button
-                      onClick={() => setShowSrnModal(true)}
-                      disabled={srnCount === 0}
-                      className="ml-2 rounded-md bg-white/5 px-4 py-2 text-white text-sm disabled:opacity-40 transform transition duration-150 hover:scale-105"
-                    >
-                      View Collection
-                    </button>
-                    <button
-                      onClick={() => fetchSRNCollection(address)}
-                      className="ml-auto rounded-md bg-white/5 px-3 py-2 text-white text-sm transform transition duration-150 hover:scale-105"
-                    >
-                      Refresh
-                    </button>
+                    <button onClick={() => setShowSrnModal(true)} disabled={srnCount === 0} className="ml-2 rounded-md bg-white/5 px-4 py-2 text-white text-sm disabled:opacity-40 transform transition duration-150 hover:scale-105">View Collection</button>
+                    <button onClick={() => fetchSRNCollection(address)} className="ml-auto rounded-md bg-white/5 px-3 py-2 text-white text-sm transform transition duration-150 hover:scale-105">Refresh</button>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 items-center">
                   {!connected ? (
-                    <button
-                      onClick={async () => {
-                        setConnecting(true)
-                        await connectToWallet()
-                        setConnecting(false)
-                      }}
-                      className="w-full sm:w-auto faucet-glow text-2xs transform transition duration-200 ease-out hover:scale-102 active:scale-95 inline-flex items-center gap-3"
-                    >
-                      {/* <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                        <path d="M12 1v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M5 7h14v10a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V7z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <circle cx="12" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.5" />
-                      </svg> */}
-                      <span>Connect</span>
-                    </button>
+                    <button onClick={async () => { setConnecting(true); await connectToWallet(); setConnecting(false); }} className="w-full sm:w-auto faucet-glow text-2xs transform transition duration-200 ease-out hover:scale-102 active:scale-95 inline-flex items-center gap-3">Connect</button>
                   ) : (
-                    <button
-                      onClick={() => disconnectWallet()}
-                      className="w-full sm:w-auto rounded-md border border-white/10 px-6 py-3 text-white text-base transform transition duration-150 active:scale-95 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/10 inline-flex items-center gap-3"
-                    >
-                      <svg className="w-5 h-5 transform transition-transform duration-150 group-hover:rotate-[-10deg]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                        <path d="M16 17l5-5-5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M21 12H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M13 19H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      <span>Disconnect</span>
-                    </button>
+                    <button onClick={() => disconnectWallet()} className="w-full sm:w-auto rounded-md border border-white/10 px-6 py-3 text-white text-base transform transition duration-150 active:scale-95 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/10 inline-flex items-center gap-3">Disconnect</button>
                   )}
-                  <button
-                    onClick={() => fetchBalanceForAddress(address, { showSpinner: true })}
-                    disabled={!address}
-                    className="w-full sm:w-auto rounded-md bg-white/5 px-6 py-3 text-white text-base disabled:opacity-40 transform transition duration-150 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/10 inline-flex items-center gap-3"
-                  >
-                    <svg className="w-5 h-5 transform transition-transform duration-300 hover:rotate-180" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                      <path d="M21 12a9 9 0 1 0-3.2 6.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="M21 3v6h-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span>Refresh</span>
-                  </button>
+                  <button onClick={() => fetchBalanceForAddress(address, { showSpinner: true })} disabled={!address} className="w-full sm:w-auto rounded-md bg-white/5 px-6 py-3 text-white text-base disabled:opacity-40 transform transition duration-150 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white/10 inline-flex items-center gap-3">Refresh</button>
 
-                  {/* Faucet button moved inline and styled with custom glow class */}
-                  <button
-                    onClick={requestFromFaucet}
-                    className="w-full sm:w-auto rounded-md bg-gradient-to-r from-[#6dd3ff] via-[#a77bff] to-[#ffa0f2] px-6 py-3 text-white text-base transform transition duration-200 ease-out hover:scale-105 active:scale-95 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[hsl(203,71%,60%)]/30 inline-flex items-center gap-3"
-                  >
-                    <svg className="w-5 h-5 transform transition-transform duration-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                      <path d="M12 1v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="M5 7h14v10a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V7z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <circle cx="12" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.5" />
-                    </svg>
-                    <span>Faucet</span>
-                  </button>
+                  <button onClick={requestFromFaucet} className="w-full sm:w-auto rounded-md bg-gradient-to-r from-[#6dd3ff] via-[#a77bff] to-[#ffa0f2] px-6 py-3 text-white text-base transform transition duration-200 ease-out hover:scale-105 active:scale-95 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[hsl(203,71%,60%)]/30 inline-flex items-center gap-3">Faucet</button>
                   {faucetStatus && <div className="text-sm text-green-300">{faucetStatus}</div>}
                 </div>
               </div>
@@ -812,7 +686,6 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                     srnCollection.map((nft, idx) => (
                       <div key={idx} className="bg-white/5 p-3 rounded-lg flex flex-col items-center text-center">
                         {nft.image ? (
-                          // plain img tag to avoid next/image server constraints in modal
                           <img src={nft.image} alt={nft.name ?? nft.tokenId} className="w-full h-32 object-cover rounded-md mb-2" />
                         ) : (
                           <div className="w-full h-32 bg-white/3 rounded-md mb-2 flex items-center justify-center">No image</div>
@@ -832,94 +705,74 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
           <div className="px-8 py-12 relative z-10">
             <div className="grid md:grid-cols-2 gap-8 items-stretch">
               {/* Left content */}
-              <div ref={homeRef} className="welcome text-white space-y-4 text-left md:flex md:flex-col md:justify-center md:transform md:-translate-y-4">
-                <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-                  <span className="text-[#ffa0f2]">Explore</span> <br />
-                  Find and <br />
-                  Collect your SHRNs.
-                </h1>
-                <p className="text-[hsl(203,8%,80%)] text-lg md:text-xl whitespace-nowrap overflow-x-auto">
-                  Seeking love from her is like collecting Orbs to get SHIREN in its entirety.
-                </p>
+              <div ref={homeRef} className="welcome text-white space-y-1 text-left md:flex md:flex-col h-full">
+                <div className="md:flex-1 md:flex md:flex-col md:justify-center">
+                  <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-1">
+                    <span className="text-[#ffa0f2]">Explore</span> <br />
+                    Find and <br />
+                    Collect your SHRNs.
+                  </h1>
+                  <p className="text-[hsl(203,8%,80%)] text-lg md:text-xl mt-1 mb-1">Seeking love from her is like collecting Orbs to get SHIREN in its entirety.</p>
 
-                {/* Stats */}
-                <div ref={statsRef} className="grid grid-cols-3 gap-6 py-4 text-left mt-4 md:mt-6">
-                  <div>
-                    <h3 className="text-3xl font-bold text-[#ffa0f2]">X,XXX</h3>
-                    <p className="text-[hsl(203,8%,80%)]">Collection</p>
-                  </div>
-                  <div>
-                    <h3 className="text-3xl font-bold text-[#ffa0f2]">XX</h3>
-                    <p className="text-[hsl(203,8%,80%)]">Legendary</p>
-                  </div>
-                  <div>
-                    <h3 className="text-3xl font-bold text-[#ffa0f2]">RISE</h3>
-                    <p className="text-[hsl(203,8%,80%)]">Chain</p>
+                  <div ref={statsRef} className="grid grid-cols-3 gap-3 py-1 text-left mt-3 md:mt-4">
+                    <div>
+                      <h3 className="text-3xl font-bold text-[#ffa0f2]">X,XXX</h3>
+                      <p className="text-[hsl(203,8%,80%)]">Collection</p>
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-bold text-[#ffa0f2]">XX</h3>
+                      <p className="text-[hsl(203,8%,80%)]">Legendary</p>
+                    </div>
+                    <div>
+                      <h3 className="text-3xl font-bold text-[#ffa0f2]">RISE</h3>
+                      <p className="text-[hsl(203,8%,80%)]">Chain</p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Music player: inline on small screens, absolutely positioned near bottom on md+ so text doesn't move */}
-                <div ref={playerInlineRef} className="mt-8 md:hidden">
-                  <MusicPlayer />
+                <div className="mt-6 md:mt-8">
+                  <div ref={playerInlineRef} className="md:hidden"><MusicPlayer /></div>
+                  <div ref={playerAbsRef} className="hidden md:block"><MusicPlayer /></div>
                 </div>
               </div>
 
               {/* Right content - Featured NFT */}
               <div ref={nftCardRef} className="relative">
-                {/* On small screens use a fixed height to avoid overly tall cards; on md+ keep square aspect */}
                 <div className="rounded-xl overflow-hidden relative h-64 md:aspect-square md:h-auto">
-                  <img
-                    src={featuredImages[currentImageIndex] ?? '/SHIREN%20NFT/felixxx.png'}
-                    alt="Featured NFT"
-                    className="w-full h-full object-cover rounded-xl"
-                  />
-                  {/* NFT Details overlay */}
+                  <img src={featuredImages[currentImageIndex] ?? '/SHIREN%20NFT/felixxx.png'} alt="Featured NFT" className="w-full h-full object-cover rounded-xl" />
                   <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                     <div className="flex justify-between items-end">
                       <div className="text-left">
                         <h3 className="text-lg md:text-xl font-semibold text-white">Starts Sale in</h3>
                         <div className="flex gap-4 md:gap-6 text-white text-sm md:text-base flex-wrap">
-                          <div className="flex flex-col items-center px-2">
-                            <p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).days).padStart(2, '0')}</p>
-                            <p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">days</p>
-                          </div>
-                          <div className="flex flex-col items-center px-2">
-                            <p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).hours).padStart(2, '0')}</p>
-                            <p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">hours</p>
-                          </div>
-                          <div className="flex flex-col items-center px-2">
-                            <p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).minutes).padStart(2, '0')}</p>
-                            <p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">minutes</p>
-                          </div>
-                          <div className="flex flex-col items-center px-2">
-                            <p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).seconds).padStart(2, '0')}</p>
-                            <p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">seconds</p>
-                          </div>
+                          <div className="flex flex-col items-center px-2"><p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).days).padStart(2, '0')}</p><p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">days</p></div>
+                          <div className="flex flex-col items-center px-2"><p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).hours).padStart(2, '0')}</p><p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">hours</p></div>
+                          <div className="flex flex-col items-center px-2"><p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).minutes).padStart(2, '0')}</p><p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">minutes</p></div>
+                          <div className="flex flex-col items-center px-2"><p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).seconds).padStart(2, '0')}</p><p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">seconds</p></div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-                {/* Absolutely positioned player for md+ screens: placed at the bottom-left half of the grid container
-                  so it visually aligns with the bottom of the NFT image without changing text layout. */}
-              <div className="hidden md:block md:col-start-1 md:col-end-2">
-                <div ref={playerAbsRef} className="md:absolute md:bottom-20 md:left-6 md:w-[calc(50%-48px)] md:z-20 md:pointer-events-auto">
-                  <MusicPlayer />
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="mt-6">
-        <div className="mt-6">
-          <ScrollBasedVelocityDemo />
+      <div className="mt-6"><ScrollBasedVelocityDemo /></div>
+      <br/> <br/>
+      <div className="container mx-auto px-4 py-6 items-center justify-center">
+        <div className="relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-6 md:p-8">
+          <div className="absolute inset-0 bg-black/50 rounded-3xl pointer-events-none" />
+          <div className="md:flex-1 md:flex md:flex-col md:justify-center md:items-center text-center">
+            <h5 className="text-3xl md:text-4xl font-semibold mb-1 max-w-4xl">
+              <br/>
+              where SHIREN positions itself as a community in RISE
+            </h5>
+          </div>
+          <div className="mt-6"><AnimatedBeamMultipleOutputDemo /></div>
         </div>
-      <div className="mt-6">
-                    <AnimatedBeamMultipleOutputDemo />
-                  </div>
+      </div>
     </div>
   )
 }
