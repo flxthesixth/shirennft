@@ -125,10 +125,10 @@ function Loading({ onFinished }: Props) {
             exit={{ opacity: 0 }}
           >
             <div className="absolute left-0 top-0 h-full w-full opacity-0" ref={logoPattern}>
-              <Image src={'/fsociety1.jpg'} alt="Pattern" className="object-contain" fill />
+              <Image src={'/foreshadowing.png'} alt="Pattern" className="object-contain" fill />
             </div>
             <div className="absolute left-0 top-0 h-full w-full opacity-0" ref={logo}>
-              <Image src={'/fsociety2.jpg'} alt="Logo" className="object-contain" fill />
+              <Image src={'/shiren_back.png'} alt="Logo" className="object-contain" fill />
             </div>
 
             <div

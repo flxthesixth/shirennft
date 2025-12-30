@@ -10,13 +10,19 @@
     "format:fix": "npx prettier --write ."
   },
   "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "framer-motion": "^11.2.12",
     "gsap": "^3.12.5",
+    "lucide-react": "^0.562.0",
+    "motion": "^12.23.26",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
     "rise-wallet": "^0.2.29",
-    "scrollreveal": "^4.0.9"
+    "scrollreveal": "^4.0.9",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20",

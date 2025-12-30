@@ -771,6 +771,11 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
             </h5>
           </div>
           <div className="mt-6"><AnimatedBeamMultipleOutputDemo /></div>
+          <div className="md:flex-1 md:flex md:flex-col md:justify-center md:items-center text-center">
+            <h5 className="text-3xl md:text-4xl font-semibold mb-1 max-w-4xl">   
+              because SHIREN without RISE just N(A)H. lmao
+            </h5>
+          </div>
         </div>
       </div>
     </div>

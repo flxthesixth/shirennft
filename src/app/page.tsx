@@ -25,7 +25,34 @@ export default function Home() {
   useEffect(() => {
     try {
       const had = sessionStorage.getItem('hadInitialLoad')
-      if (had) setIsInitialPageLoad(false)
+      // Detect hard refresh/navigation type — if this navigation is a reload, show Loading again
+      let navType: string | undefined
+      try {
+        const entries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[]
+        if (entries && entries.length > 0) navType = entries[0].type
+        // fallback to legacy API numeric type
+        if (!navType && (performance as any).navigation) {
+          const legacy = (performance as any).navigation.type
+          // legacy: 0=navigate, 1=reload, 2=back_forward, 255=prerender
+          if (legacy === 1) navType = 'reload'
+          else if (legacy === 0) navType = 'navigate'
+          else if (legacy === 2) navType = 'back_forward'
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      const isReload = navType === 'reload'
+      if (isReload) {
+        // on hard reload we want to show the loading overlay again
+        setIsInitialPageLoad(true)
+      } else if (had) {
+        // if user already saw loading and this is a normal navigation, skip it
+        setIsInitialPageLoad(false)
+      } else {
+        // first visit in this session: show loading
+        setIsInitialPageLoad(true)
+      }
     } catch (e) {
       // ignore sessionStorage errors
     }
