@@ -54,7 +54,7 @@ export function AnimatedBeamMultipleOutputDemo({ className }: { className?: stri
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center">
             <div ref={centerRef} className="rounded-full bg-white/6 border border-white/10 p-2 flex items-center justify-center">
-              <img src="/shiren_pfp.jpg" alt="SHIREN" className="w-24 h-24 object-cover rounded-full" />
+              <img src="/shiren_pfp.JPG" alt="SHIREN" className="w-24 h-24 object-cover rounded-full" />
             </div>
             <div className="text-sm font-semibold text-white mt-2">SHIREN</div>
           </div>
