@@ -1,0 +1,39 @@
+"use client"
+
+import { useEffect, useRef } from 'react'
+
+function Frame() {
+  const frame = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Dynamically import gsap so module is only evaluated on the client
+    let mounted = true
+    ;(async () => {
+      try {
+        const g = (await import('gsap')).default
+        if (!mounted) return
+        g.to(frame.current, {
+          delay: 3,
+          opacity: 1,
+        })
+      } catch (e) {
+        console.warn('gsap failed to load in Frame', e)
+      }
+    })()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  return (
+    <div
+      ref={frame}
+      className="absolute left-1/2 top-1/2 h-[calc(100%-40px)] w-[calc(100%-40px)] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-gray-300 opacity-0 pointer-events-none"
+    >
+      <div className="absolute right-[70px] top-0 h-full w-px bg-gray-300" />
+      <div className="absolute right-0 top-[50px] h-px w-full bg-gray-300" />
+    </div>
+  )
+}
+
+export default Frame
