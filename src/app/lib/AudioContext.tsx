@@ -224,12 +224,14 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
     // listen only to gesture events (mousedown/touchstart/keydown). Avoid `mousemove` because
     // it is noisy and should not be considered a user gesture that unpauses/unmutes playback.
-    ['mousedown', 'keydown', 'touchstart'].forEach((ev) => window.addEventListener(ev, onUser))
+    // listen to gesture events (mousedown/keydown/touchstart) plus wheel so scrolling
+    // also counts as activity and restarts the idle timer.
+    ['mousedown', 'keydown', 'touchstart', 'wheel'].forEach((ev) => window.addEventListener(ev, onUser))
     reset()
 
     return () => {
       if (timeoutId) window.clearTimeout(timeoutId);
-      ['mousedown', 'keydown', 'touchstart'].forEach((ev) => window.removeEventListener(ev, onUser))
+      ['mousedown', 'keydown', 'touchstart', 'wheel'].forEach((ev) => window.removeEventListener(ev, onUser))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [play, playing])

@@ -729,8 +729,15 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
 
               {/* Right content - Featured NFT */}
               <div ref={nftCardRef} className="relative">
-                <div className="rounded-xl overflow-hidden relative h-64 md:aspect-square md:h-auto">
-                  <img src={featuredImages[currentImageIndex] ?? '/SHIREN%20NFT/felixnew.png'} alt="Featured NFT" className="w-full h-full object-cover rounded-xl" />
+                <div className="rounded-xl overflow-hidden relative aspect-square">
+                  <img
+                    src={featuredImages[currentImageIndex] ?? '/SHIREN%20NFT/felixnew.png'}
+                    alt="Featured NFT"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="sync"
+                    className="w-full h-full object-cover rounded-xl"
+                  />
                   <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                     <div className="flex justify-between items-end">
                       <div className="text-left">

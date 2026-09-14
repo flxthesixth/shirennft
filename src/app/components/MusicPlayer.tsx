@@ -92,6 +92,16 @@ export default function MusicPlayer() {
         </div>
       </div>
 
+      {/* Muted-autoplay hint: browser blocked unmuted autoplay — tap to unmute */}
+      {autoplayBlocked && muted && (
+        <button
+          onClick={async () => { setMuted(false); await play() }}
+          className="mt-2 w-full text-xs text-[#f5d76e] bg-white/5 hover:bg-white/10 rounded px-2 py-1"
+        >
+          Tap to unmute
+        </button>
+      )}
+
       {/* Title and artist moved to bottom */}
       <div className="mt-3 text-center">
         <div className="font-semibold song-title-container">

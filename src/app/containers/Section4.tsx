@@ -8,9 +8,9 @@ import { useRouter } from 'next/navigation'
 export default function Section4() {
   const router = useRouter()
   const cards = [
-    { id: 1, title: 'Silver Pass', image: '/shirensilver.png' },
-    { id: 2, title: 'Gold Pass', image: '/shirengold.png' },
-    { id: 3, title: 'Magical Avatar Pass', image: '/shirenmagical.png' },
+    { id: 1, title: 'Silver Pass', image: '/shirensilver.webp' },
+    { id: 2, title: 'Gold Pass', image: '/shirengold.webp' },
+    { id: 3, title: 'Magical Avatar Pass', image: '/shirenmagical.webp' },
   ]
 
   return (

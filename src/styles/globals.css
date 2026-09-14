@@ -422,29 +422,17 @@ body {
     background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.52) 60%, rgba(0,0,0,0.72) 100%);
 }
 
+/* Gold glow border for Ticket Pass cards (brand: black + gold) */
 .rgb::after {
     content: "";
-    background: linear-gradient(45deg,
-        #ff0000 0%,
-        #ff9a00 10%,
-        #d0de21 20%,
-        #4fdc4a 30%,
-        #3fdad8 40%,
-        #2fc9e2 50%,
-        #1c7fee 60%,
-        #5f15f2 70%,
-        #ba0cf8 80%,
-        #fb07d9 90%,
-        #ff0000 100%
-    ) repeat 0% 0% / 300% 100%;
+    background: linear-gradient(135deg, rgba(245,215,110,0.55), rgba(122,94,26,0.35) 40%, rgba(245,215,110,0.55));
     position: absolute;
     inset: -6px;
     border-radius: 18px;
     filter: blur(8px);
     transform-origin: center;
     z-index: 0;
-    opacity: 0.75;
-    animation: rgb 6s linear infinite;
+    opacity: 0.5;
     pointer-events: none;
     transition: filter 360ms ease, transform 360ms ease, opacity 360ms ease;
 }
