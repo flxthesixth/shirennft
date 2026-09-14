@@ -17,7 +17,7 @@ export default function Section2({ onBack }: Props) {
         <div className="absolute inset-0 bg-transparent pointer-events-none z-20" />
         {/* decorative orb GIF centered behind the rotating cards */}
         <div className="orb absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10">
-          <Image src="/orb3.gif" alt="orb" width={480} height={480} className="object-contain" />
+          <Image src="/orb3.webp" alt="orb" width={480} height={480} className="object-contain" />
         </div>
 
         <div className="slider" style={{ '--quantity': 7 } as any}>
@@ -34,10 +34,10 @@ export default function Section2({ onBack }: Props) {
             <Image src="/SHIREN%20NFT/safetybot.png" alt="Safety Bot" fill className="object-cover" />
           </div>
           <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 5 } as any}>
-            <Image src="/SHIREN%20NFT/ripdoteth.png" alt="Rip dot eth" fill className="object-cover" />
+            <Image src="/SHIREN%20NFT/ripdoteth.png" alt="Sasha" fill className="object-cover" />
           </div>
           <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 6 } as any}>
-            <Image src="/SHIREN%20NFT/sasha.png" alt="Rip dot eth" fill className="object-cover" />
+            <Image src="/SHIREN%20NFT/sasha.png" alt="Sasha" fill className="object-cover" />
           </div>
           <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 7 } as any}>
             <Image src="/SHIREN%20NFT/samarth.png" alt="Kucing" fill className="object-cover" />

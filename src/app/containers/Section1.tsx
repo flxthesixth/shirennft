@@ -71,7 +71,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const [showSrnModal, setShowSrnModal] = useState(false)
   const [showMobileNav, setShowMobileNav] = useState(false)
   // Featured images for slideshow (uses public/SHIREN NFT)
-  const [featuredImages, setFeaturedImages] = useState<string[]>(['/SHIREN%20NFT/felixxx.png'])
+  const [featuredImages, setFeaturedImages] = useState<string[]>(['/SHIREN%20NFT/felixnew.png'])
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
 
   
@@ -322,33 +322,8 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
     }, 10_000)
     return () => clearInterval(iv)
   }, [featuredImages])
-  // Dynamically import ScrollReveal on the client to avoid SSR evaluation
-  useEffect(() => {
-    let srInstance: any = null
-    ;(async () => {
-      try {
-        const SR = (await import('scrollreveal')).default
-        srInstance = SR({
-          origin: 'top',
-          distance: '60px',
-          duration: 2500,
-          delay: 400,
-          reset: false,
-        })
-
-        if (homeRef.current) srInstance.reveal(homeRef.current, { origin: 'left' })
-        if (statsRef.current) srInstance.reveal(statsRef.current, { origin: 'bottom', delay: 800 })
-        if (nftCardRef.current) srInstance.reveal(nftCardRef.current, { origin: 'right', delay: 600 })
-        if (playerInlineRef.current) srInstance.reveal(playerInlineRef.current, { origin: 'bottom', delay: 900 })
-        if (playerAbsRef.current) srInstance.reveal(playerAbsRef.current, { origin: 'bottom', delay: 900 })
-      } catch (e) {
-        // If ScrollReveal fails to load on server or in test env, ignore silently
-        console.warn('ScrollReveal failed to load', e)
-      }
-    })()
-
-    return () => srInstance?.destroy?.()
-  }, [])
+  // Scroll reveal disabled: scrollreveal dependency removed for bundle size.
+  // ponytail: reveal animations now handled by existing CSS/framer; re-add lib only if richer choreography needed.
 
   // click outside / escape to close the wallet sidebar
   useEffect(() => {
@@ -755,7 +730,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
               {/* Right content - Featured NFT */}
               <div ref={nftCardRef} className="relative">
                 <div className="rounded-xl overflow-hidden relative h-64 md:aspect-square md:h-auto">
-                  <img src={featuredImages[currentImageIndex] ?? '/SHIREN%20NFT/felixxx.png'} alt="Featured NFT" className="w-full h-full object-cover rounded-xl" />
+                  <img src={featuredImages[currentImageIndex] ?? '/SHIREN%20NFT/felixnew.png'} alt="Featured NFT" className="w-full h-full object-cover rounded-xl" />
                   <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
                     <div className="flex justify-between items-end">
                       <div className="text-left">

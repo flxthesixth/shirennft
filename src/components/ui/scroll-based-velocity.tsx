@@ -9,8 +9,8 @@ import {
   useSpring,
   useTransform,
   useVelocity,
-} from "motion/react"
-import type { MotionValue } from "motion/react"
+} from "framer-motion"
+import type { MotionValue } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 

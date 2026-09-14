@@ -147,25 +147,15 @@ body {
 /* Animated gradient + glow for "Coming Soon" */
 .glow-text{
     display: inline-block;
-    background: linear-gradient(90deg, #ff6b6b, #ffd166, #6bffb3, #6bd1ff, #b06bff);
-    background-size: 400% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: gradientShift 6s linear infinite, glowPulse 2.5s ease-in-out infinite alternate;
-    text-shadow: 0 0 8px rgba(176,107,255,0.45), 0 0 20px rgba(107,209,255,0.12);
+    color: #f5d76e;
+    letter-spacing: 0.08em;
+    animation: goldBreathe 3.2s ease-in-out infinite alternate;
+    text-shadow: 0 0 14px rgba(245,215,110,0.22), 0 2px 24px rgba(0,0,0,0.55);
 }
 
-@keyframes gradientShift{
-    0%{ background-position: 0% 50%; }
-    50%{ background-position: 100% 50%; }
-    100%{ background-position: 0% 50%; }
-}
-
-@keyframes glowPulse{
-    0%{ text-shadow: 0 0 6px rgba(255,107,107,0.12), 0 0 18px rgba(176,107,255,0.08); }
-    50%{ text-shadow: 0 0 18px rgba(255,214,102,0.28), 0 0 36px rgba(107,209,255,0.16); }
-    100%{ text-shadow: 0 0 6px rgba(255,107,107,0.12), 0 0 18px rgba(176,107,255,0.08); }
+@keyframes goldBreathe{
+    from{ text-shadow: 0 0 10px rgba(245,215,110,0.14), 0 2px 24px rgba(0,0,0,0.55); }
+    to{ text-shadow: 0 0 22px rgba(245,215,110,0.34), 0 2px 24px rgba(0,0,0,0.55); }
 }
 .banner .content .model{
     /* background-image: url(images/model.png); */
@@ -529,7 +519,7 @@ body {
     padding: 0.45rem; /* thickness of the border ring */
     border-radius: inherit;
     /* Conic gradient for colorful ring; animate background-position for shimmer */
-    background: conic-gradient(from 180deg, #1c7fee, #5f15f2, #fb07d9, #ff9a00, #d0de21, #4fdc4a, #3fdad8, #2fc9e2, #1c7fee) 0% 50% / 200% 100%;
+    background: conic-gradient(from 180deg, #8a6d1f, #f5d76e, #8a6d1f, #f5d76e, #8a6d1f) 0% 50% / 200% 100%;
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);

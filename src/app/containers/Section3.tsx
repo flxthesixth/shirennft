@@ -29,12 +29,12 @@ export default function Section3({ onBack }: Props) {
   ]
 
   return (
-    <div className="flex flex-col items-center justify-center z-20 bg-[#1a1a1a] md:min-h-screen">
+    <div className="flex flex-col items-center justify-center z-20 bg-black md:min-h-screen">
       <div className="w-full max-w-6xl px-4 md:px-6 py-10 md:py-16">
         <div className="mb-6 md:mb-8 text-center">
           <h2 className="text-2xl md:text-4xl font-bold text-white">MEET THE TEAM</h2>
           <p className="mt-2 md:mt-3 text-sm md:text-lg text-gray-300 max-w-3xl mx-auto">
-            A unpassionate group of builders creating new vibes alongside its community
+            The team behind SHIREN, building alongside its community.
           </p>
         </div>
 

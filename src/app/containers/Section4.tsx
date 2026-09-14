@@ -14,7 +14,7 @@ export default function Section4() {
   ]
 
   return (
-    <main className="min-h-screen bg-[#07070a] text-white flex items-center justify-center py-16">
+    <main className="min-h-screen bg-black text-white flex items-center justify-center py-16">
         <motion.div className="w-full max-w-7xl px-6" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
           <div className="relative mb-10 md:mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-center">Ticket Pass</h1>

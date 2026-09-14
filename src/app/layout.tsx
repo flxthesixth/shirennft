@@ -15,9 +15,9 @@ export const metadata: Metadata = {
   },
   description: 'find your orb, collect your shiren',
   icons: {
-    icon: '/SHIREN_NEW_LOGO_WHITE.png',
-    shortcut: '/SHIREN_NEW_LOGO_WHITE.png',
-    apple: '/SHIREN_NEW_LOGO_WHITE.png',
+    icon: '/icon-256.png',
+    shortcut: '/icon-256.png',
+    apple: '/icon-256.png',
   }
 }
 
@@ -31,10 +31,10 @@ export default function RootLayout({
       <head>
         {/* Explicit favicons (cache-busted) to avoid stale icons on deploy */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/SHIREN_NEW_LOGO_WHITE.png?v=2" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/SHIREN_NEW_LOGO_WHITE.png?v=2" />
-        <link rel="shortcut icon" href="/SHIREN_NEW_LOGO_WHITE.png?v=2" />
-        <link rel="apple-touch-icon" href="/SHIREN_NEW_LOGO_WHITE.png?v=2" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon-256.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icon-256.png" />
+        <link rel="shortcut icon" href="/icon-256.png" />
+        <link rel="apple-touch-icon" href="/icon-256.png" />
         <meta name="theme-color" content="#000000" />
       </head>
       <body className={vazirmatn.className}>
