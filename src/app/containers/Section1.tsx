@@ -517,7 +517,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
           <nav className="border-b border-white/10 relative z-10">
             <div className="flex justify-between items-center h-16 md:h-20 px-4 md:px-8">
               <div className="text-3xl md:text-4xl font-bold text-[#ffa0f2]">
-                <a href="https://x.com/shiren_NFT" target="_blank" rel="noopener noreferrer" className="hover:opacity-90 transition-opacity">
+                <a href="https://x.com/shirennft" target="_blank" rel="noopener noreferrer" className="hover:opacity-90 transition-opacity">
                   SHIRΞN
                 </a>
               </div>

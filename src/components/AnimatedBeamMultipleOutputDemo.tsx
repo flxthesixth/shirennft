@@ -44,9 +44,9 @@ export function AnimatedBeamMultipleOutputDemo({ className }: { className?: stri
       case "RISE":
         return "https://x.com/risechain"
       case "RISEX":
-        return "https://x.com/RISEx_trade"
+        return "https://x.com/risextrade"
       case "SHIREN":
-        return "https://x.com/shiren_NFT"
+        return "https://x.com/shirennft"
       case "FTK":
         return "https://x.com/4thekingdom_xyz"
       case "SPINE":
