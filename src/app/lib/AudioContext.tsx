@@ -212,7 +212,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
               }
             })
         }
-      }, 10_000) // 10s idle
+      }, 5_000) // 5s idle
     }
 
     const onUser = () => {
