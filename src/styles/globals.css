@@ -973,6 +973,26 @@ body {
   font-weight: 800 !important;
   letter-spacing: -0.03em;
 }
+.shiren-shell nav > div > div:first-child {
+  color: var(--goat-lime);
+}
+.shiren-shell nav .hidden.md\:flex,
+.shiren-shell nav .md\:hidden {
+  color: #ffffff;
+}
+.shiren-shell nav .hidden.md\:flex a,
+.shiren-shell nav .hidden.md\:flex button,
+.shiren-shell nav .md\:hidden a,
+.shiren-shell nav .md\:hidden button {
+  color: #ffffff !important;
+}
+.shiren-shell nav > div > div:first-child a {
+  color: var(--goat-lime) !important;
+}
+.shiren-shell nav .hidden.md\:flex a:hover,
+.shiren-shell nav .hidden.md\:flex button:hover {
+  color: rgba(255,255,255,0.72) !important;
+}
 .shiren-shell nav .text-3xl {
   color: var(--goat-ink) !important;
   font-size: 2.35rem !important;
@@ -988,7 +1008,7 @@ body {
 .shiren-shell .welcome::before {
   content: 'SHIREN NFT  ·  RISE CHAIN';
   display: inline-block;
-  margin-bottom: 2rem;
+  margin-bottom: 2.8rem;
   padding: 0.6rem 0.9rem;
   border: 2px solid var(--goat-ink);
   background: var(--goat-lime);
@@ -1014,11 +1034,14 @@ body {
 }
 .shiren-shell .welcome > div > p {
   max-width: 48rem;
+  margin-top: 2.8rem !important;
+  margin-bottom: 1rem;
   color: rgba(13,15,21,0.72) !important;
   font-size: 1.8rem;
   font-weight: 600;
 }
 .shiren-stats {
+  margin-top: 2.2rem !important;
   max-width: 54rem;
   border: 2px solid var(--goat-ink) !important;
   background: #fff;
@@ -1098,9 +1121,14 @@ body {
 .shiren-shell .container:last-child .text-white {
   color: #ffffff !important;
 }
-.shiren-shell .container:last-child .bg-white\/6 {
-  background-color: rgba(255,255,255,0.1) !important;
-  border-color: rgba(255,255,255,0.28) !important;
+.shiren-shell .container:last-child .bg-white\/6,
+.shiren-shell .container:last-child .bg-white\/8 {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.shiren-shell .container:last-child .rounded-full {
+  border-radius: 9999px;
 }
 .shiren-shell .container:last-child .bg-white {
   background-color: #ffffff !important;
