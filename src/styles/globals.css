@@ -9,7 +9,195 @@ html {
 
 body {
   overflow-x: hidden;
+  color: #141414;
+}
+
+/* ============================================================
+   SHIREN — Clean Luxury White theme
+   Ivory gallery surfaces, warm black type, soft platinum
+   hairlines, rose accent. Scoped via theme classes; no
+   changes to markup structure or behavior.
+   ============================================================ */
+
+/* Page shell: ivory wash over the photographic bg */
+.shiren-shell {
+  background-color: #f6f4ef;
+  background-blend-mode: luminosity;
+}
+.shiren-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(246,244,239,0.96) 0%, rgba(246,244,239,0.88) 40%, rgba(246,244,239,0.97) 100%);
+  z-index: 0;
+}
+.shiren-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Glass panels: frosted white cards with hairline borders */
+.shiren-panel {
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(20,20,20,0.08);
+  box-shadow: 0 24px 60px rgba(20,20,20,0.08), 0 1px 0 rgba(255,255,255,0.9) inset;
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+}
+.shiren-panel-veil {
+  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0));
+}
+
+/* Text + accents inside themed areas */
+.shiren-shell,
+.shiren-clean {
+  color: #141414;
+}
+.shiren-shell .text-white,
+.shiren-clean .text-white,
+.shiren-shell .welcome.text-white {
+  color: #141414;
+}
+.shiren-shell .text-\[\#ffa0f2\],
+.shiren-clean .text-\[\#ffa0f2\] {
+  color: #b4533f;
+}
+.shiren-shell .text-\[hsl\(203,8%,80%\)\],
+.shiren-clean .text-\[hsl\(203,8%,80%\)\] {
+  color: rgba(20,20,20,0.62);
+}
+.shiren-shell .hover\:text-\[hsl\(203,71%,60%\)\]:hover,
+.shiren-clean .hover\:text-\[hsl\(203,71%,60%\)\]:hover {
+  color: #b4533f;
+}
+.shiren-shell .border-white\/10,
+.shiren-shell .border-white\/6 {
+  border-color: rgba(20,20,20,0.1);
+}
+
+/* Collection/Team pages: solid ivory, no black wash */
+.shiren-clean {
+  background: #f6f4ef;
+}
+
+/* Countdown veil over featured NFT: keep legible on light card */
+.shiren-shell .bg-gradient-to-t.from-black\/80 {
+  background: linear-gradient(180deg, rgba(20,20,20,0) 0%, rgba(20,20,20,0.55) 100%);
+}
+
+/* Wallet sidebar scrims and modal surfaces */
+.shiren-shell .bg-black\/40,
+.shiren-shell .bg-black\/60,
+.shiren-shell .bg-black\/10 {
+  background-color: rgba(20,20,20,0.55);
+}
+.shiren-shell .bg-\[\#0b0b0d\] {
+  background: #ffffff;
+  color: #141414;
+}
+.shiren-shell .bg-white\/6,
+.shiren-shell .bg-white\/5,
+.shiren-shell .bg-white\/3 {
+  background-color: rgba(20,20,20,0.045);
+}
+.shiren-shell .disabled\:opacity-40:disabled {
+  opacity: 0.4;
+}
+
+/* Faucet button: warm rose instead of neon purple */
+.faucet-glow {
+  --glow-color: rgb(180, 83, 63);
+  --glow-spread-color: rgba(180, 83, 63, 0.28);
+  --enhanced-glow-color: rgb(214, 128, 108);
+  --btn-color: rgb(180, 83, 63);
   color: #fff;
+  text-shadow: none;
+}
+
+/* Section2/3 cards: light overlays so art stays vivid on ivory */
+.shiren-clean .flex-card::after {
+  background: rgba(20,20,20,0.28);
+}
+.shiren-clean .flex-card:hover::after {
+  background: rgba(20,20,20,0.08);
+}
+.shiren-clean .overlay {
+  background: rgba(20,20,20,0.32);
+}
+.shiren-clean .flex-card:hover .overlay {
+  background: rgba(20,20,20,0.1);
+}
+.shiren-clean .flex-cards:not(:hover) .flex-card {
+  box-shadow: 0 18px 44px rgba(20,20,20,0.1);
+}
+
+/* COMING SOON headline: warm black with soft gold, no glow halo */
+.glow-text {
+  color: #141414;
+  letter-spacing: 0.1em;
+  animation: none;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+}
+.glow-text::after {
+  display: none;
+}
+.banner .content h1 {
+  color: #141414;
+}
+.banner .content h1::after {
+  -webkit-text-stroke: 1px rgba(20,20,20,0.35);
+}
+.banner .slider .item img {
+  box-shadow: 0 30px 80px rgba(20,20,20,0.16), 0 10px 30px rgba(20,20,20,0.08) inset;
+}
+.banner .slider .item:hover img {
+  filter: brightness(1.03) saturate(1.04);
+  box-shadow: 0 34px 90px rgba(20,20,20,0.2), 0 12px 36px rgba(20,20,20,0.1) inset;
+}
+.banner .slider .item::after {
+  background: radial-gradient(circle at 50% 40%, rgba(180,83,63,0.05), rgba(180,83,63,0.02) 35%, transparent 40%);
+}
+.banner .slider .item:hover::after {
+  opacity: 0.5;
+}
+
+/* Ticket Pass card glow: champagne hairline instead of gold bloom */
+.rgb::after {
+  background: linear-gradient(135deg, rgba(180,83,63,0.4), rgba(20,20,20,0.12) 40%, rgba(180,83,63,0.4));
+  opacity: 0.35;
+}
+.card:hover::after {
+  opacity: 0.8;
+}
+.card:hover {
+  box-shadow: 0 30px 80px rgba(20,20,20,0.16);
+}
+.card .card-overlay {
+  background: linear-gradient(180deg, rgba(20,20,20,0) 0%, rgba(20,20,20,0.42) 60%, rgba(20,20,20,0.62) 100%);
+}
+
+/* Back button ring: rose hairline, monochrome rest */
+.ticket-pass-header .back-btn .outline {
+  background: #ffffff;
+  box-shadow: inset 0 0.2rem 0.4rem rgba(20,20,20,0.05), 0 8px 20px rgba(20,20,20,0.1);
+}
+.ticket-pass-header .back-btn .outline::before {
+  background: conic-gradient(from 180deg, #b4533f, #e0b9a8, #b4533f, #e0b9a8, #b4533f) 0% 50% / 200% 100%;
+}
+
+/* Loader: keep bright gallery flash, soften ring to warm black */
+.shiren-loader .h-20 {
+  border-color: rgba(20,20,20,0.7);
+}
+.shiren-loadflash {
+  background: #f6f4ef;
+}
+
+/* Theme color for mobile browser chrome */
+.shiren-theme {
+  background: #f6f4ef;
 }
 
 .section1Background {

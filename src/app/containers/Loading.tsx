@@ -119,7 +119,7 @@ function Loading({ onFinished }: Props) {
       {showLoading && (
         <>
           <motion.div
-            className="fixed left-0 top-0 z-50 h-full w-full cursor-none overflow-hidden bg-white text-black"
+            className="shiren-loader fixed left-0 top-0 z-50 h-full w-full cursor-none overflow-hidden bg-white text-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

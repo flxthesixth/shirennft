@@ -505,13 +505,13 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   }, [])
 
   return (
-    <div className="relative w-full md:min-h-screen z-10 overflow-visible bg-[url('/bg3.jpg')] bg-cover bg-center">
+    <div className="shiren-shell relative w-full md:min-h-screen z-10 overflow-visible bg-[url('/bg3.jpg')] bg-cover bg-center">
       {/* <Frame /> removed as requested */}
       {/* Loading is handled at the page level to control initial handoff; do not render Loading here */}
 
       <div className="container mx-auto px-4 py-6 flex items-center justify-center md:min-h-screen">
-        <div ref={containerRef} className="relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-6 md:p-8">
-          <div className="absolute inset-0 bg-black/50 rounded-3xl pointer-events-none" />
+        <div ref={containerRef} className="shiren-panel relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-6 md:p-8">
+          <div className="shiren-panel-veil absolute inset-0 rounded-3xl pointer-events-none" />
 
           {/* Navigation Bar */}
           <nav className="border-b border-white/10 relative z-10">
@@ -760,7 +760,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
       {/* <div className="mt-6"><ScrollBasedVelocityDemo /></div> */}
       <br/> <br/>
       <div className="container mx-auto px-4 py-6 items-center justify-center">
-        <div className="relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-4 md:p-8">
+        <div className="shiren-panel relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-4 md:p-8">
           <div className="absolute inset-0 bg-black/50 rounded-3xl pointer-events-none" />
           <div className="md:flex-1 md:flex md:flex-col md:justify-center md:items-center text-center relative z-10">
             <h5 className="text-xl sm:text-2xl md:text-4xl font-semibold mb-1 max-w-4xl">

@@ -70,7 +70,7 @@ export default function Home() {
     <main>
       {/* Immediate lightweight overlay to prevent Section1 flash before the Loading component mounts */}
       {isInitialPageLoad && (
-        <div className="fixed inset-0 z-50 bg-white" aria-hidden />
+        <div className="fixed inset-0 z-50 shiren-loadflash" aria-hidden />
       )}
       {/* keep loading visible until Loading calls onFinished */}
       {isInitialPageLoad && (
