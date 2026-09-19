@@ -1224,5 +1224,5 @@ body {
 
 /* Header wordmark sits independently of the removed hero eyebrow. */
 .shiren-shell nav > div > div:first-child a {
-  color: var(--goat-ink) !important;
+  color: #ffffff !important;
 }
