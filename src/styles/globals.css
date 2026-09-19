@@ -1187,6 +1187,33 @@ body {
 .shiren-clean .ticket-pass-header .back-btn .svg-icon { fill: #ffffff; }
 .shiren-clean .ticket-pass-header .back-btn .outline::before { display: none; }
 
+/* Team page: dark surface, white text */
+.shiren-team {
+  background: #0a0a0a !important;
+  color: #ffffff;
+}
+.shiren-team h2,
+.shiren-team h3,
+.shiren-team p,
+.shiren-team .text-white {
+  color: #ffffff !important;
+}
+.shiren-team .text-gray-300 {
+  color: rgba(255,255,255,0.75) !important;
+}
+.shiren-team .flex-card {
+  border-color: rgba(255,255,255,0.9) !important;
+  box-shadow: 6px 6px 0 rgba(255,255,255,0.35) !important;
+}
+.shiren-team .flex-card:hover {
+  box-shadow: 10px 10px 0 rgba(255,255,255,0.5) !important;
+}
+.shiren-team .ticket-pass-header .back-btn .outline {
+  border-color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 4px 4px 0 rgba(255,255,255,0.35);
+}
+
 @media (max-width: 767px) {
   .shiren-shell::before { background: var(--goat-paper); }
   .shiren-shell .container { padding-left: 1.6rem; padding-right: 1.6rem; }
