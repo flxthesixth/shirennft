@@ -63,6 +63,21 @@ export default function Section2({ onBack }: Props) {
           <div className="model"></div>
         </div>
       </div>
+
+      <div className="w-full flex justify-center pb-10 ticket-pass-header">
+        <button
+          onClick={() => onBack?.()}
+          className="back-btn"
+          aria-label="Back"
+          type="button"
+        >
+          <span className="outline" aria-hidden>
+            <svg className="svg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+              <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+          </span>
+        </button>
+      </div>
     </div>
   )
 }
