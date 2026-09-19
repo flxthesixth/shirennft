@@ -195,6 +195,14 @@ body {
   background: #f6f4ef;
 }
 
+/* Countdown card on featured NFT stays white over the dark veil */
+.shiren-shell .shiren-hero .bg-gradient-to-t,
+.shiren-shell .shiren-hero .bg-gradient-to-t .text-white,
+.shiren-shell .shiren-hero .bg-gradient-to-t h3,
+.shiren-shell .shiren-hero .bg-gradient-to-t p {
+  color: #ffffff !important;
+}
+
 /* Theme color for mobile browser chrome */
 .shiren-theme {
   background: #f6f4ef;
