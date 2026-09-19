@@ -20,7 +20,7 @@ export default function Section2({ onBack }: Props) {
             <Image src="/collection/thaiji.webp" alt="Thaiji" fill className="object-cover" />
           </div>
           <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 2 } as any}>
-            <Image src="/collection/samb.webp" alt="Sam" fill className="object-cover" />
+            <Image src="/collection/samb.webp" alt="Sam" fill priority sizes="(max-width: 767px) 144px, 200px" className="object-cover" />
           </div>
           <div className="item relative w-36 h-44 md:w-auto md:h-auto" style={{ '--position': 3 } as any}>
             <Image src="/collection/hainguyen.webp" alt="Hai Nguyen" fill className="object-cover" />
