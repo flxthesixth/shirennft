@@ -70,7 +70,7 @@ export function AnimatedBeamMultipleOutputDemo({ className }: { className?: stri
           <div className="flex flex-col items-center">
             <a href={urlFor("RISE")} target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center">
               <div ref={leftRef} className="rounded-full bg-white/6 border border-white/10 p-2 flex items-center justify-center">
-                <img src="/pfprise.png" alt="RISE" className="w-14 h-14 md:w-24 md:h-24 object-contain" />
+                <img src="/rise-mark.svg" alt="RISE" className="w-14 h-14 md:w-24 md:h-24 object-contain" />
               </div>
               <div className="text-xs md:text-sm font-semibold text-white mt-2">RISE</div>
             </a>
