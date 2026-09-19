@@ -897,8 +897,9 @@ body {
   background-image: linear-gradient(rgba(20,20,20,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(20,20,20,0.045) 1px, transparent 1px);
   background-size: 32px 32px;
 }
-.shiren-clean .banner .content {
-  padding-bottom: 10rem;
+.shiren-collection .banner .content {
+  bottom: 4rem;
+  padding-bottom: 0;
 }
 .shiren-clean .banner .content h1 {
   font-size: clamp(5rem, 14vw, 17rem);
