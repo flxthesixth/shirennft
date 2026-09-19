@@ -35,7 +35,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/icon-256.png" />
         <link rel="shortcut icon" href="/icon-256.png" />
         <link rel="apple-touch-icon" href="/icon-256.png" />
-        <meta name="theme-color" content="#f6f4ef" />
+        <meta name="theme-color" content="#c9f422" />
       </head>
       <body className={vazirmatn.className}>
         <AudioProvider>{children}</AudioProvider>

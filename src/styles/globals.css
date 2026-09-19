@@ -925,3 +925,216 @@ body {
   .banner .slider, .glow-text { animation: none; }
 }
 
+/* The Goat reference: neo-brutalist system, adapted for SHIREN assets. */
+:root {
+  --goat-paper: #f9f9f3;
+  --goat-ink: #0d0f15;
+  --goat-lime: #c9f422;
+}
+.shiren-shell,
+.shiren-clean {
+  color: var(--goat-ink);
+  background: var(--goat-paper) !important;
+}
+.shiren-shell {
+  background-image: none !important;
+}
+.shiren-shell::before {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent 0 54%, var(--goat-lime) 54% 100%);
+}
+.shiren-shell .container {
+  max-width: 1280px;
+  padding-left: 2.4rem;
+  padding-right: 2.4rem;
+}
+.shiren-shell .shiren-panel {
+  position: relative;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.shiren-shell .shiren-panel:first-of-type {
+  padding-top: 5.6rem !important;
+}
+.shiren-shell .shiren-panel-veil { display: none; }
+.shiren-shell nav {
+  border-bottom: 2px solid var(--goat-ink) !important;
+}
+.shiren-shell nav > div {
+  min-height: 6.8rem;
+}
+.shiren-shell nav a,
+.shiren-shell nav button {
+  font-size: 1.45rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em;
+}
+.shiren-shell nav .text-3xl {
+  color: var(--goat-ink) !important;
+  font-size: 2.35rem !important;
+  font-weight: 900;
+}
+.shiren-shell .shiren-hero {
+  padding: 8.5rem 0 9.5rem !important;
+}
+.shiren-shell .shiren-hero > div {
+  gap: 4.8rem !important;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+}
+.shiren-shell .welcome::before {
+  content: 'SHIREN NFT  ·  RISE CHAIN';
+  display: inline-block;
+  margin-bottom: 2rem;
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--goat-ink);
+  background: var(--goat-lime);
+  color: var(--goat-ink);
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+}
+.shiren-shell .welcome h1 {
+  max-width: 8ch;
+  font-size: clamp(5.8rem, 7.7vw, 10.8rem) !important;
+  font-weight: 900;
+  line-height: 0.84;
+  letter-spacing: -0.095em;
+}
+.shiren-shell .welcome h1 .text-\[\#ffa0f2\],
+.shiren-shell .text-\[\#ffa0f2\] {
+  display: inline-block;
+  padding: 0.02em 0.08em 0.08em;
+  color: var(--goat-ink) !important;
+  background: var(--goat-lime);
+  transform: rotate(-1.5deg);
+}
+.shiren-shell .welcome > div > p {
+  max-width: 48rem;
+  color: rgba(13,15,21,0.72) !important;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+.shiren-stats {
+  max-width: 54rem;
+  border: 2px solid var(--goat-ink) !important;
+  background: #fff;
+  box-shadow: 6px 6px 0 var(--goat-ink);
+}
+.shiren-stat {
+  min-height: 8.5rem;
+  padding: 1.4rem 1.2rem !important;
+  border-right: 2px solid var(--goat-ink) !important;
+}
+.shiren-stat:first-child { padding-left: 1.2rem !important; }
+.shiren-stat h3 {
+  color: var(--goat-ink) !important;
+  font-size: 2.6rem !important;
+  font-weight: 900;
+}
+.shiren-stat p { color: rgba(13,15,21,0.62) !important; font-weight: 700; }
+.shiren-shell .shiren-hero > div > div:last-child > div {
+  overflow: visible !important;
+  border: 2px solid var(--goat-ink) !important;
+  border-radius: 0 !important;
+  background: var(--goat-lime);
+  box-shadow: 12px 12px 0 var(--goat-ink) !important;
+}
+.shiren-shell .shiren-hero > div > div:last-child img {
+  display: block;
+  border: 1.2rem solid var(--goat-lime);
+  filter: none;
+}
+.shiren-shell .shiren-hero > div > div:last-child .bg-gradient-to-t {
+  background: linear-gradient(180deg, transparent 0%, rgba(13,15,21,0.87) 100%) !important;
+}
+.shiren-shell .faucet-glow {
+  border: 2px solid var(--goat-ink) !important;
+  border-radius: 0 !important;
+  background: var(--goat-lime) !important;
+  box-shadow: 4px 4px 0 var(--goat-ink) !important;
+  color: var(--goat-ink) !important;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.shiren-shell .faucet-glow:hover {
+  transform: translate(-2px, -2px) !important;
+  background: var(--goat-lime) !important;
+  box-shadow: 7px 7px 0 var(--goat-ink) !important;
+  color: var(--goat-ink) !important;
+}
+.shiren-shell .rounded-3xl,
+.shiren-shell .rounded-xl,
+.shiren-shell .rounded-md { border-radius: 0 !important; }
+.shiren-shell > br { display: none; }
+.shiren-shell .container:last-child {
+  max-width: none;
+  margin-top: 0 !important;
+  padding: 7rem max(2.4rem, calc((100vw - 1280px) / 2 + 2.4rem)) !important;
+  background: var(--goat-ink);
+  color: #f5f5f1;
+}
+.shiren-shell .container:last-child .shiren-panel {
+  max-width: 108rem;
+  margin: auto !important;
+  background: transparent !important;
+}
+.shiren-shell .container:last-child h5 { font-weight: 800; line-height: 1.1; }
+.shiren-shell .container:last-child .text-\[\#ffa0f2\] {
+  color: var(--goat-lime) !important;
+  background: transparent !important;
+  padding: 0;
+  transform: none;
+}
+
+.shiren-clean {
+  background: var(--goat-paper) !important;
+}
+.shiren-clean .banner {
+  min-height: 100vh;
+  background: linear-gradient(90deg, var(--goat-paper) 0 54%, var(--goat-lime) 54% 100%) !important;
+}
+.shiren-clean .banner .content h1 {
+  color: var(--goat-ink) !important;
+  font-size: clamp(6rem, 15vw, 18rem) !important;
+  font-weight: 900;
+  letter-spacing: -0.12em;
+  text-shadow: none;
+}
+.shiren-clean .banner .content h1::after { display: none; }
+.shiren-clean .banner .orb { filter: drop-shadow(8px 8px 0 var(--goat-ink)); }
+.shiren-clean .banner .slider .item img {
+  border: 2px solid var(--goat-ink);
+  box-shadow: 6px 6px 0 var(--goat-ink);
+}
+.shiren-clean .flex-card {
+  border: 2px solid var(--goat-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 6px 6px 0 var(--goat-ink) !important;
+}
+.shiren-clean .flex-card:hover { box-shadow: 10px 10px 0 var(--goat-ink) !important; }
+.shiren-clean h2 { color: var(--goat-ink) !important; font-weight: 900; }
+.shiren-clean .ticket-pass-header .back-btn .outline {
+  border: 2px solid var(--goat-ink);
+  border-radius: 0;
+  background: var(--goat-lime);
+  box-shadow: 4px 4px 0 var(--goat-ink);
+}
+.shiren-clean .ticket-pass-header .back-btn .outline::before { display: none; }
+
+@media (max-width: 767px) {
+  .shiren-shell::before { background: var(--goat-paper); }
+  .shiren-shell .container { padding-left: 1.6rem; padding-right: 1.6rem; }
+  .shiren-shell .shiren-panel:first-of-type { padding-top: 2rem !important; }
+  .shiren-shell .shiren-hero { padding: 5rem 0 6.5rem !important; }
+  .shiren-shell .shiren-hero > div { gap: 4rem !important; display: flex; flex-direction: column; }
+  .shiren-shell .welcome h1 { font-size: clamp(5.1rem, 17vw, 8rem) !important; }
+  .shiren-shell .shiren-hero > div > div:last-child { width: 100%; }
+  .shiren-shell .shiren-hero > div > div:last-child img { border-width: 0.8rem; }
+  .shiren-clean .banner { background: var(--goat-paper) !important; }
+}
+
