@@ -929,7 +929,7 @@ body {
 :root {
   --goat-paper: #f9f9f3;
   --goat-ink: #0d0f15;
-  --goat-lime: #c9f422;
+  --goat-lime: #0c2748;
 }
 .shiren-shell,
 .shiren-clean {
@@ -992,7 +992,7 @@ body {
   padding: 0.6rem 0.9rem;
   border: 2px solid var(--goat-ink);
   background: var(--goat-lime);
-  color: var(--goat-ink);
+  color: #ffffff;
   font-size: 1.15rem;
   font-weight: 900;
   letter-spacing: 0.11em;
@@ -1008,7 +1008,7 @@ body {
 .shiren-shell .text-\[\#ffa0f2\] {
   display: inline-block;
   padding: 0.02em 0.08em 0.08em;
-  color: var(--goat-ink) !important;
+  color: #ffffff !important;
   background: var(--goat-lime);
   transform: rotate(-1.5deg);
 }
@@ -1041,11 +1041,11 @@ body {
   border: 2px solid var(--goat-ink) !important;
   border-radius: 0 !important;
   background: var(--goat-lime);
-  box-shadow: 12px 12px 0 var(--goat-ink) !important;
+  box-shadow: 12px 12px 0 var(--goat-lime), 12px 12px 0 2px var(--goat-ink) !important;
 }
 .shiren-shell .shiren-hero > div > div:last-child img {
   display: block;
-  border: 1.2rem solid var(--goat-lime);
+  border: 1.2rem solid #ffffff;
   filter: none;
 }
 .shiren-shell .shiren-hero > div > div:last-child .bg-gradient-to-t {
@@ -1056,7 +1056,7 @@ body {
   border-radius: 0 !important;
   background: var(--goat-lime) !important;
   box-shadow: 4px 4px 0 var(--goat-ink) !important;
-  color: var(--goat-ink) !important;
+  color: #ffffff !important;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1065,7 +1065,7 @@ body {
   transform: translate(-2px, -2px) !important;
   background: var(--goat-lime) !important;
   box-shadow: 7px 7px 0 var(--goat-ink) !important;
-  color: var(--goat-ink) !important;
+  color: #ffffff !important;
 }
 .shiren-shell .rounded-3xl,
 .shiren-shell .rounded-xl,
@@ -1075,20 +1075,35 @@ body {
   max-width: none;
   margin-top: 0 !important;
   padding: 7rem max(2.4rem, calc((100vw - 1280px) / 2 + 2.4rem)) !important;
-  background: var(--goat-ink);
-  color: #f5f5f1;
+  background: var(--goat-lime);
+  color: #ffffff;
+  border-top: 2px solid var(--goat-ink);
 }
 .shiren-shell .container:last-child .shiren-panel {
   max-width: 108rem;
   margin: auto !important;
   background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 .shiren-shell .container:last-child h5 { font-weight: 800; line-height: 1.1; }
 .shiren-shell .container:last-child .text-\[\#ffa0f2\] {
-  color: var(--goat-lime) !important;
-  background: transparent !important;
-  padding: 0;
+  color: #ffffff !important;
+  background: rgba(255,255,255,0.08);
+  padding: 0.02em 0.12em;
   transform: none;
+}
+.shiren-shell .container:last-child .text-white {
+  color: #ffffff !important;
+}
+.shiren-shell .container:last-child .bg-white\/6 {
+  background-color: rgba(255,255,255,0.1) !important;
+  border-color: rgba(255,255,255,0.28) !important;
+}
+.shiren-shell .container:last-child .bg-white {
+  background-color: #ffffff !important;
 }
 
 .shiren-clean {
@@ -1124,6 +1139,7 @@ body {
   background: var(--goat-lime);
   box-shadow: 4px 4px 0 var(--goat-ink);
 }
+.shiren-clean .ticket-pass-header .back-btn .svg-icon { fill: #ffffff; }
 .shiren-clean .ticket-pass-header .back-btn .outline::before { display: none; }
 
 @media (max-width: 767px) {
