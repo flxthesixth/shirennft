@@ -900,6 +900,8 @@ body {
 .shiren-collection .banner .content {
   bottom: 4rem;
   padding-bottom: 0;
+  justify-content: center;
+  align-items: center;
 }
 .shiren-clean .banner .content h1 {
   font-size: clamp(5rem, 14vw, 17rem);
