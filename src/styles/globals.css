@@ -1101,8 +1101,8 @@ body {
   max-width: none;
   margin-top: 0 !important;
   padding: 7rem max(2.4rem, calc((100vw - 1280px) / 2 + 2.4rem)) !important;
-  background: var(--goat-lime);
-  color: #ffffff;
+  background: var(--goat-paper);
+  color: var(--goat-ink);
   border-top: 2px solid var(--goat-ink);
 }
 .shiren-shell .container:last-child .shiren-panel {
@@ -1116,13 +1116,13 @@ body {
 }
 .shiren-shell .container:last-child h5 { font-weight: 800; line-height: 1.1; }
 .shiren-shell .container:last-child .text-\[\#ffa0f2\] {
-  color: #ffffff !important;
-  background: rgba(255,255,255,0.08);
+  color: var(--goat-ink) !important;
+  background: var(--goat-lime);
   padding: 0.02em 0.12em;
   transform: none;
 }
 .shiren-shell .container:last-child .text-white {
-  color: #ffffff !important;
+  color: var(--goat-ink) !important;
 }
 .shiren-shell .container:last-child .bg-white\/6,
 .shiren-shell .container:last-child .bg-white\/8 {
