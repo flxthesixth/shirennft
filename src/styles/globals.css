@@ -958,14 +958,14 @@ body {
   -webkit-backdrop-filter: none;
 }
 .shiren-shell .shiren-panel:first-of-type {
-  padding-top: 5.6rem !important;
+  padding-top: 0 !important;
 }
 .shiren-shell .shiren-panel-veil { display: none; }
 .shiren-shell nav {
   border-bottom: 2px solid var(--goat-ink) !important;
 }
 .shiren-shell nav > div {
-  min-height: 6.8rem;
+  min-height: 0;
 }
 .shiren-shell nav a,
 .shiren-shell nav button {
@@ -1135,11 +1135,18 @@ body {
 }
 
 .shiren-clean {
-  background: var(--goat-paper) !important;
+  background: #0a0a0a !important;
+  color: #ffffff;
 }
 .shiren-clean .banner {
   min-height: 100vh;
-  background: linear-gradient(90deg, var(--goat-paper) 0 54%, var(--goat-lime) 54% 100%) !important;
+  background: #0a0a0a !important;
+}
+.shiren-clean .banner .content h1 {
+  color: #ffffff !important;
+}
+.shiren-clean .banner .content h1::after {
+  display: none;
 }
 .shiren-clean .banner .content h1 {
   color: var(--goat-ink) !important;
@@ -1149,10 +1156,13 @@ body {
   text-shadow: none;
 }
 .shiren-clean .banner .content h1::after { display: none; }
-.shiren-clean .banner .orb { filter: drop-shadow(8px 8px 0 var(--goat-ink)); }
+.shiren-clean .glow-text {
+  color: #ffffff !important;
+}
+.shiren-clean .banner .orb { filter: drop-shadow(0 0 60px rgba(255,255,255,0.18)); }
 .shiren-clean .banner .slider .item img {
-  border: 2px solid var(--goat-ink);
-  box-shadow: 6px 6px 0 var(--goat-ink);
+  border: 2px solid rgba(255,255,255,0.9);
+  box-shadow: 6px 6px 0 rgba(255,255,255,0.35);
 }
 .shiren-clean .flex-card {
   border: 2px solid var(--goat-ink) !important;
@@ -1173,12 +1183,11 @@ body {
 @media (max-width: 767px) {
   .shiren-shell::before { background: var(--goat-paper); }
   .shiren-shell .container { padding-left: 1.6rem; padding-right: 1.6rem; }
-  .shiren-shell .shiren-panel:first-of-type { padding-top: 2rem !important; }
   .shiren-shell .shiren-hero { padding: 5rem 0 6.5rem !important; }
   .shiren-shell .shiren-hero > div { gap: 4rem !important; display: flex; flex-direction: column; }
   .shiren-shell .welcome h1 { font-size: clamp(5.1rem, 17vw, 8rem) !important; }
   .shiren-shell .shiren-hero > div > div:last-child { width: 100%; }
   .shiren-shell .shiren-hero > div > div:last-child img { border-width: 0.8rem; }
-  .shiren-clean .banner { background: var(--goat-paper) !important; }
+  .shiren-collection .banner { background: #0a0a0a !important; }
 }
 

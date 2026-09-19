@@ -11,7 +11,7 @@ export default function Section2({ onBack }: Props) {
   
 
   return (
-    <div className="shiren-clean relative z-20 bg-black overflow-visible md:overflow-hidden md:min-h-screen">
+    <div className="shiren-clean shiren-collection relative z-20 bg-black overflow-visible md:overflow-hidden md:min-h-screen">
       <div className="banner relative">
         {/* overlay is transparent on white background */}
         <div className="absolute inset-0 bg-transparent pointer-events-none z-20" />
@@ -62,9 +62,8 @@ export default function Section2({ onBack }: Props) {
           </h1>
           <div className="model"></div>
         </div>
-      </div>
 
-      <div className="w-full flex justify-center pb-10 ticket-pass-header">
+        <div className="w-full flex justify-center mt-2 ticket-pass-header">
         <button
           onClick={() => onBack?.()}
           className="back-btn"
@@ -77,6 +76,7 @@ export default function Section2({ onBack }: Props) {
             </svg>
           </span>
         </button>
+        </div>
       </div>
     </div>
   )
