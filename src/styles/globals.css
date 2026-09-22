@@ -1100,7 +1100,7 @@ body {
   margin-top: 0 !important;
   padding: 7rem max(2.4rem, calc((100vw - 1280px) / 2 + 2.4rem)) !important;
   overflow: hidden;
-  background: linear-gradient(116deg, #00bf63 0%, #007b42 42%, #101510 100%);
+  background: linear-gradient(180deg, #00bf63 0%, #007b42 52%, #101510 100%);
   color: #ffffff;
   border-top: 2px solid var(--goat-ink);
 }
