@@ -1094,12 +1094,25 @@ body {
 .shiren-shell .rounded-md { border-radius: 0 !important; }
 .shiren-shell > br { display: none; }
 .shiren-shell .container:last-child {
+  position: relative;
+  isolation: isolate;
   max-width: none;
   margin-top: 0 !important;
   padding: 7rem max(2.4rem, calc((100vw - 1280px) / 2 + 2.4rem)) !important;
-  background: var(--goat-lime);
+  overflow: hidden;
+  background: linear-gradient(116deg, #00bf63 0%, #007b42 42%, #101510 100%);
   color: #ffffff;
   border-top: 2px solid var(--goat-ink);
+}
+.shiren-shell .container:last-child::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: url('/shrn-character-ref.jpg') center/cover no-repeat;
+  filter: grayscale(1) contrast(1.45) brightness(0.3);
+  opacity: 0.38;
+  mix-blend-mode: screen;
 }
 .shiren-shell .container:last-child .shiren-panel {
   max-width: none !important;
