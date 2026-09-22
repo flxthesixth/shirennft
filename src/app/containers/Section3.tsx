@@ -23,8 +23,7 @@ export default function Section3({ onBack }: Props) {
   { id: 2, title: 'Jun', img: '/SHIREN%20NFT/jun.png', desc: 'Chief Executive Officer', link: 'https://x.com/lsdjun' },
   { id: 3, title: 'Krisnaf', img: '/SHIREN%20NFT/krisna.png', desc: 'Artist', link: 'https://x.com/Krisnaf_' },
   { id: 4, title: 'Ryu J', img: '/SHIREN%20NFT/ryuji.png', desc: 'Artist', link: 'https://x.com/drunkenryu1' },
-  { id: 5, title: 'KucingNKL', img: '/SHIREN%20NFT/Kucingg.png', desc: 'Social Media Manager', link: 'https://x.com/rizkibahari_66' },
-  { id: 6, title: 'AzrTen4', img: '/SHIREN%20NFT/azura.png', desc: 'Community Manager', link: 'https://x.com/Azuraten4' },
+  { id: 5, title: 'KucingNKL', img: '/SHIREN%20NFT/Kucingg.png', desc: 'Community Manager', link: 'https://x.com/rizkibahari_66' },
   // { id: 7, title: 'Damm', img: '/SHIREN%20NFT/dam.png', desc: 'Community Manager', link: 'https://x.com/0xdamm28' },
   ]
 
