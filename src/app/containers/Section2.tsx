@@ -38,19 +38,9 @@ export default function Section2({ onBack }: Props) {
             <Image src="/collection/samarth.webp" alt="Kucing" fill className="object-cover" />
           </div>
   </div>
-
-        <div className="content ticket-pass-header">
-          <button
-            onClick={() => onBack?.()}
-            className="back-btn"
-            aria-label="Back"
-            type="button"
-          >
-            <span className="outline" aria-hidden>
-              <svg className="svg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-              </svg>
-            </span>
+        <div className="shiren-back">
+          <button onClick={() => onBack?.()} className="shiren-back-button" type="button">
+            <span aria-hidden="true">←</span> Back
           </button>
         </div>
       </div>

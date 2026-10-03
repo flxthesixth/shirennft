@@ -655,7 +655,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
           <div className="shiren-hero">
             <div className="shiren-hero-grid">
               <div className="shiren-intro" ref={homeRef}>
-                <p className="shiren-eyebrow">SHIREN / RISE TESTNET</p>
+                <p className="shiren-eyebrow">SHIREN / SOON ON RISE MAINNET</p>
                 <h1>SHIREN<span className="shiren-period">.</span></h1>
                 <p className="shiren-lede">A collection shaped by art, community, and life on RISE.</p>
                 <div className="shiren-actions">
@@ -679,8 +679,8 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
         </div>
       </div>
       <section className="shiren-bottom" aria-label="About SHIREN">
-        <span>01 / THE COMMUNITY</span>
-        <p>RISE is our home.<br />SHIREN is our love.</p>
+        <span>END OF 2026</span>
+        <p>There is always RISE within SHIREN.</p>
         <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer">Find us on Discord ↗</a>
       </section>
     </div>

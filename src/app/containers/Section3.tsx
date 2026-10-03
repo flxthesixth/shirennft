@@ -121,24 +121,18 @@ export default function Section3({ onBack }: Props) {
           }
         `}</style>
 
-        {/* Back button centered below cards */}
-        <div className="w-full flex justify-center mt-10 ticket-pass-header">
-          <button
-            onClick={() => {
-              if (typeof onBack === 'function') return onBack()
-              router.push('/')
-            }}
-            className="back-btn"
-            aria-label="Back"
-            type="button"
-          >
-            <span className="outline" aria-hidden>
-              <svg className="svg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-                <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-              </svg>
-            </span>
-          </button>
-        </div>
+      </div>
+      <div className="shiren-back">
+        <button
+          onClick={() => {
+            if (typeof onBack === 'function') return onBack()
+            router.push('/')
+          }}
+          className="shiren-back-button"
+          type="button"
+        >
+          <span aria-hidden="true">←</span> Back
+        </button>
       </div>
     </div>
   )
