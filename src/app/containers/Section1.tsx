@@ -37,13 +37,6 @@ export function ScrollBasedVelocityDemo() {
 }
 
 function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad = true }: Props) {
-  // Timer state (added days)
-  const [timeLeft, setTimeLeft] = useState({
-    days: 69,
-    hours: 7,
-    minutes: 1,
-    seconds: 59
-  })
   const [connected, setConnected] = useState(false)
   const [address, setAddress] = useState<string | null>(null)
   const walletRef = useRef<any>(null)
@@ -471,47 +464,13 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
     }
   }
 
-  // Timer effect (handles days -> hours -> minutes -> seconds)
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        let { days, hours, minutes, seconds } = prev as {
-          days: number
-          hours: number
-          minutes: number
-          seconds: number
-        }
-
-        if (seconds > 0) {
-          seconds--
-        } else if (minutes > 0) {
-          minutes--
-          seconds = 59
-        } else if (hours > 0) {
-          hours--
-          minutes = 59
-          seconds = 59
-        } else if (days > 0) {
-          days--
-          hours = 23
-          minutes = 59
-          seconds = 59
-        }
-        return { days, hours, minutes, seconds }
-      })
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [])
-
   return (
-    <div className="shiren-shell relative w-full md:min-h-screen z-10 overflow-visible bg-[url('/bg3.jpg')] bg-cover bg-center">
+    <div className="shiren-home">
       {/* <Frame /> removed as requested */}
       {/* Loading is handled at the page level to control initial handoff; do not render Loading here */}
 
-      <div className="container mx-auto px-4 py-6 flex items-center justify-center md:min-h-screen">
-        <div ref={containerRef} className="shiren-panel relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-6 md:p-8">
-          <div className="shiren-panel-veil absolute inset-0 rounded-3xl pointer-events-none" />
+      <div className="shiren-home-inner">
+        <div ref={containerRef} className="shiren-home-main">
 
           {/* Navigation Bar */}
           <nav className="border-b border-white/10 relative z-10">
@@ -693,89 +652,37 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
             </div>
           )}
 
-          <div className="shiren-hero px-4 md:px-8 py-8 md:py-12 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-center">
-              {/* Left content */}
-              <div ref={homeRef} className="welcome text-white space-y-1 text-left md:flex md:flex-col h-full">
-                <div className="md:flex-1 md:flex md:flex-col md:justify-center">
-                  <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight mb-1">
-                    <span className="text-[#ffa0f2]">Explore</span> <br />
-                    Find and <br />
-                    Collect your SHRNs.
-                  </h1>
-                  <p className="text-[hsl(203,8%,80%)] text-base md:text-xl mt-1 mb-1">Seeking love from her is like collecting Orbs to get SHIREN in its entirety.</p>
-
-                  <div ref={statsRef} className="shiren-stats grid grid-cols-3 gap-2 md:gap-3 py-1 text-left mt-3 md:mt-4">
-                    <div className="shiren-stat">
-                      <h3 className="text-2xl md:text-3xl font-bold text-[#ffa0f2]">X,XXX</h3>
-                      <p className="text-sm md:text-base text-[hsl(203,8%,80%)]">Collection</p>
-                    </div>
-                    <div className="shiren-stat">
-                      <h3 className="text-2xl md:text-3xl font-bold text-[#ffa0f2]">XX</h3>
-                      <p className="text-sm md:text-base text-[hsl(203,8%,80%)]">Legendary</p>
-                    </div>
-                    <div className="shiren-stat">
-                      <h3 className="text-2xl md:text-3xl font-bold text-[#ffa0f2]">RISE</h3>
-                      <p className="text-sm md:text-base text-[hsl(203,8%,80%)]">Chain</p>
-                    </div>
-                  </div>
+          <div className="shiren-hero">
+            <div className="shiren-hero-grid">
+              <div className="shiren-intro" ref={homeRef}>
+                <p className="shiren-eyebrow">SHIREN / RISE TESTNET</p>
+                <h1>SHIREN<span className="shiren-period">.</span></h1>
+                <p className="shiren-lede">A collection shaped by art, community, and life on RISE.</p>
+                <div className="shiren-actions">
+                  <button type="button" onClick={() => onSelect?.('pass')}>Explore collection <span aria-hidden="true">↗</span></button>
+                  <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer">Join community <span aria-hidden="true">↗</span></a>
                 </div>
-
-                <div className="mt-6 md:mt-8">
-                  <div ref={playerInlineRef} className="md:hidden"><MusicPlayer /></div>
-                  <div ref={playerAbsRef} className="hidden md:block"><MusicPlayer /></div>
-                </div>
+                <div ref={playerInlineRef} className="shiren-player"><MusicPlayer /></div>
               </div>
-
-              {/* Right content - Featured NFT */}
-              <div ref={nftCardRef} className="relative">
-                <div className="rounded-xl overflow-hidden relative aspect-square">
-                  <img
-                    src={featuredImages[currentImageIndex] ?? '/SHIREN%20NFT/felixnew.png'}
-                    alt="Featured NFT"
-                    loading="eager"
-                    fetchPriority="high"
-                    decoding="sync"
-                    className="w-full h-full object-cover rounded-xl"
-                  />
-                  <div className="absolute bottom-0 inset-x-0 p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
-                    <div className="flex justify-between items-end">
-                      <div className="text-left">
-                        <h3 className="text-lg md:text-xl font-semibold text-white">Starts Sale in</h3>
-                        <div className="flex gap-4 md:gap-6 text-white text-sm md:text-base flex-wrap">
-                          <div className="flex flex-col items-center px-2"><p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).days).padStart(2, '0')}</p><p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">days</p></div>
-                          <div className="flex flex-col items-center px-2"><p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).hours).padStart(2, '0')}</p><p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">hours</p></div>
-                          <div className="flex flex-col items-center px-2"><p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).minutes).padStart(2, '0')}</p><p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">minutes</p></div>
-                          <div className="flex flex-col items-center px-2"><p className="text-xl md:text-3xl font-bold">{String((timeLeft as any).seconds).padStart(2, '0')}</p><p className="text-xs md:text-sm text-[hsl(203,8%,80%)]">seconds</p></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <figure className="shiren-feature" ref={nftCardRef}>
+                <img
+                  src={featuredImages[currentImageIndex] ?? '/SHIREN%20NFT/felixnew.png'}
+                  alt="Featured SHIREN artwork"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                />
+                <figcaption><span>Featured artwork</span><span>SHIREN / 001</span></figcaption>
+              </figure>
             </div>
           </div>
         </div>
       </div>
-      {/* <div className="mt-6"><ScrollBasedVelocityDemo /></div> */}
-      <br/> <br/>
-      <div className="container mx-auto px-4 py-6 items-center justify-center">
-        <div className="shiren-panel relative bg-[url('/bg1.avif')] bg-cover bg-center backdrop-blur-md rounded-3xl border border-white/10 shadow-lg mt-4 overflow-visible p-4 md:p-8">
-          <div className="absolute inset-0 bg-black/50 rounded-3xl pointer-events-none" />
-          <div className="md:flex-1 md:flex md:flex-col md:justify-center md:items-center text-center relative z-10">
-            <h5 className="text-xl sm:text-2xl md:text-4xl font-semibold mb-1 max-w-4xl">
-              <br/>
-              where <span className="text-[#ffa0f2]">SHIREN</span> positions itself as a community in <span className="text-[#ffa0f2]">RISE</span>
-            </h5>
-          </div>
-          <div className="mt-4 md:mt-6 relative z-10"><AnimatedBeamMultipleOutputDemo /></div>
-          <div className="md:flex-1 md:flex md:flex-col md:justify-center md:items-center text-center relative z-10">
-            <h5 className="text-xl sm:text-2xl md:text-4xl font-semibold mb-1 max-w-4xl">   
-              because <span className="text-[#ffa0f2]">RISE</span>  is our home, and <span className="text-[#ffa0f2]">SHIREN</span> is our love.
-            </h5>
-          </div>
-        </div>
-      </div>
+      <section className="shiren-bottom" aria-label="About SHIREN">
+        <span>01 / THE COMMUNITY</span>
+        <p>RISE is our home.<br />SHIREN is our love.</p>
+        <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer">Find us on Discord ↗</a>
+      </section>
     </div>
   )
 }

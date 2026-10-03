@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Vazirmatn } from 'next/font/google'
 import '../styles/globals.css'
+import '../styles/home.css'
 import { AudioProvider } from './lib/AudioContext'
 
 const vazirmatn = Vazirmatn({
