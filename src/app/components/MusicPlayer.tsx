@@ -92,13 +92,12 @@ export default function MusicPlayer() {
         </div>
       </div>
 
-      {/* Muted-autoplay hint: browser blocked unmuted autoplay — tap to unmute */}
-      {autoplayBlocked && muted && (
+      {autoplayBlocked && !playing && (
         <button
-          onClick={async () => { setMuted(false); await play() }}
+          onClick={() => play()}
           className="mt-2 w-full text-xs text-[#f5d76e] bg-white/5 hover:bg-white/10 rounded px-2 py-1"
         >
-          Tap to unmute
+          Tap to play
         </button>
       )}
 

@@ -30,6 +30,7 @@ export function useAudio() {
 
 export function AudioProvider({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const indexInitializedRef = useRef(false)
   const userPausedRef = useRef<boolean>(false)
   const [playing, setPlaying] = useState(false)
   const [index, setIndex] = useState(0)
@@ -53,9 +54,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       const a = document.createElement('audio')
       a.preload = 'metadata'
       a.style.display = 'none'
-      // Do not autoplay immediately; we'll attempt playback after a short
-      // 'idle' period so the UX feels less abrupt.
-      a.autoplay = false
+      a.autoplay = true
       a.muted = false
       // reflect initial muted state in provider
       setMuted(false)
@@ -79,8 +78,15 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     a.addEventListener('canplay', onCanPlay)
     a.addEventListener('canplaythrough', onCanPlayThrough)
 
-    // Do not start playback immediately here; idle/autoplay logic will handle
-    // when to attempt playback so it's not abrupt on page load.
+    // Audible autoplay may be blocked until the first user gesture.
+    const attemptPlay = () => a.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true))
+    attemptPlay()
+    const onGesture = () => {
+      if (userPausedRef.current || !a.paused) return
+      attemptPlay()
+    }
+    window.addEventListener('pointerdown', onGesture)
+    window.addEventListener('keydown', onGesture)
 
     // Cleanup diagnostics when effect re-runs / component unmounts
     const removeDiagnostics = () => {
@@ -99,6 +105,8 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     a.addEventListener('ended', onEnded)
 
     return () => {
+      window.removeEventListener('pointerdown', onGesture)
+      window.removeEventListener('keydown', onGesture)
       removeDiagnostics()
       a.removeEventListener('play', onPlay)
       a.removeEventListener('pause', onPause)
@@ -111,12 +119,13 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const a = audioRef.current
     if (!a) return
+    if (!indexInitializedRef.current) {
+      indexInitializedRef.current = true
+      return
+    }
     a.src = playlist[index].src
     a.load()
-    if (playing) {
-      const p = a.play()
-      if (p && typeof (p as any).catch === 'function') (p as any).catch(() => setPlaying(false))
-    }
+    if (!userPausedRef.current) a.play().then(() => setAutoplayBlocked(false)).catch(() => setAutoplayBlocked(true))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index])
 
@@ -139,6 +148,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     userPausedRef.current = false
     try {
       await a.play()
+      setAutoplayBlocked(false)
       setPlaying(true)
     } catch (e) {
       setPlaying(false)
@@ -169,73 +179,6 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const setVolume = useCallback((v: number) => setVolumeState(Math.max(0, Math.min(1, v))), [])
-
-  // Idle autoplay: if the user is idle for N seconds, try to play
-  useEffect(() => {
-    let idle = false
-    let timeoutId: number | null = null
-    let interacted = false
-
-    const reset = () => {
-      if (timeoutId) window.clearTimeout(timeoutId);
-      idle = false
-      timeoutId = window.setTimeout(() => {
-        idle = true
-        // attempt autoplay when idle
-        if (!playing && !userPausedRef.current) {
-          // First try to unmute and play (user wants unmuted autoplay after standby).
-          const a = audioRef.current
-          if (a) {
-            try {
-              a.muted = false
-              setMuted(false)
-            } catch (e) {
-              // ignore
-            }
-          }
-          // only try to play; if browser blocks unmuted autoplay we'll fallback
-          // to a muted autoplay so at least audio will start silently.
-          play()
-            .then(() => {
-              // started playing unmuted
-            })
-            .catch((err: any) => {
-              console.debug('[Audio] idle unmuted play() blocked, falling back to muted autoplay', err)
-              setAutoplayBlocked(true)
-              try {
-                if (a) {
-                  a.muted = true
-                  setMuted(true)
-                  a.play().catch((err2) => console.debug('[Audio] muted fallback failed', err2))
-                }
-              } catch (e) {
-                console.debug('[Audio] muted fallback error', e)
-              }
-            })
-        }
-      }, 5_000) // 5s idle
-    }
-
-    const onUser = () => {
-      interacted = true
-      // reset idle timer on meaningful user gestures; do not auto-unmute/play on simple mousemove
-      // (we'll only listen to gesture events below)
-      reset()
-    }
-
-    // listen only to gesture events (mousedown/touchstart/keydown). Avoid `mousemove` because
-    // it is noisy and should not be considered a user gesture that unpauses/unmutes playback.
-    // listen to gesture events (mousedown/keydown/touchstart) plus wheel so scrolling
-    // also counts as activity and restarts the idle timer.
-    ['mousedown', 'keydown', 'touchstart', 'wheel'].forEach((ev) => window.addEventListener(ev, onUser))
-    reset()
-
-    return () => {
-      if (timeoutId) window.clearTimeout(timeoutId);
-      ['mousedown', 'keydown', 'touchstart', 'wheel'].forEach((ev) => window.removeEventListener(ev, onUser))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [play, playing])
 
   const value: AudioContextValue = {
     playing,
