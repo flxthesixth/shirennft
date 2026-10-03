@@ -38,11 +38,12 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [autoplayBlocked, setAutoplayBlocked] = useState(false)
 
   const defaultPlaylist: Track[] = [
-    { title: 'Sam Feldt - Show Me Love (EDX\'s Indian Summer Remix)', src: '/track-showmelove.mp3' },
-    { title: 'Tenxi & Jemsii - Bintang 5 (8D)', artist: 'Tenxi & Jemsii', src: '/track-bintang.mp3' },
-    { title: 'YOASOBI - Racing Into The Night', src: '/track-racing.mp3' },
-    { title: 'ZHU - Cocaine Model', src: '/track-cocaine.mp3' },
-    { title: 'ZHU - Working for It (feat. Skrillex)', src: '/track-working.mp3' },
+    { title: 'SONG 1', src: '/shiren-song/black-catcher.mp3' },
+    { title: 'SONG 2', src: '/shiren-song/silhouette.mp3' },
+    { title: 'SONG 3', src: '/shiren-song/anime-mv.mp3' },
+    { title: 'SONG 4', src: '/shiren-song/inferno.mp3' },
+    { title: 'SONG 5', src: '/shiren-song/blue-encount.mp3' },
+    { title: 'SONG 6', src: '/shiren-song/noragami-opening-2.mp3' },
   ]
   const [playlist] = useState<Track[]>(defaultPlaylist)
 
