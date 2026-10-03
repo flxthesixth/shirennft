@@ -12,6 +12,8 @@ import {
 } from '@/registry/magicui/scroll-based-velocity'
 import Loading from './Loading'
 
+const featuredArtwork = ['Kucingg.png', 'azura.png', 'dam.png', 'felixnew.png', 'hainguyen.png', 'jun.png', 'krisna.png', 'ripdoteth.png', 'ryuji.png', 'safetybot.png', 'samarth.png', 'samb.png', 'sasha.png', 'thaiji.png'].map((name) => `/SHIREN%20NFT/${name}`)
+
 type Props = {
   onSelect?: (id: 'pass' | 'about') => void
   discordUrl?: string
@@ -91,8 +93,8 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const [srnCount, setSrnCount] = useState<number | null>(null)
   const [showSrnModal, setShowSrnModal] = useState(false)
   const [showMobileNav, setShowMobileNav] = useState(false)
-  // Featured images for slideshow (uses public/SHIREN NFT)
-  const [featuredImages, setFeaturedImages] = useState<string[]>(['/SHIREN%20NFT/felixnew.png'])
+  // Artwork list is bundled at build time for static hosting.
+  const [featuredImages] = useState<string[]>(featuredArtwork)
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
 
   
@@ -312,28 +314,6 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const beamEndRef = useRef<HTMLDivElement>(null)
   const playerInlineRef = useRef<HTMLDivElement>(null)
   const playerAbsRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    // Fetch list of images from API (server reads public/SHIREN NFT)
-    let mounted = true
-    ;(async () => {
-      try {
-        const res = await fetch('/api/shiren-files')
-        const j = await res.json()
-        if (!mounted) return
-        if (Array.isArray(j?.images) && j.images.length > 0) {
-          setFeaturedImages(j.images)
-          setCurrentImageIndex(0)
-        }
-      } catch (e) {
-        // ignore, keep default image
-        // console.debug('shiren-files fetch failed', e)
-      }
-    })()
-    return () => {
-      mounted = false
-    }
-  }, [])
 
   // Slideshow interval (10 seconds)
   useEffect(() => {
