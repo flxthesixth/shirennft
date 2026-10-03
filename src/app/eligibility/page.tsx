@@ -94,9 +94,7 @@ export default function EligibilityPage() {
           <section className={styles.terminal} aria-labelledby="checker-title">
             <div className={styles.terminalHead}><span id="checker-title">ELIGIBILITY CHECKER</span><span>SHIREN / 2,222</span></div>
             <div className={styles.terminalBody}>
-              <p className={styles.step}>01 / YOUR WALLET</p>
               <h2>Enter wallet address</h2>
-              <p className={styles.help}>A read-only check. Never share your recovery phrase or sign a transaction here.</p>
 
               <form onSubmit={checkAddress} noValidate>
                 <label htmlFor="wallet-address" className={styles.label}>WALLET ADDRESS</label>
@@ -107,10 +105,8 @@ export default function EligibilityPage() {
 
               <div className={styles.divider}><span>OR</span></div>
               <button type="button" onClick={connectWallet} disabled={connecting} className={styles.secondary}>{connecting ? 'WAITING FOR WALLET...' : 'CONNECT WALLET'} <span aria-hidden="true">↗</span></button>
-              <p className={styles.note}>Connect only fills the address above. No signature or transaction requested.</p>
 
               <div className={styles.result}>
-                <span className={styles.resultLabel}>02 / RESULT</span>
                 {submitted && eligible !== null ? (
                   <div className={styles.revealWrap}>
                     <button type="button" className={styles.revealButton} onClick={() => setRevealed(true)} disabled={revealed} aria-label={revealed ? 'Result revealed' : 'Reveal eligibility result'}>
