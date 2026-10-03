@@ -36,6 +36,34 @@ export function ScrollBasedVelocityDemo() {
   )
 }
 
+function TypedTagline() {
+  const text = 'There is always RISE within SHIREN.'
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLParagraphElement>(null)
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCount(text.length)
+      return
+    }
+    let timer: number | undefined
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      observer.disconnect()
+      let next = 0
+      timer = window.setInterval(() => {
+        next++
+        setCount(next)
+        if (next === text.length) window.clearInterval(timer)
+      }, 55)
+    })
+    if (ref.current) observer.observe(ref.current)
+    return () => { observer.disconnect(); window.clearInterval(timer) }
+  }, [])
+
+  return <p ref={ref} className="shiren-typed" aria-label={text}><span aria-hidden="true">{text.slice(0, count)}</span></p>
+}
+
 function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad = true }: Props) {
   const [connected, setConnected] = useState(false)
   const [address, setAddress] = useState<string | null>(null)
@@ -680,7 +708,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
       </div>
       <section className="shiren-bottom" aria-label="About SHIREN">
         <span>END OF 2026</span>
-        <p>There is always RISE within SHIREN.</p>
+        <TypedTagline />
       </section>
     </div>
   )

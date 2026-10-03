@@ -26,7 +26,10 @@
 .shiren-feature > img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background: #262a24; }
 .shiren-feature figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #454945; }
 .shiren-bottom { display: flex; align-items: start; justify-content: space-between; gap: 32px; border-top: 1px solid #454945; padding: 48px max(20px, calc((100vw - 1312px)/2)) 72px; }
-.shiren-bottom p { margin: 0; color: #f4f2ec; font-size: clamp(3rem, 4vw, 6rem); line-height: 1.1; letter-spacing: -.055em; font-weight: 600; }
+.shiren-bottom p { margin: 0; color: #f4f2ec; font-size: clamp(2rem, 3.2vw, 4.4rem); line-height: 1.25; letter-spacing: -.04em; font-weight: 500; }
+.shiren-bottom .shiren-typed { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; max-width: 35ch; min-height: 2.5em; overflow-wrap: anywhere; }
+.shiren-typed span::after { content: ''; display: inline-block; width: .06em; height: .9em; margin-left: .08em; vertical-align: -.1em; background: #a9c59a; animation: shiren-cursor .8s step-end infinite; }
+@keyframes shiren-cursor { 50% { opacity: 0; } }
 .shiren-bottom a { color: #d2e0cb; font-size: 1.5rem; text-decoration: underline; text-underline-offset: 5px; }
 /* Collection and Team share one back control and viewport position. */
 .shiren-collection, .shiren-team { position: relative; min-height: 100vh; }
