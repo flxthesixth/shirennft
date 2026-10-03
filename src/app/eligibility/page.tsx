@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import Link from 'next/link'
 import styles from './page.module.css'
 
@@ -16,15 +16,23 @@ export default function EligibilityPage() {
   const [address, setAddress] = useState('')
   const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState('')
+  const [eligible, setEligible] = useState<boolean | null>(null)
+  const [checking, setChecking] = useState(false)
+  const [revealed, setRevealed] = useState(false)
   const [connecting, setConnecting] = useState(false)
+  const requestRef = useRef<AbortController | null>(null)
 
   function updateAddress(value: string) {
+    requestRef.current?.abort()
+    setChecking(false)
     setAddress(value)
     setError('')
     setSubmitted('')
+    setEligible(null)
+    setRevealed(false)
   }
 
-  function checkAddress(event: FormEvent<HTMLFormElement>) {
+  async function checkAddress(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const value = address.trim()
     if (!isAddress(value)) {
@@ -32,9 +40,26 @@ export default function EligibilityPage() {
       setSubmitted('')
       return
     }
+    requestRef.current?.abort()
+    const controller = new AbortController()
+    requestRef.current = controller
     setError('')
-    // ponytail: do not infer eligibility in the client; query a private API when the whitelist is ready.
-    setSubmitted(value)
+    setChecking(true)
+    setSubmitted('')
+    setEligible(null)
+    setRevealed(false)
+    try {
+      const response = await fetch('/api/eligibility', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address: value }), signal: controller.signal })
+      if (!response.ok) throw new Error('Check unavailable. Please try again.')
+      const result: unknown = await response.json()
+      if (!result || typeof result !== 'object' || !('eligible' in result) || typeof result.eligible !== 'boolean') throw new Error('Check unavailable. Please try again.')
+      setEligible(result.eligible)
+      setSubmitted(value)
+    } catch (cause) {
+      if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : 'Check unavailable. Please try again.')
+    } finally {
+      if (requestRef.current === controller) { setChecking(false); requestRef.current = null }
+    }
   }
 
   async function connectWallet() {
@@ -69,7 +94,7 @@ export default function EligibilityPage() {
           <div className={styles.intro}>
             <p className={styles.kicker}>SHIREN / WALLET CHECK <span>01—02</span></p>
             <h1>Know where<br />you <em>stand.</em></h1>
-            <p className={styles.lede}>One wallet. One clear answer. Enter an address or connect your wallet to check when the eligibility list goes live.</p>
+            <p className={styles.lede}>One wallet. One clear answer. Enter an address or connect your wallet to reveal your status.</p>
           </div>
 
           <section className={styles.terminal} aria-labelledby="checker-title">
@@ -83,19 +108,29 @@ export default function EligibilityPage() {
                 <label htmlFor="wallet-address" className={styles.label}>WALLET ADDRESS</label>
                 <input id="wallet-address" type="text" value={address} onChange={(event) => updateAddress(event.target.value)} placeholder="0x..." autoComplete="off" autoCapitalize="off" spellCheck={false} aria-invalid={!!error} aria-describedby={error ? 'wallet-error' : undefined} className={styles.input} maxLength={100} />
                 {error && <p id="wallet-error" className={styles.error} role="alert">{error}</p>}
-                <button type="submit" className={styles.primary}>CHECK STATUS <span aria-hidden="true">↗</span></button>
+                <button type="submit" disabled={checking} className={styles.primary}>{checking ? 'CHECKING...' : 'CHECK STATUS'} <span aria-hidden="true">↗</span></button>
               </form>
 
               <div className={styles.divider}><span>OR</span></div>
               <button type="button" onClick={connectWallet} disabled={connecting} className={styles.secondary}>{connecting ? 'WAITING FOR WALLET...' : 'CONNECT WALLET'} <span aria-hidden="true">↗</span></button>
               <p className={styles.note}>Connect only fills the address above. No signature or transaction requested.</p>
 
-              <div className={styles.result} role="status" aria-live="polite">
+              <div className={styles.result}>
                 <span className={styles.resultLabel}>02 / RESULT</span>
-                {submitted ? (
-                  <><strong>CHECK NOT LIVE YET</strong><code>{submitted}</code><p>Your address is valid. Eligibility cannot be confirmed until the whitelist is published. No result has been saved.</p></>
+                {submitted && eligible !== null ? (
+                  <div className={styles.revealWrap}>
+                    <button type="button" className={styles.revealButton} onClick={() => setRevealed(true)} disabled={revealed} aria-label={revealed ? 'Result revealed' : 'Reveal eligibility result'}>
+                      <span className={`${styles.card} ${revealed ? styles.cardRevealed : ''}`}>
+                        <span className={styles.cardBack} aria-hidden="true"><span>SHIRΞN</span><small>TAP TO REVEAL ↗</small></span>
+                        <span className={`${styles.cardFront} ${eligible ? styles.cardEligible : styles.cardNotEligible}`} aria-hidden="true"><small>SHIREN / WALLET CHECK</small><strong>{eligible ? 'ELIGIBLE' : 'NOT ELIGIBLE'}</strong><small>{eligible ? 'YOU ARE ON THE LIST' : 'NOT ON THE CURRENT LIST'}</small></span>
+                      </span>
+                    </button>
+                    <p role="status" aria-live="polite" className={styles.resultText}>{revealed ? (eligible ? 'Eligible — this wallet is on the current list.' : 'Not eligible — this wallet is not on the current list.') : 'Result ready. Tap the card to reveal.'}</p>
+                    <code>{submitted}</code>
+                    <p>This check does not reserve a spot or verify wallet ownership.</p>
+                  </div>
                 ) : (
-                  <><strong>AWAITING ADDRESS</strong><p>Enter an address to begin. Whitelist verification will be available when the list is ready.</p></>
+                  <div role="status" aria-live="polite"><strong>{checking ? 'CHECKING ADDRESS' : 'AWAITING ADDRESS'}</strong><p>{checking ? 'Checking the current list…' : 'Enter an address or connect your wallet to begin.'}</p></div>
                 )}
               </div>
             </div>
