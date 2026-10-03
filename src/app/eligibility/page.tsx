@@ -91,12 +91,6 @@ export default function EligibilityPage() {
         </header>
 
         <div className={styles.content}>
-          <div className={styles.intro}>
-            <p className={styles.kicker}>SHIREN / WALLET CHECK <span>01—02</span></p>
-            <h1>Know where<br />you <em>stand.</em></h1>
-            <p className={styles.lede}>One wallet. One clear answer. Enter an address or connect your wallet to reveal your status.</p>
-          </div>
-
           <section className={styles.terminal} aria-labelledby="checker-title">
             <div className={styles.terminalHead}><span id="checker-title">ELIGIBILITY CHECKER</span><span>SHIREN / 2,222</span></div>
             <div className={styles.terminalBody}>
