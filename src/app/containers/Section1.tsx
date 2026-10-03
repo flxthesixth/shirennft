@@ -672,7 +672,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   fetchPriority="high"
                   decoding="async"
                 />
-                <figcaption><span>Featured artwork</span><span>SHIREN / 001</span></figcaption>
+                <figcaption><span>Featured artwork</span><span>SHIREN / 2,222</span></figcaption>
               </figure>
             </div>
           </div>
@@ -681,7 +681,6 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
       <section className="shiren-bottom" aria-label="About SHIREN">
         <span>END OF 2026</span>
         <p>There is always RISE within SHIREN.</p>
-        <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer">Find us on Discord ↗</a>
       </section>
     </div>
   )
