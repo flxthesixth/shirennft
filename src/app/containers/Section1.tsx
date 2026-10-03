@@ -500,6 +500,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   <Link href="/" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Home</Link>
                   <button onClick={() => onSelect?.('pass')} className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Collection</button>
                   <button onClick={() => onSelect?.('about')} className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Team</button>
+                  <Link href="/eligibility" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Eligibility</Link>
                   <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Community</a>
                 </div>
 
@@ -549,6 +550,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                 <Link href="/" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium" onClick={() => setShowMobileNav(false)}>Home</Link>
                 <button onClick={() => { onSelect?.('pass'); setShowMobileNav(false) }} className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium text-left">Collection</button>
                 <button onClick={() => { onSelect?.('about'); setShowMobileNav(false) }} className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium text-left">Team</button>
+                <Link href="/eligibility" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium" onClick={() => setShowMobileNav(false)}>Eligibility</Link>
                 <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Community</a>
               </div>
             )}
