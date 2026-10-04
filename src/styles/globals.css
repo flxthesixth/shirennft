@@ -1235,6 +1235,10 @@ body {
 }
 
 
+/* Keep the social mark small; generic card-image rules otherwise stretch it. */
+.shiren-team .flex-card .icon-x img { width: 20px; height: 20px; object-fit: contain; }
+.shiren-team .flex-card .icon-x { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
+
 /* Mobile gallery keeps cards readable without hover. */
 @media (max-width: 768px) {
   .shiren-team .flex-cards { height: auto !important; overflow-x: auto; align-items: stretch; scroll-snap-type: x proximity; }
