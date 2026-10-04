@@ -1235,6 +1235,17 @@ body {
 }
 
 
+/* Mobile gallery keeps cards readable without hover. */
+@media (max-width: 768px) {
+  .shiren-team .flex-cards { height: auto !important; overflow-x: auto; align-items: stretch; scroll-snap-type: x proximity; }
+  .shiren-team .flex-card { min-height: 320px; scroll-snap-align: start; filter: none; }
+  .shiren-team .flex-card::after { background: rgba(0,0,0,0.35); }
+  .shiren-team .flex-card .card-meta h3,
+  .shiren-team .flex-card .card-meta .icon-x,
+  .shiren-team .flex-card .card-meta p { opacity: 1; transform: none; }
+  .shiren-team .flex-card .card-meta { width: 100%; padding: 0 12px; }
+}
+
 /* Header wordmark sits independently of the removed hero eyebrow. */
 .shiren-shell nav > div > div:first-child a {
   color: #ffffff !important;
