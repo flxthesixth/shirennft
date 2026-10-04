@@ -500,6 +500,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   <button onClick={() => onSelect?.('pass')} className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Collection</button>
                   <button onClick={() => onSelect?.('about')} className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Team</button>
                   <Link href="/eligibility" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Eligibility</Link>
+                  <Link href="/wallet-tracker" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Wallet Tracker</Link>
                   <Link href="/trading" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Trading Desk</Link>
                   <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Community</a>
                 </div>
@@ -551,6 +552,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                 <button onClick={() => { onSelect?.('pass'); setShowMobileNav(false) }} className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium text-left">Collection</button>
                 <button onClick={() => { onSelect?.('about'); setShowMobileNav(false) }} className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium text-left">Team</button>
                 <Link href="/eligibility" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium" onClick={() => setShowMobileNav(false)}>Eligibility</Link>
+                <Link href="/wallet-tracker" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium" onClick={() => setShowMobileNav(false)}>Wallet Tracker</Link>
                 <Link href="/trading" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium" onClick={() => setShowMobileNav(false)}>Trading Desk</Link>
                 <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Community</a>
               </div>

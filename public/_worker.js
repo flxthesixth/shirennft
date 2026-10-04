@@ -35,6 +35,40 @@ export default {
         return respond(url.pathname.endsWith('/markets') ? { markets: payload.data.markets } : { summary: payload.data.summary, positions: payload.data.positions })
       } catch { return respond({ error: 'RISEx data unavailable' }, 502) }
     }
+    if (url.pathname === '/api/wallet-tracker') {
+      const headers = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }
+      const respond = (body, status = 200) => new Response(JSON.stringify(body), { status, headers })
+      const address = url.searchParams.get('address')
+      if (request.method !== 'GET') return respond({ error: 'Method not allowed' }, 405)
+      if (!address || !addressPattern.test(address) || [...url.searchParams.keys()].some(key => key !== 'address')) return respond({ error: 'Invalid wallet address' }, 400)
+      const root = `https://eth.blockscout.com/api/v2/addresses/${address}`
+      try {
+        const results = await Promise.all(['', '/token-balances', '/nft', '/transactions'].map(async path => {
+          const r = await fetch(root + path, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(8000) })
+          if (!r.ok) throw Error('upstream')
+          return r.json()
+        }))
+        const [wallet, tokens, nfts, txs] = results
+        if (!wallet || typeof wallet.coin_balance !== 'string' || !Array.isArray(tokens) || !Array.isArray(nfts?.items) || !Array.isArray(txs?.items)) throw Error('payload')
+        const price = value => value != null && value !== '' && Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null
+        const amount = (value, decimals) => { const n = Number(value) / 10 ** Number(decimals); return Number.isFinite(n) && n >= 0 ? n : null }
+        const assets = []
+        const native = amount(wallet.coin_balance, 18)
+        if (native === null) throw Error('balance')
+        assets.push({ id: 'native', symbol: 'ETH', name: 'Ether', amount: native, usd: price(wallet.exchange_rate) === null ? null : native * price(wallet.exchange_rate), category: 'Core' })
+        // ponytail: only first explorer page; expose truncation rather than silently claiming a complete portfolio.
+        for (const item of tokens.slice(0, 500)) {
+          const token = item?.token
+          if (token?.type !== 'ERC-20' || !addressPattern.test(token.address_hash) || !/^\d+$/.test(String(token.decimals)) || Number(token.decimals) > 36 || !/^\d+$/.test(String(item.value))) continue
+          const qty = amount(item.value, token.decimals)
+          if (qty === null || qty === 0) continue
+          const rate = price(token.exchange_rate)
+          assets.push({ id: token.address_hash.toLowerCase(), symbol: String(token.symbol || 'Token').slice(0, 30), name: String(token.name || 'Token').slice(0, 80), amount: qty, usd: rate === null ? null : qty * rate, category: /^(USDC|USDT|DAI|USDS|USDE|FRAX|LUSD|PYUSD)$/i.test(token.symbol) ? 'Stablecoin' : 'Token', reputation: token.reputation || null })
+        }
+        const transactions = txs.items.slice(0, 25).filter(tx => typeof tx?.hash === 'string' && /^0x[a-fA-F0-9]{64}$/.test(tx.hash)).map(tx => ({ hash: tx.hash, timestamp: tx.timestamp || null, from: tx.from?.hash || null, to: tx.to?.hash || null, status: tx.status || tx.result || null, value: /^\d+$/.test(String(tx.value)) ? Number(tx.value) / 1e18 : null }))
+        return respond({ chain: 'Ethereum', address, assets, nftCount: nfts.items.length, nftMore: Boolean(nfts.next_page_params), tokenMore: tokens.length > 500, transactions, transactionMore: Boolean(txs.next_page_params), fetchedAt: new Date().toISOString() })
+      } catch { return respond({ error: 'Explorer data unavailable' }, 502) }
+    }
     if (url.pathname !== '/api/eligibility') return env.ASSETS.fetch(request)
     const headers = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }
     const respond = (body, status = 200) => new Response(JSON.stringify(body), { status, headers })
