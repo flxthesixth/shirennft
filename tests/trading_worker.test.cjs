@@ -11,6 +11,17 @@ const context = { URL, Request, Response, Headers, AbortSignal, Set, JSON, fetch
 } }
 vm.runInNewContext(source, context)
 const env = { ASSETS: { fetch: () => new Response('asset') } }
+test('rejects malformed RISEx trading payloads', async () => {
+  const original = context.fetch
+  context.fetch = async () => new Response(JSON.stringify({ data: { markets: 'invalid' } }))
+  try {
+    const response = await context.worker.fetch(new Request('https://site.test/api/trading/markets'), env)
+    assert.equal(response.status, 502)
+    context.fetch = async () => new Response(JSON.stringify({ data: { summary: {}, positions: null } }))
+    const portfolio = await context.worker.fetch(new Request('https://site.test/api/trading/portfolio?address=0x0000000000000000000000000000000000000000'), env)
+    assert.equal(portfolio.status, 502)
+  } finally { context.fetch = original }
+})
 test('trading market and portfolio are bounded read-only routes', async () => {
   const m = await context.worker.fetch(new Request('https://site.test/api/trading/markets'), env)
   assert.equal(m.status, 200)

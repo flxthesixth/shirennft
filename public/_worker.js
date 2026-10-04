@@ -19,7 +19,7 @@ export default {
         const response = await fetch(upstream, { headers: { Accept: 'application/json', 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(8000) })
         if (!response.ok) return respond({ error: 'RISEx data unavailable' }, 502)
         const payload = await response.json()
-        if (!payload?.data || typeof payload.data !== 'object') return respond({ error: 'RISEx data unavailable' }, 502)
+        if (!payload?.data || typeof payload.data !== 'object' || (url.pathname.endsWith('/markets') ? !Array.isArray(payload.data.markets) : !payload.data.summary || typeof payload.data.summary !== 'object' || !Array.isArray(payload.data.positions))) return respond({ error: 'RISEx data unavailable' }, 502)
         return respond(url.pathname.endsWith('/markets') ? { markets: payload.data.markets } : { summary: payload.data.summary, positions: payload.data.positions })
       } catch { return respond({ error: 'RISEx data unavailable' }, 502) }
     }
