@@ -74,10 +74,18 @@ export default function WalletTracker() {
   const total = priced.reduce((sum, a) => sum + (a.usd || 0), 0)
   const unpriced = assets.filter(a => a.usd === null)
   const breakdown = categories.map(category => ({ category, usd: priced.filter(a => a.category === category).reduce((sum, a) => sum + (a.usd || 0), 0) })).filter(row => row.usd > 0)
+  const palette = ['#9fe9b4', '#6aa7db', '#d9b978', '#d78e9d', '#a59cd8', '#9ba9a0']
+  let offset = 0
+  const stops = breakdown.map(row => {
+    const start = offset
+    offset += row.usd / total * 100
+    return `${palette[categories.indexOf(row.category)]} ${start}% ${offset}%`
+  })
+  const allocationLabel = `Priced asset allocation: ${breakdown.map(row => `${row.category} ${(row.usd / total * 100).toFixed(1)} percent`).join(', ')}`
   const activities = loaded.flatMap(s => s.transactions.map(tx => ({ ...tx, wallet: s.address.toLowerCase() }))).sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || '')).slice(0, 30)
   return <main className={styles.main}>
     <nav><Link href="/">SHIREN</Link><span> / Personal Wallet Tracker</span></nav>
-    <header><p className={styles.label}>READ-ONLY · ETHEREUM MAINNET</p><h1>Your wallets, in one view.</h1><p>Track balances and recent activity. No wallet connection, signature, or transaction permission.</p></header>
+    <header><p className={styles.label}>READ-ONLY · ETHEREUM MAINNET</p><h1>Wallet Tracker</h1><p>Balances and activity in one place. No wallet connection or signature.</p></header>
     <section className={styles.panel}><h2>Wallets</h2><form onSubmit={addWallet} className={styles.row}><label htmlFor="address">Ethereum address</label><input id="address" value={input} onChange={e => setInput(e.target.value)} placeholder="0x…" autoComplete="off" spellCheck={false}/><button type="submit">Add wallet</button></form>
       <p className={styles.muted}>Up to 5 addresses. Saved only in this browser. Anyone with an address can view its public on-chain data.</p>
       {addresses.length > 0 && <button type="button" disabled={loading} onClick={() => setRefresh(n => n + 1)}>Refresh</button>}
@@ -85,7 +93,13 @@ export default function WalletTracker() {
       {error && <p role="alert" className={styles.error}>{error}</p>}{loading && <p role="status">Loading wallet data…</p>}
     </section>
     {loaded.length > 0 && <><section className={styles.panel}><h2>Balance</h2><p className={styles.total}>{money(total)}<span> priced assets only</span></p><p className={styles.muted}>Snapshot · {loaded.map(s => new Date(s.fetchedAt).toLocaleString()).join(' / ')}. Not a complete net worth.</p>
-      {breakdown.map(row => <div key={row.category} className={styles.allocation}><span>{row.category}</span><span>{money(row.usd)} · {total ? (row.usd / total * 100).toFixed(1) : 0}%</span><div className={styles.bar}><i style={{ width: `${total ? row.usd / total * 100 : 0}%` }}/></div></div>)}
+      {total > 0 && <div className={styles.chartLayout}>
+        <div className={styles.donut} role="img" aria-label={allocationLabel} style={{ background: `conic-gradient(${stops.join(', ')})` }}>
+          <div className={styles.donutCenter}><span>ALLOCATION</span><strong>{breakdown.length} {breakdown.length === 1 ? 'category' : 'categories'}</strong></div>
+        </div>
+        <div className={styles.legend}>{breakdown.map(row => <div key={row.category} className={styles.allocation}><span><i className={styles.swatch} style={{ background: palette[categories.indexOf(row.category)] }}/>{row.category}</span><span>{money(row.usd)} <small>{(row.usd / total * 100).toFixed(1)}%</small></span></div>)}</div>
+      </div>}
+      {total === 0 && <p className={styles.muted}>No priced assets to chart.</p>}
       <p className={styles.muted}>NFTs: {loaded.reduce((n, s) => n + s.nftCount, 0)} shown, not priced{loaded.some(s => s.nftMore) ? ' (more pages exist)' : ''}. Unpriced tokens: {unpriced.length}. DeFi deposits, debt, positions, and assets on other chains are not included. Tokens with no price are excluded from the percentages.</p>
       {loaded.some(s => s.tokenMore) && <p className={styles.error}>Token list was capped at 500 for one wallet. Totals are incomplete.</p>}
     </section>

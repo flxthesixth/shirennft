@@ -21,12 +21,19 @@ def run(url):
         page.get_by_role('button', name='Add wallet').click()
         page.get_by_text('$2,502.00').first.wait_for()
         assert page.get_by_text('Unpriced tokens: 1').count() == 1
+        chart = page.get_by_role('img', name='Priced asset allocation')
+        assert chart.count() == 1
+        assert 'conic-gradient(' in chart.evaluate('(el) => getComputedStyle(el).backgroundImage')
+        assert chart.evaluate('(el) => el.getBoundingClientRect().width <= 260')
         page.get_by_label('Category for USDC').select_option('Meme')
         page.get_by_text('Meme').first.wait_for()
         page.reload()
         page.get_by_text('$2,502.00').first.wait_for()
         assert page.get_by_label('Category for USDC').input_value() == 'Meme'
         assert page.locator('body').evaluate('(el) => el.scrollWidth <= window.innerWidth')
+        page.set_viewport_size({"width": 1280, "height": 800})
+        assert page.locator('body').evaluate('(el) => el.scrollWidth <= window.innerWidth')
+        assert chart.evaluate('(el) => el.getBoundingClientRect().width <= 260')
         page.get_by_role('button', name='Remove ' + ADDRESS).click()
         page.get_by_text('$2,502.00').wait_for(state='detached')
         browser.close()
