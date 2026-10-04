@@ -51,22 +51,22 @@ export default function Section3({ onBack }: Props) {
               {/* dark overlay, will become lighter on hover so image can show fully */}
               <div className="absolute inset-0 overlay transition-colors duration-500" />
 
-              {/* center title/description horizontally, keep y (bottom) the same */}
-              <div className="absolute left-1/2 -translate-x-1/2 bottom-6 text-white z-10 text-center card-meta">
-                <h3 className="text-3xl font-bold mb-2">{c.title}</h3>
+              {/* Center the compact name, social link, and role group. */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-white z-10 text-center card-meta">
+                <h3 className="text-3xl font-bold leading-tight">{c.title}</h3>
 
                 <a
                   href={c.link ?? '#'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block mb-2 icon-x p-0 bg-transparent"
+                  className="icon-x p-0 bg-transparent"
                   style={{ background: 'transparent' }}
                 >
                   {/* Use uploaded xlogo as the X/Twitter icon (no extra rounded white background) */}
                   <Image src="/xlogo.png" alt="X / Twitter" width={28} height={28} className="object-cover rounded-none" />
                 </a>
 
-                <p className="mt-1 max-w-xs opacity-0 transition-opacity duration-500">
+                <p className="max-w-xs opacity-0 transition-opacity duration-500">
                   {c.desc}
                 </p>
               </div>
