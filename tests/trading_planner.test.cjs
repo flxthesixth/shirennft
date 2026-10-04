@@ -31,6 +31,16 @@ test('caps leverage by market and excludes market whose min order cannot fit ris
   const r = plan({ ...input, capital: 20, target: 30 }, markets)
   assert.equal(r.options.length, 0)
 })
+test('required winner move compounds winning and losing trades, not arithmetic mean', () => {
+  const r = plan({ ...input, capital: 1000, target: 2000, days: 100, tradesPerDay: 1, winRate: 50, feeBps: 0 }, markets)
+  const lossFraction = r.risk / 1000
+  const winFraction = r.requiredRewardRisk * r.notional * (input.stopPct / 100) / 1000
+  const projectedLogGrowth = 100 * (0.5 * Math.log1p(winFraction) + 0.5 * Math.log1p(-lossFraction))
+  assert.ok(Math.abs(projectedLogGrowth - Math.log(2)) < 1e-10)
+  const withFee = plan({ ...input, capital: 1000, target: 2000, days: 100, tradesPerDay: 1, winRate: 50, feeBps: 5 }, markets)
+  const netWin = (withFee.requiredRewardRisk * withFee.notional * 0.02 - withFee.options[0].estimatedRoundTripFee) / 1000
+  assert.ok(Math.abs(100 * (0.5 * Math.log1p(netWin) + 0.5 * Math.log1p(-0.01)) - Math.log(2)) < 1e-10)
+})
 test('trade count, losing streak and fee assumptions are explicit', () => {
   const r = plan({ ...input, target: 600, days: 30, tradesPerDay: 2, feeBps: 5 }, markets)
   assert.equal(r.tradeCount, 60)
