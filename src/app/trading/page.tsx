@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Market, plan } from './planner'
 import styles from './page.module.css'
@@ -24,11 +24,12 @@ export default function TradingPage() {
   const [winRate, setWinRate] = useState('50')
   const [feeBps, setFeeBps] = useState('5')
   const [result, setResult] = useState<ReturnType<typeof plan> | null>(null)
+  const connectVersion = useRef(0)
 
   useEffect(() => {
     const provider = (window as Window & { ethereum?: Provider }).ethereum
     if (!provider?.on) return
-    const invalidate = () => { setAddress(''); setPortfolio(null); setMarkets([]); setResult(null); setCapital(''); setError('Wallet changed. Reconnect to refresh account data.') }
+    const invalidate = () => { connectVersion.current++; setLoading(false); setAddress(''); setPortfolio(null); setMarkets([]); setResult(null); setCapital(''); setError('Wallet changed. Reconnect to refresh account data.') }
     provider.on('accountsChanged', invalidate)
     provider.on('chainChanged', invalidate)
     return () => {
@@ -39,21 +40,25 @@ export default function TradingPage() {
   }, [])
 
   async function connect() {
+    const version = ++connectVersion.current
     setError(''); setResult(null); setPortfolio(null); setAddress(''); setCapital(''); setLoading(true)
     try {
       const provider = (window as Window & { ethereum?: Provider }).ethereum
       if (!provider) throw new Error('Open this page in a browser wallet or install a wallet extension.')
       const accounts = await provider.request({ method: 'eth_requestAccounts' })
+      if (version !== connectVersion.current) return
       const account = Array.isArray(accounts) ? accounts[0] : null
       if (typeof account !== 'string' || !addressPattern.test(account)) throw new Error('Wallet returned no valid address.')
       const [p, m] = await Promise.all([fetch(`/api/trading/portfolio?address=${encodeURIComponent(account)}`, { cache: 'no-store' }), fetch('/api/trading/markets', { cache: 'no-store' })])
+      if (version !== connectVersion.current) return
       if (!p.ok || !m.ok) throw new Error('RISEx data unavailable. Try again later.')
       const [accountData, marketData] = await Promise.all([p.json(), m.json()])
+      if (version !== connectVersion.current) return
       if (!accountData?.summary || !Array.isArray(accountData.positions) || !Array.isArray(marketData?.markets)) throw new Error('RISEx returned unexpected data.')
       setAddress(account); setPortfolio(accountData); setMarkets(marketData.markets)
       setCapital(String(Number(accountData.summary.free_collateral) || ''))
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Connection failed.') }
-    finally { setLoading(false) }
+    } catch (cause) { if (version === connectVersion.current) setError(cause instanceof Error ? cause.message : 'Connection failed.') }
+    finally { if (version === connectVersion.current) setLoading(false) }
   }
 
   function calculate(event: FormEvent) {
@@ -84,7 +89,7 @@ export default function TradingPage() {
     {result && <section className={styles.panel} aria-live="polite"><span className={styles.kicker}>TARGET PRESSURE</span><div className={styles.metrics}><div><span>Required daily growth</span><strong>{result.requiredDailyPct.toFixed(2)}%</strong></div><div><span>Risk per trade</span><strong>${result.risk.toFixed(2)}</strong></div><div><span>Required reward / risk*</span><strong>{result.requiredRewardRisk.toFixed(1)}×</strong></div></div><p className={styles.small}>{result.tradeCount} hypothetical trades in {days} days · 3 consecutive stop-outs: about ${result.lossAfterThree.toFixed(2)} lost before slippage/funding. Stop trading after a pre-set loss limit; plan screen time accordingly.</p><p className={styles.small}>*Deterministic compounded path using assumed win rate, fixed stop and fees; not a probability or forecast. Real trade order, funding, slippage and liquidations can change outcomes.</p>
       <span className={styles.kicker}>TRADE FREQUENCY SCENARIOS</span>{result.scenarios.map(s => <div className={styles.option} key={s.tradesPerDay}><strong>{s.tradesPerDay} trade{s.tradesPerDay > 1 ? 's' : ''} / day</strong><p>{s.tradeCount} trades total · required reward/risk {s.requiredRewardRisk.toFixed(1)}× · target price move {s.requiredMovePct.toFixed(1)}% per winning trade · screen load {s.screenLoad}</p><b>{result.options.length && s.feasible ? 'WITHIN PLANNING BOUNDS — NOT A FORECAST' : 'NOT WITHIN PLANNING BOUNDS'}</b></div>)}
       <span className={styles.kicker}>MARKET CANDIDATES</span>
-      {result.options.length === 0 ? <p>No active RISEx market fits the minimum order, risk and leverage limits used here. Adjust parameters; do not force a trade.</p> : result.options.map(o => <div className={styles.option} key={o.marketId}><div><strong>{o.name}</strong><span>Live RISEx market · ${o.price.toLocaleString()}</span></div><p>Illustrative position: ${o.notional.toFixed(2)} · {o.leverage.toFixed(2)}× leverage · stop {stop}% · target move {o.requiredMovePct.toFixed(1)}% · assumed round-trip fees ${o.estimatedRoundTripFee.toFixed(2)} · required reward/risk {o.requiredRewardRisk.toFixed(1)}×</p><b>{o.feasible ? 'WITHIN PLANNING BOUNDS — NOT A TRADE SIGNAL' : 'TARGET EXCEEDS PLANNING BOUNDS'}</b></div>)}
+      {result.options.length === 0 ? <p>No active RISEx market fits the minimum order, risk and leverage limits used here. Adjust parameters; do not force a trade.</p> : result.options.map(o => <div className={styles.option} key={o.marketId}><div><strong>{o.name}</strong><span>Live RISEx market · ${o.price.toLocaleString()}</span></div><p>Illustrative position: ${o.notional.toFixed(2)} · {o.leverage.toFixed(2)}× leverage · stop {stop}% · target move {o.requiredMovePct.toFixed(1)}% · baseline round-trip fees ${o.estimatedRoundTripFee.toFixed(2)} at entry notional (exit fee varies with price) · required reward/risk {o.requiredRewardRisk.toFixed(1)}×</p><b>{o.feasible ? 'WITHIN PLANNING BOUNDS — NOT A TRADE SIGNAL' : 'TARGET EXCEEDS PLANNING BOUNDS'}</b></div>)}
       <p className={styles.small}>Market names are candidates by volume, not picks or expected winners. Up to 2% risk/trade, 5× leverage, 3× required reward/risk and 2% daily target are conservative display bounds, not guarantees or RISEx risk rules. Stop orders may slip. Pause after losses; limit trade frequency to what you can monitor.</p>
     </section>}
   </div></main>

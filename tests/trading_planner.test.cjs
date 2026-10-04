@@ -38,8 +38,24 @@ test('required winner move compounds winning and losing trades, not arithmetic m
   const projectedLogGrowth = 100 * (0.5 * Math.log1p(winFraction) + 0.5 * Math.log1p(-lossFraction))
   assert.ok(Math.abs(projectedLogGrowth - Math.log(2)) < 1e-10)
   const withFee = plan({ ...input, capital: 1000, target: 2000, days: 100, tradesPerDay: 1, winRate: 50, feeBps: 5 }, markets)
-  const netWin = (withFee.requiredRewardRisk * withFee.notional * 0.02 - withFee.options[0].estimatedRoundTripFee) / 1000
+  const move = withFee.requiredRewardRisk * 0.02
+  const netWin = (withFee.notional * move - withFee.notional * 0.0005 * (2 + move)) / 1000
   assert.ok(Math.abs(100 * (0.5 * Math.log1p(netWin) + 0.5 * Math.log1p(-0.01)) - Math.log(2)) < 1e-10)
+})
+test('selects three eligible markets after leverage filtering', () => {
+  const four = [1, 2, 3, 4].map((n) => ({ ...markets[0], market_id: String(n), quote_volume_24h: String(10000 - n), config: { ...markets[0].config, max_leverage: n === 4 ? '5' : '1', min_order_size: '0.00001' } }))
+  const r = plan({ ...input, capital: 1000, target: 1100, stopPct: 0.5 }, four)
+  assert.deepEqual(r.options.map(o => o.marketId), ['4'])
+})
+test('compounded target includes exit fee on winning and losing close notional', () => {
+  const settings = { ...input, capital: 1000, target: 1100, days: 100, stopPct: 5, feeBps: 100 }
+  const r = plan(settings, markets)
+  const entry = r.notional, fee = settings.feeBps / 10000, stop = settings.stopPct / 100
+  const winnerMove = r.requiredRewardRisk * stop
+  const win = (entry * winnerMove - fee * entry * (2 + winnerMove)) / settings.capital
+  const loss = (entry * stop + fee * entry * (2 - stop)) / settings.capital
+  const projected = settings.capital * Math.exp(settings.days * (0.5 * Math.log1p(win) + 0.5 * Math.log1p(-loss)))
+  assert.ok(Math.abs(projected - settings.target) < 0.01, projected)
 })
 test('trade count, losing streak and fee assumptions are explicit', () => {
   const r = plan({ ...input, target: 600, days: 30, tradesPerDay: 2, feeBps: 5 }, markets)
