@@ -21,12 +21,15 @@ with sync_playwright() as pw:
     page.goto(base + '/trading')
     page.evaluate("""() => {
       window.originalFetch = window.fetch;
-      window.fetch = (...args) => new Promise(resolve => {
-        (window.pendingFetches ||= []).push(() => window.originalFetch(...args).then(resolve));
-      });
+      window.fetch = (...args) => {
+        if (!String(args[0]).includes('/api/trading/')) return window.originalFetch(...args);
+        return new Promise(resolve => {
+          (window.pendingFetches ||= []).push(() => window.originalFetch(...args).then(resolve));
+        });
+      };
     }""")
     page.get_by_role('button', name='CONNECT WALLET').click()
-    page.wait_for_function('window.pendingFetches?.length === 2', timeout=15000)
+    page.wait_for_function('window.pendingFetches?.length >= 2', timeout=15000)
     page.evaluate("window.ethereum.emit('accountsChanged')")
     page.evaluate('window.pendingFetches.forEach(release => release())')
     page.get_by_role('button', name='CONNECT WALLET').wait_for()
