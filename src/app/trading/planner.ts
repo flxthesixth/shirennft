@@ -25,7 +25,7 @@ export function ceilingPath(input: Inputs, result: ReturnType<typeof plan>) {
 
 export function plan(input: Inputs, markets: Market[]) {
   const { capital, target, days, riskPct, stopPct, tradesPerDay, winRate, feeBps = 0 } = input
-  if (![capital, target, days, riskPct, stopPct, tradesPerDay, winRate, feeBps].every(Number.isFinite) || capital <= 0 || target <= capital || days < 1 || days > 3650 || !Number.isInteger(days) || !Number.isInteger(tradesPerDay) || riskPct <= 0 || riskPct > 2 || stopPct <= 0 || stopPct > 50 || tradesPerDay < 1 || tradesPerDay > 10 || winRate <= 0 || winRate >= 100 || feeBps < 0 || feeBps > 100) throw new Error('Invalid planning inputs')
+  if (![capital, target, days, riskPct, stopPct, tradesPerDay, winRate, feeBps].every(Number.isFinite) || capital <= 0 || target <= capital || days < 1 || days > 3650 || !Number.isInteger(days) || !Number.isInteger(tradesPerDay) || riskPct <= 0 || riskPct >= 100 || stopPct <= 0 || stopPct > 50 || tradesPerDay < 1 || tradesPerDay > 10 || winRate <= 0 || winRate >= 100 || feeBps < 0 || feeBps > 100) throw new Error('Invalid planning inputs')
   const risk = capital * riskPct / 100
   const notional = risk / (stopPct / 100 + feeBps / 10000 * (2 - stopPct / 100))
   const requiredDailyPct = (Math.pow(target / capital, 1 / days) - 1) * 100

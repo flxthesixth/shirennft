@@ -13,6 +13,7 @@ export default function TradingPage() {
   const [address, setAddress] = useState('')
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null)
   const [markets, setMarkets] = useState<Market[]>([])
+  const [selectedMarket, setSelectedMarket] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [capital, setCapital] = useState('')
@@ -30,7 +31,7 @@ export default function TradingPage() {
   useEffect(() => {
     const provider = (window as Window & { ethereum?: Provider }).ethereum
     if (!provider?.on) return
-    const invalidate = () => { connectVersion.current++; setLoading(false); setAddress(''); setPortfolio(null); setMarkets([]); setResult(null); setCapital(''); setError('Wallet changed. Reconnect to refresh account data.') }
+    const invalidate = () => { connectVersion.current++; setLoading(false); setAddress(''); setPortfolio(null); setMarkets([]); setSelectedMarket(''); setResult(null); setCapital(''); setError('Wallet changed. Reconnect to refresh account data.') }
     provider.on('accountsChanged', invalidate)
     provider.on('chainChanged', invalidate)
     return () => {
@@ -42,7 +43,7 @@ export default function TradingPage() {
 
   async function connect() {
     const version = ++connectVersion.current
-    setError(''); setResult(null); setPortfolio(null); setAddress(''); setCapital(''); setLoading(true)
+    setError(''); setResult(null); setPortfolio(null); setAddress(''); setSelectedMarket(''); setCapital(''); setLoading(true)
     try {
       const provider = (window as Window & { ethereum?: Provider }).ethereum
       if (!provider) throw new Error('Open this page in a browser wallet or install a wallet extension.')
@@ -57,16 +58,19 @@ export default function TradingPage() {
       if (version !== connectVersion.current) return
       if (!accountData?.summary || !Array.isArray(accountData.positions) || !Array.isArray(marketData?.markets)) throw new Error('RISEx returned unexpected data.')
       setAddress(account); setPortfolio(accountData); setMarkets(marketData.markets)
+      setSelectedMarket('')
       setCapital(String(Number(accountData.summary.free_collateral) || ''))
     } catch (cause) { if (version === connectVersion.current) setError(cause instanceof Error ? cause.message : 'Connection failed.') }
     finally { if (version === connectVersion.current) setLoading(false) }
   }
 
+  const availableMarkets = markets.filter(m => m.active && m.config?.unlocked && Number(m.last_price) > 0).sort((a, b) => Number(b.quote_volume_24h) - Number(a.quote_volume_24h))
+  const marketId = selectedMarket || availableMarkets[0]?.market_id || ''
   function calculate(event: FormEvent) {
     event.preventDefault(); setError(''); setResult(null)
     try {
-      setResult(plan({ capital: Number(capital), target: Number(target), days: Number(days), riskPct: Number(risk), stopPct: Number(stop), tradesPerDay: Number(trades), winRate: Number(winRate), feeBps: Number(feeBps) }, markets))
-    } catch { setError('Check inputs: target ending balance above allocated capital; days 1–3650; risk >0–2%; stop >0–50%; trades/day 1–10; win rate >0–<100%; fees 0–100 bps per side.') }
+      setResult(plan({ capital: Number(capital), target: Number(target), days: Number(days), riskPct: Number(risk), stopPct: Number(stop), tradesPerDay: Number(trades), winRate: Number(winRate), feeBps: Number(feeBps) }, markets.filter(m => m.market_id === marketId)))
+    } catch { setError('Check inputs: target above capital; days 1–3650; risk above 0% and below 100%; stop above 0% and at most 50%; trades/day 1–10; win rate above 0% and below 100%; fees 0–100 bps per side.') }
   }
   const activePositions = portfolio?.positions.filter(p => Number(p.size) !== 0) ?? []
   const path = result ? ceilingPath({ capital: Number(capital), target: Number(target), days: Number(days), riskPct: Number(risk), stopPct: Number(stop), tradesPerDay: Number(trades), winRate: Number(winRate), feeBps: Number(feeBps) }, result) : []
@@ -79,7 +83,7 @@ export default function TradingPage() {
   const reasons = result ? [
     ...(result.requiredDailyPct > 2 ? [`Daily growth ${result.requiredDailyPct.toFixed(2)}% exceeds the 2% display bound. Extend the horizon or lower the ending target.`] : []),
     ...(result.requiredRewardRisk > 3 ? [`Required reward/risk ${result.requiredRewardRisk.toFixed(2)}× exceeds the 3× display bound. Extend the horizon, lower the target, or revisit the assumed win rate and trade frequency.`] : []),
-    ...(result.options.length === 0 ? ['No eligible market fits minimum order and leverage at this risk and stop distance. Change those assumptions; do not force a trade.'] : []),
+    ...(result.options.length === 0 ? ['This market does not fit its minimum order or leverage limit with your risk and stop. Choose another market or adjust the inputs.'] : []),
   ] : []
   return <main className={styles.page}><div className={styles.shell}>
     <header className={styles.top}><Link href="/" className={styles.brand}>SHIRΞN<span>.</span></Link><Link href="/">← BACK</Link></header>
@@ -88,24 +92,25 @@ export default function TradingPage() {
       {portfolio && <div className={styles.metrics}><div><span>Account value</span><strong>${Number(portfolio.summary.total_account_value).toLocaleString()}</strong></div><div><span>Free collateral</span><strong>${Number(portfolio.summary.free_collateral).toLocaleString()}</strong></div><div><span>Open positions</span><strong>{activePositions.length}</strong></div></div>}
       {activePositions.length > 0 && <p className={styles.small}>Existing exposure: {activePositions.map(p => `${p.market_name} ${p.side === 0 ? 'long' : 'short'} (${p.size})`).join(' · ')}. Plans below do not model cross-margin interaction.</p>}
     </section>
-    {portfolio && <form onSubmit={calculate} onChange={() => setResult(null)} className={styles.panel}><span className={styles.kicker}>YOUR PARAMETERS</span><div className={styles.fields}>
+    {portfolio && <form onSubmit={calculate} onChange={() => setResult(null)} className={styles.panel}><span className={styles.kicker}>PLAN</span><div className={styles.fields}>
+      <label>Market<select aria-label="Market" value={marketId} onChange={e => setSelectedMarket(e.target.value)} required>{availableMarkets.map(m => <option key={m.market_id} value={m.market_id}>{m.display_name}</option>)}</select></label>
       <label>Capital allocated (USD)<input type="number" min="0.01" step="any" value={capital} onChange={e => setCapital(e.target.value)} required /></label>
       <label>Target ending balance (USD)<input type="number" min="0.01" step="any" value={target} onChange={e => setTarget(e.target.value)} required /></label>
       <label>Time horizon (days)<input type="number" min="1" max="3650" step="1" value={days} onChange={e => setDays(e.target.value)} required /></label>
-      <label>Risk per trade (%)<input type="number" min="0.01" max="2" step="any" value={risk} onChange={e => setRisk(e.target.value)} required /></label>
+      <label>Risk per trade (%)<input type="number" min="0.01" max="99.99" step="any" value={risk} onChange={e => setRisk(e.target.value)} required /></label>
       <label>Assumed stop distance (%)<input type="number" min="0.01" max="50" step="any" value={stop} onChange={e => setStop(e.target.value)} required /></label>
       <label>Trades per day<input type="number" min="1" max="10" step="1" value={trades} onChange={e => setTrades(e.target.value)} required /></label>
       <label>Assumed win rate (%)<input type="number" min="0.01" max="99.99" step="any" value={winRate} onChange={e => setWinRate(e.target.value)} required /></label>
       <label>Assumed fee per side (bps)<input type="number" min="0" max="100" step="any" value={feeBps} onChange={e => setFeeBps(e.target.value)} required /></label>
-    </div>{Number(capital) > Number(portfolio.summary.free_collateral) && <p className={styles.small}>Planning with assumed future capital. Current RISEx free collateral is ${Number(portfolio.summary.free_collateral).toLocaleString()}; this amount is not available for trading yet.</p>}<button type="submit">ANALYZE TARGET ↗</button><p className={styles.small}>Fee is your assumption, not a live RISEx fee quote. Funding, slippage, liquidation and market direction not modeled. No orders or wallet signatures requested.</p></form>}
+    </div>{Number(risk) > 2 && <p className={styles.warning}>Risk above 2% per trade. Three losses in a row would cut this plan’s capital by about {(100 * (1 - Math.pow(1 - Number(risk) / 100, 3))).toFixed(1)}%, before slippage.</p>}{Number(capital) > Number(portfolio.summary.free_collateral) && <p className={styles.small}>Capital exceeds current free collateral (${Number(portfolio.summary.free_collateral).toLocaleString()}). This is a hypothetical plan.</p>}<button type="submit">Analyze</button><p className={styles.small}>Fee is an estimate you enter, not a live quote. Funding, slippage and liquidation are not included. No orders or signatures.</p></form>}
     {error && <p role="alert" className={styles.error}>{error}</p>}
-    {result && <section className={styles.panel} aria-live="polite"><span className={styles.kicker}>RISK DASHBOARD</span><h2 className={styles.verdict}>{reasons.length ? 'Outside planning bounds' : 'Within planning bounds — not a forecast'}</h2><p className={styles.small}>{reasons.length ? 'Change one assumption at a time and analyze again. These limits are display guardrails, not RISEx exchange rules.' : 'No display bound was crossed under your assumptions. This does not imply the target is likely or that a trade should be placed.'}</p>{reasons.length > 0 && <ul className={styles.reasons}>{reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>}
+    {result && <section className={styles.panel} aria-live="polite"><span className={styles.kicker}>RESULT · {availableMarkets.find(m => m.market_id === marketId)?.display_name}</span><h2 className={styles.verdict}>{reasons.length ? 'Plan exceeds limits' : 'Plan fits these limits'}</h2><p className={styles.small}>{reasons.length ? 'Check the reasons below. These are planning limits, not RISEx rules.' : 'This is a calculation, not a forecast or a trade signal.'}</p>{reasons.length > 0 && <ul className={styles.reasons}>{reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>}
       <div className={styles.chart}><div className={styles.chartHead}><span className={styles.kicker}>ENDING BALANCE PATH</span><span>USD · {days} days</span></div><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Illustrative target balance and 3× reward-to-risk scenario over time"><line x1="0" x2="100" y1="90" y2="90" className={styles.axis}/><polyline points={plot('target')} className={styles.targetLine}/>{end?.ceiling != null && <polyline points={plot('ceiling')} className={styles.scenarioLine}/>}</svg><label className={styles.chartInspect}>Inspect day {Math.round(inspected.day)}<input type="range" min="0" max="4" step="1" value={chartStep} onChange={event => setChartStep(Number(event.target.value))} aria-label="Inspect balance path by day" /></label><p className={styles.chartReadout}>Target ${inspected.target.toLocaleString(undefined, { maximumFractionDigits: 2 })} · 3× scenario {inspected.ceiling == null ? 'not representable' : `$${inspected.ceiling.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}</p><div className={styles.chartLegend}><span><i className={styles.targetKey}/> Target ${Number(target).toLocaleString()}</span><span><i className={styles.scenarioKey}/> 3× reward/risk scenario {end?.ceiling == null ? 'not representable' : `$${end.ceiling.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}</span></div><p className={styles.small}>Illustration assumes fixed fractional risk, {winRate}% wins, {trades} trades/day, {stop}% stop and {feeBps} bps/side. The 3× line is an assumed outcome per win, not a return cap, price forecast, or achievable strategy. No slippage, funding, liquidation or trade-order effects.</p></div>
       <span className={styles.kicker}>TARGET PRESSURE</span><div className={styles.metrics}><div><span>Required daily growth</span><strong>{result.requiredDailyPct.toFixed(2)}%</strong></div><div><span>Risk per trade</span><strong>${result.risk.toFixed(2)}</strong></div><div><span>Required reward / risk*</span><strong>{result.requiredRewardRisk.toFixed(1)}×</strong></div></div><p className={styles.small}>{result.tradeCount} hypothetical trades in {days} days · 3 consecutive stop-outs: about ${result.lossAfterThree.toFixed(2)} lost before slippage/funding. Stop trading after a pre-set loss limit; plan screen time accordingly.</p><p className={styles.small}>*Deterministic compounded path using assumed win rate, fixed stop and fees; not a probability or forecast. Real trade order, funding, slippage and liquidations can change outcomes.</p>
       <span className={styles.kicker}>TRADE FREQUENCY SCENARIOS</span>{result.scenarios.map(s => <div className={styles.option} key={s.tradesPerDay}><strong>{s.tradesPerDay} trade{s.tradesPerDay > 1 ? 's' : ''} / day</strong><p>{s.tradeCount} trades total · required reward/risk {s.requiredRewardRisk.toFixed(1)}× · target price move {s.requiredMovePct.toFixed(1)}% per winning trade · screen load {s.screenLoad}</p><b>{result.options.length && s.feasible ? 'WITHIN PLANNING BOUNDS — NOT A FORECAST' : 'NOT WITHIN PLANNING BOUNDS'}</b></div>)}
-      <span className={styles.kicker}>MARKET CANDIDATES</span>
-      {result.options.length === 0 ? <p>No active RISEx market fits the minimum order, risk and leverage limits used here. Adjust parameters; do not force a trade.</p> : result.options.map(o => <div className={styles.option} key={o.marketId}><div><strong>{o.name}</strong><span>Live RISEx market · ${o.price.toLocaleString()}</span></div><p>Illustrative position: ${o.notional.toFixed(2)} · {o.leverage.toFixed(2)}× leverage · stop {stop}% · target move {o.requiredMovePct.toFixed(1)}% · baseline round-trip fees ${o.estimatedRoundTripFee.toFixed(2)} at entry notional (exit fee varies with price) · required reward/risk {o.requiredRewardRisk.toFixed(1)}×</p><b>{o.feasible ? 'WITHIN PLANNING BOUNDS — NOT A TRADE SIGNAL' : 'TARGET EXCEEDS PLANNING BOUNDS'}</b></div>)}
-      <p className={styles.small}>Market names are candidates by volume, not picks or expected winners. Up to 2% risk/trade, 5× leverage, 3× required reward/risk and 2% daily target are conservative display bounds, not guarantees or RISEx risk rules. Stop orders may slip. Pause after losses; limit trade frequency to what you can monitor.</p>
+      <span className={styles.kicker}>SELECTED MARKET</span>
+      {result.options.length === 0 ? <p>This market does not fit the minimum order or leverage needed for this plan.</p> : result.options.map(o => <div className={styles.option} key={o.marketId}><div><strong>{o.name}</strong><span>Live RISEx market · ${o.price.toLocaleString()}</span></div><p>Illustrative position: ${o.notional.toFixed(2)} · {o.leverage.toFixed(2)}× leverage · stop {stop}% · target move {o.requiredMovePct.toFixed(1)}% · baseline round-trip fees ${o.estimatedRoundTripFee.toFixed(2)} at entry notional (exit fee varies with price) · required reward/risk {o.requiredRewardRisk.toFixed(1)}×</p><b>{o.feasible ? 'WITHIN PLANNING BOUNDS — NOT A TRADE SIGNAL' : 'TARGET EXCEEDS PLANNING BOUNDS'}</b></div>)}
+      <p className={styles.small}>You chose this market. Risk above 2% is allowed but warned. Leverage is capped at 5× in this plan; 3× reward/risk and 2% daily growth are display limits, not RISEx rules. Stops can slip.</p>
     </section>}
   </div></main>
 }

@@ -48,6 +48,17 @@ test('never claims a strategy when no enabled market or invalid inputs', () => {
   assert.throws(() => plan({ ...input, tradesPerDay: 1.5 }, markets))
   assert.throws(() => plan({ ...input, capital: Infinity }, markets))
 })
+test('accepts user risk above 2% but rejects total-loss or invalid risk', () => {
+  const r = plan({ ...input, capital: 1000, target: 1200, riskPct: 3 }, markets)
+  assert.equal(r.risk, 30)
+  assert.throws(() => plan({ ...input, riskPct: 100 }, markets))
+  assert.throws(() => plan({ ...input, riskPct: -1 }, markets))
+})
+test('only evaluates a user-selected market', () => {
+  const other = { ...markets[0], market_id: '2', display_name: 'SOL/USDC', quote_volume_24h: '1' }
+  const r = plan({ ...input, capital: 1000, target: 1200 }, [other])
+  assert.deepEqual(r.options.map(o => o.marketId), ['2'])
+})
 test('caps leverage by market and excludes market whose min order cannot fit risk', () => {
   const r = plan({ ...input, capital: 20, target: 30 }, markets)
   assert.equal(r.options.length, 0)
