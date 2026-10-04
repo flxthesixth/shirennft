@@ -29,7 +29,7 @@ with sync_playwright() as pw:
                 assert cards.count() == 5
                 assert cards.first.evaluate('(e) => e.getBoundingClientRect().height') >= 200, (width, 'team card collapsed')
                 assert cards.first.locator('h3').evaluate('(e) => getComputedStyle(e).opacity') != '0', (width, 'team title hidden')
-                assert cards.first.locator('.icon-x img').evaluate('(e) => e.getBoundingClientRect().width <= 24'), (width, 'X icon oversized')
+                assert cards.first.locator('.icon-x img').evaluate('(e) => Math.abs(e.getBoundingClientRect().width - 30) < 1'), (width, 'X icon size')
             page.get_by_role('button', name='Back', exact=False).first.click()
             page.get_by_role('button', name='Toggle menu' if width < 768 else 'Collection').first.wait_for(timeout=15000)
             page.close()
