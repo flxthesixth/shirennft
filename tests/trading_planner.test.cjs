@@ -6,7 +6,28 @@ const vm = require('node:vm')
 const source = fs.readFileSync('src/app/trading/planner.ts', 'utf8')
 const loaded = { exports: {} }
 vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText, { module: loaded, exports: loaded.exports, Math, Number, Error })
-const { plan } = loaded.exports
+const { plan, ceilingPath } = loaded.exports
+
+test('ceiling path plots target and fee-aware 3x reward/risk scenario without promising outcome', () => {
+  const settings = { ...input, capital: 1000, target: 1100, days: 100, stopPct: 5, feeBps: 100 }
+  const r = plan(settings, markets)
+  const path = ceilingPath(settings, r)
+  assert.equal(path.length, 5)
+  assert.equal(path[0].target, 1000)
+  assert.equal(path[0].ceiling, 1000)
+  assert.ok(Math.abs(path[4].target - 1100) < 1e-6)
+  const move = 3 * settings.stopPct / 100
+  const win = (r.notional * move - r.notional * 0.01 * (2 + move)) / settings.capital
+  const expected = 1000 * Math.exp(settings.days * (0.5 * Math.log1p(win) + 0.5 * Math.log1p(-0.01)))
+  assert.ok(Math.abs(path[4].ceiling - expected) < 1e-6)
+  assert.ok(path.every(point => Number.isFinite(point.target) && Number.isFinite(point.ceiling)))
+})
+
+test('ceiling path rejects non-representable extreme values', () => {
+  const settings = { ...input, capital: 1000, target: 1100, days: 3650, tradesPerDay: 10, riskPct: 2, stopPct: 50, winRate: 99, feeBps: 0 }
+  const r = plan(settings, markets)
+  assert.equal(ceilingPath(settings, r).at(-1).ceiling, null)
+})
 const markets = [{ market_id: '1', display_name: 'BTC/USDC', last_price: '85000', active: true, config: { unlocked: true, max_leverage: '25', min_order_size: '0.00015' }, quote_volume_24h: '10000000' }]
 const input = { capital: 500, target: 10000, days: 30, riskPct: 1, stopPct: 2, tradesPerDay: 1, winRate: 50 }
 

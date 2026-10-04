@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Market, plan } from './planner'
+import { Market, ceilingPath, plan } from './planner'
 import styles from './page.module.css'
 
 type Portfolio = { summary: { total_account_value: string; free_collateral: string; margin_usage: string }; positions: { size: string; market_name: string; side: number; unrealized_pnl: string }[] }
@@ -24,6 +24,7 @@ export default function TradingPage() {
   const [winRate, setWinRate] = useState('50')
   const [feeBps, setFeeBps] = useState('5')
   const [result, setResult] = useState<ReturnType<typeof plan> | null>(null)
+  const [chartStep, setChartStep] = useState(4)
   const connectVersion = useRef(0)
 
   useEffect(() => {
@@ -68,6 +69,18 @@ export default function TradingPage() {
     } catch { setError('Check inputs: target ending balance above allocated capital; days 1–3650; risk >0–2%; stop >0–50%; trades/day 1–10; win rate >0–<100%; fees 0–100 bps per side.') }
   }
   const activePositions = portfolio?.positions.filter(p => Number(p.size) !== 0) ?? []
+  const path = result ? ceilingPath({ capital: Number(capital), target: Number(target), days: Number(days), riskPct: Number(risk), stopPct: Number(stop), tradesPerDay: Number(trades), winRate: Number(winRate), feeBps: Number(feeBps) }, result) : []
+  const end = path.at(-1)
+  const inspected = path[chartStep]
+  const levels = path.flatMap(point => [point.target, point.ceiling].filter((value): value is number => value != null && value > 0))
+  const floor = Math.min(...levels)
+  const span = Math.log(Math.max(...levels) / floor) || 1
+  const plot = (key: 'target' | 'ceiling') => path.map((point, index) => `${index * 25},${90 - 80 * Math.log((point[key] ?? floor) / floor) / span}`).join(' ')
+  const reasons = result ? [
+    ...(result.requiredDailyPct > 2 ? [`Daily growth ${result.requiredDailyPct.toFixed(2)}% exceeds the 2% display bound. Extend the horizon or lower the ending target.`] : []),
+    ...(result.requiredRewardRisk > 3 ? [`Required reward/risk ${result.requiredRewardRisk.toFixed(2)}× exceeds the 3× display bound. Extend the horizon, lower the target, or revisit the assumed win rate and trade frequency.`] : []),
+    ...(result.options.length === 0 ? ['No eligible market fits minimum order and leverage at this risk and stop distance. Change those assumptions; do not force a trade.'] : []),
+  ] : []
   return <main className={styles.page}><div className={styles.shell}>
     <header className={styles.top}><Link href="/" className={styles.brand}>SHIRΞN<span>.</span></Link><Link href="/">← BACK</Link></header>
     <div className={styles.intro}><span>RISEx / READ-ONLY</span><h1>Pre-Trade Desk</h1><p>Plan from your actual account. Examine what a target demands before placing a trade.</p></div>
@@ -75,7 +88,7 @@ export default function TradingPage() {
       {portfolio && <div className={styles.metrics}><div><span>Account value</span><strong>${Number(portfolio.summary.total_account_value).toLocaleString()}</strong></div><div><span>Free collateral</span><strong>${Number(portfolio.summary.free_collateral).toLocaleString()}</strong></div><div><span>Open positions</span><strong>{activePositions.length}</strong></div></div>}
       {activePositions.length > 0 && <p className={styles.small}>Existing exposure: {activePositions.map(p => `${p.market_name} ${p.side === 0 ? 'long' : 'short'} (${p.size})`).join(' · ')}. Plans below do not model cross-margin interaction.</p>}
     </section>
-    {portfolio && <form onSubmit={calculate} className={styles.panel}><span className={styles.kicker}>YOUR PARAMETERS</span><div className={styles.fields}>
+    {portfolio && <form onSubmit={calculate} onChange={() => setResult(null)} className={styles.panel}><span className={styles.kicker}>YOUR PARAMETERS</span><div className={styles.fields}>
       <label>Capital allocated (USD)<input type="number" min="0.01" step="any" value={capital} onChange={e => setCapital(e.target.value)} required /></label>
       <label>Target ending balance (USD)<input type="number" min="0.01" step="any" value={target} onChange={e => setTarget(e.target.value)} required /></label>
       <label>Time horizon (days)<input type="number" min="1" max="3650" step="1" value={days} onChange={e => setDays(e.target.value)} required /></label>
@@ -86,7 +99,9 @@ export default function TradingPage() {
       <label>Assumed fee per side (bps)<input type="number" min="0" max="100" step="any" value={feeBps} onChange={e => setFeeBps(e.target.value)} required /></label>
     </div>{Number(capital) > Number(portfolio.summary.free_collateral) && <p className={styles.small}>Planning with assumed future capital. Current RISEx free collateral is ${Number(portfolio.summary.free_collateral).toLocaleString()}; this amount is not available for trading yet.</p>}<button type="submit">ANALYZE TARGET ↗</button><p className={styles.small}>Fee is your assumption, not a live RISEx fee quote. Funding, slippage, liquidation and market direction not modeled. No orders or wallet signatures requested.</p></form>}
     {error && <p role="alert" className={styles.error}>{error}</p>}
-    {result && <section className={styles.panel} aria-live="polite"><span className={styles.kicker}>TARGET PRESSURE</span><div className={styles.metrics}><div><span>Required daily growth</span><strong>{result.requiredDailyPct.toFixed(2)}%</strong></div><div><span>Risk per trade</span><strong>${result.risk.toFixed(2)}</strong></div><div><span>Required reward / risk*</span><strong>{result.requiredRewardRisk.toFixed(1)}×</strong></div></div><p className={styles.small}>{result.tradeCount} hypothetical trades in {days} days · 3 consecutive stop-outs: about ${result.lossAfterThree.toFixed(2)} lost before slippage/funding. Stop trading after a pre-set loss limit; plan screen time accordingly.</p><p className={styles.small}>*Deterministic compounded path using assumed win rate, fixed stop and fees; not a probability or forecast. Real trade order, funding, slippage and liquidations can change outcomes.</p>
+    {result && <section className={styles.panel} aria-live="polite"><span className={styles.kicker}>RISK DASHBOARD</span><h2 className={styles.verdict}>{reasons.length ? 'Outside planning bounds' : 'Within planning bounds — not a forecast'}</h2><p className={styles.small}>{reasons.length ? 'Change one assumption at a time and analyze again. These limits are display guardrails, not RISEx exchange rules.' : 'No display bound was crossed under your assumptions. This does not imply the target is likely or that a trade should be placed.'}</p>{reasons.length > 0 && <ul className={styles.reasons}>{reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>}
+      <div className={styles.chart}><div className={styles.chartHead}><span className={styles.kicker}>ENDING BALANCE PATH</span><span>USD · {days} days</span></div><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Illustrative target balance and 3× reward-to-risk scenario over time"><line x1="0" x2="100" y1="90" y2="90" className={styles.axis}/><polyline points={plot('target')} className={styles.targetLine}/>{end?.ceiling != null && <polyline points={plot('ceiling')} className={styles.scenarioLine}/>}</svg><label className={styles.chartInspect}>Inspect day {Math.round(inspected.day)}<input type="range" min="0" max="4" step="1" value={chartStep} onChange={event => setChartStep(Number(event.target.value))} aria-label="Inspect balance path by day" /></label><p className={styles.chartReadout}>Target ${inspected.target.toLocaleString(undefined, { maximumFractionDigits: 2 })} · 3× scenario {inspected.ceiling == null ? 'not representable' : `$${inspected.ceiling.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}</p><div className={styles.chartLegend}><span><i className={styles.targetKey}/> Target ${Number(target).toLocaleString()}</span><span><i className={styles.scenarioKey}/> 3× reward/risk scenario {end?.ceiling == null ? 'not representable' : `$${end.ceiling.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}</span></div><p className={styles.small}>Illustration assumes fixed fractional risk, {winRate}% wins, {trades} trades/day, {stop}% stop and {feeBps} bps/side. The 3× line is an assumed outcome per win, not a return cap, price forecast, or achievable strategy. No slippage, funding, liquidation or trade-order effects.</p></div>
+      <span className={styles.kicker}>TARGET PRESSURE</span><div className={styles.metrics}><div><span>Required daily growth</span><strong>{result.requiredDailyPct.toFixed(2)}%</strong></div><div><span>Risk per trade</span><strong>${result.risk.toFixed(2)}</strong></div><div><span>Required reward / risk*</span><strong>{result.requiredRewardRisk.toFixed(1)}×</strong></div></div><p className={styles.small}>{result.tradeCount} hypothetical trades in {days} days · 3 consecutive stop-outs: about ${result.lossAfterThree.toFixed(2)} lost before slippage/funding. Stop trading after a pre-set loss limit; plan screen time accordingly.</p><p className={styles.small}>*Deterministic compounded path using assumed win rate, fixed stop and fees; not a probability or forecast. Real trade order, funding, slippage and liquidations can change outcomes.</p>
       <span className={styles.kicker}>TRADE FREQUENCY SCENARIOS</span>{result.scenarios.map(s => <div className={styles.option} key={s.tradesPerDay}><strong>{s.tradesPerDay} trade{s.tradesPerDay > 1 ? 's' : ''} / day</strong><p>{s.tradeCount} trades total · required reward/risk {s.requiredRewardRisk.toFixed(1)}× · target price move {s.requiredMovePct.toFixed(1)}% per winning trade · screen load {s.screenLoad}</p><b>{result.options.length && s.feasible ? 'WITHIN PLANNING BOUNDS — NOT A FORECAST' : 'NOT WITHIN PLANNING BOUNDS'}</b></div>)}
       <span className={styles.kicker}>MARKET CANDIDATES</span>
       {result.options.length === 0 ? <p>No active RISEx market fits the minimum order, risk and leverage limits used here. Adjust parameters; do not force a trade.</p> : result.options.map(o => <div className={styles.option} key={o.marketId}><div><strong>{o.name}</strong><span>Live RISEx market · ${o.price.toLocaleString()}</span></div><p>Illustrative position: ${o.notional.toFixed(2)} · {o.leverage.toFixed(2)}× leverage · stop {stop}% · target move {o.requiredMovePct.toFixed(1)}% · baseline round-trip fees ${o.estimatedRoundTripFee.toFixed(2)} at entry notional (exit fee varies with price) · required reward/risk {o.requiredRewardRisk.toFixed(1)}×</p><b>{o.feasible ? 'WITHIN PLANNING BOUNDS — NOT A TRADE SIGNAL' : 'TARGET EXCEEDS PLANNING BOUNDS'}</b></div>)}

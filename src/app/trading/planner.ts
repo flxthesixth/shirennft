@@ -9,6 +9,20 @@ export type Market = {
 
 type Inputs = { capital: number; target: number; days: number; riskPct: number; stopPct: number; tradesPerDay: number; winRate: number; feeBps?: number }
 
+export function ceilingPath(input: Inputs, result: ReturnType<typeof plan>) {
+  const { capital, target, days, tradesPerDay, winRate, stopPct, feeBps = 0 } = input
+  const move = 3 * stopPct / 100
+  const feeRate = feeBps / 10000
+  const win = (result.notional * move - result.notional * feeRate * (2 + move)) / capital
+  const loss = result.risk / capital
+  const growth = win > -1 ? tradesPerDay * (winRate / 100 * Math.log1p(win) + (1 - winRate / 100) * Math.log1p(-loss)) : NaN
+  return [0, .25, .5, .75, 1].map(fraction => {
+    const day = days * fraction
+    const estimate = capital * Math.exp(growth * day)
+    return { day, target: capital * Math.pow(target / capital, fraction), ceiling: Number.isFinite(estimate) ? estimate : null }
+  })
+}
+
 export function plan(input: Inputs, markets: Market[]) {
   const { capital, target, days, riskPct, stopPct, tradesPerDay, winRate, feeBps = 0 } = input
   if (![capital, target, days, riskPct, stopPct, tradesPerDay, winRate, feeBps].every(Number.isFinite) || capital <= 0 || target <= capital || days < 1 || days > 3650 || !Number.isInteger(days) || !Number.isInteger(tradesPerDay) || riskPct <= 0 || riskPct > 2 || stopPct <= 0 || stopPct > 50 || tradesPerDay < 1 || tradesPerDay > 10 || winRate <= 0 || winRate >= 100 || feeBps < 0 || feeBps > 100) throw new Error('Invalid planning inputs')
