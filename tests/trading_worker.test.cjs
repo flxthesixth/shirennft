@@ -25,6 +25,25 @@ test('rejects malformed RISEx trading payloads', async () => {
     assert.equal(invalidBalance.status, 502)
   } finally { context.fetch = original }
 })
+test('leaderboard returns 100 entries from a fixed read-only RISEx query', async () => {
+  const original = context.fetch
+  let upstream
+  context.fetch = async url => {
+    upstream = new URL(url)
+    return new Response(JSON.stringify({ data: { entries: Array.from({ length: 100 }, (_, i) => ({ rank: String(i + 1), address: '0x' + String(i).padStart(40, '0'), notional_pnl: '123', roi_percent: '4', win_rate: '50', trades: '10', notional_volume: '1000' })), total: 100 } }))
+  }
+  try {
+    const r = await context.worker.fetch(new Request('https://site.test/api/trading/leaderboard?period=30d'), env)
+    assert.equal(r.status, 200)
+    assert.equal((await r.json()).entries.length, 100)
+    assert.equal(upstream.hostname, 'api.rise.trade')
+    assert.equal(upstream.searchParams.get('timeframe'), 'LEADERBOARD_TIME_FRAME_30D')
+    assert.equal(upstream.searchParams.get('limit'), '100')
+    assert.equal((await context.worker.fetch(new Request('https://site.test/api/trading/leaderboard?period=bad'), env)).status, 400)
+    context.fetch = async () => new Response(JSON.stringify({ data: { entries: [{ address: 'bad' }] } }))
+    assert.equal((await context.worker.fetch(new Request('https://site.test/api/trading/leaderboard'), env)).status, 502)
+  } finally { context.fetch = original }
+})
 test('trading market and portfolio are bounded read-only routes', async () => {
   const m = await context.worker.fetch(new Request('https://site.test/api/trading/markets'), env)
   assert.equal(m.status, 200)

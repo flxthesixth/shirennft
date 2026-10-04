@@ -10,6 +10,12 @@ export default {
       if (request.method !== 'GET') return respond({ error: 'Method not allowed' }, 405)
       let upstream
       if (url.pathname === '/api/trading/markets') upstream = 'https://api.rise.trade/v1/markets'
+      else if (url.pathname === '/api/trading/leaderboard') {
+        const periods = { '1d': '24H', '7d': '7D', '30d': '30D', all: 'ALL' }
+        const period = url.searchParams.get('period') || '30d'
+        if (!Object.hasOwn(periods, period) || [...url.searchParams.keys()].some(key => key !== 'period')) return respond({ error: 'Invalid period' }, 400)
+        upstream = `https://api.rise.trade/api/v1/leaderboard/combined?timeframe=LEADERBOARD_TIME_FRAME_${periods[period]}&sort_by=COMBINED_LEADERBOARD_SORT_BY_PNL&asc=false&limit=100&page=1`
+      }
       else if (url.pathname === '/api/trading/portfolio') {
         const address = url.searchParams.get('address')
         if (!address || !addressPattern.test(address)) return respond({ error: 'Invalid wallet address' }, 400)
@@ -19,7 +25,13 @@ export default {
         const response = await fetch(upstream, { headers: { Accept: 'application/json', 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(8000) })
         if (!response.ok) return respond({ error: 'RISEx data unavailable' }, 502)
         const payload = await response.json()
-        if (!payload?.data || typeof payload.data !== 'object' || (url.pathname.endsWith('/markets') ? !Array.isArray(payload.data.markets) : !payload.data.summary || typeof payload.data.summary !== 'object' || !Array.isArray(payload.data.positions) || !['total_account_value', 'free_collateral', 'margin_usage'].every(key => payload.data.summary[key] != null && payload.data.summary[key] !== '' && Number.isFinite(Number(payload.data.summary[key]))))) return respond({ error: 'RISEx data unavailable' }, 502)
+        if (!payload?.data || typeof payload.data !== 'object') return respond({ error: 'RISEx data unavailable' }, 502)
+        if (url.pathname.endsWith('/leaderboard')) {
+          const entries = payload.data.entries
+          if (!Array.isArray(entries) || entries.length > 100 || entries.some(entry => !addressPattern.test(entry?.address) || !['rank', 'notional_pnl', 'roi_percent', 'win_rate', 'trades', 'notional_volume'].every(key => entry[key] != null && entry[key] !== '' && Number.isFinite(Number(entry[key]))))) return respond({ error: 'RISEx data unavailable' }, 502)
+          return respond({ entries: entries.map(({ rank, address, notional_pnl, roi_percent, win_rate, trades, notional_volume }) => ({ rank, address, notional_pnl, roi_percent, win_rate, trades, notional_volume })), fetchedAt: new Date().toISOString() })
+        }
+        if (url.pathname.endsWith('/markets') ? !Array.isArray(payload.data.markets) : !payload.data.summary || typeof payload.data.summary !== 'object' || !Array.isArray(payload.data.positions) || !['total_account_value', 'free_collateral', 'margin_usage'].every(key => payload.data.summary[key] != null && payload.data.summary[key] !== '' && Number.isFinite(Number(payload.data.summary[key])))) return respond({ error: 'RISEx data unavailable' }, 502)
         return respond(url.pathname.endsWith('/markets') ? { markets: payload.data.markets } : { summary: payload.data.summary, positions: payload.data.positions })
       } catch { return respond({ error: 'RISEx data unavailable' }, 502) }
     }

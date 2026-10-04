@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Market, ceilingPath, plan } from './planner'
 import styles from './page.module.css'
 
+type Trader = { rank: string; address: string; notional_pnl: string; roi_percent: string; win_rate: string; trades: string; notional_volume: string }
 type Portfolio = { summary: { total_account_value: string; free_collateral: string; margin_usage: string }; positions: { size: string; market_name: string; side: number; unrealized_pnl: string }[] }
 type Provider = { request: (args: { method: string }) => Promise<unknown>; on?: (event: string, handler: (...args: unknown[]) => void) => void }
 const addressPattern = /^0x[a-fA-F0-9]{40}$/
@@ -14,6 +15,11 @@ export default function TradingPage() {
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null)
   const [markets, setMarkets] = useState<Market[]>([])
   const [selectedMarket, setSelectedMarket] = useState('')
+  const [traders, setTraders] = useState<Trader[]>([])
+  const [period, setPeriod] = useState('30d')
+  const [traderError, setTraderError] = useState('')
+  const [traderLoading, setTraderLoading] = useState(false)
+  const [fetchedAt, setFetchedAt] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [capital, setCapital] = useState('')
@@ -27,6 +33,7 @@ export default function TradingPage() {
   const [result, setResult] = useState<ReturnType<typeof plan> | null>(null)
   const [chartStep, setChartStep] = useState(4)
   const connectVersion = useRef(0)
+  const leaderboardVersion = useRef(0)
 
   useEffect(() => {
     const provider = (window as Window & { ethereum?: Provider }).ethereum
@@ -62,6 +69,19 @@ export default function TradingPage() {
       setCapital(String(Number(accountData.summary.free_collateral) || ''))
     } catch (cause) { if (version === connectVersion.current) setError(cause instanceof Error ? cause.message : 'Connection failed.') }
     finally { if (version === connectVersion.current) setLoading(false) }
+  }
+
+  async function loadTraders(nextPeriod = period) {
+    const version = ++leaderboardVersion.current
+    setPeriod(nextPeriod); setTraders([]); setFetchedAt(''); setTraderError(''); setTraderLoading(true)
+    try {
+      const response = await fetch(`/api/trading/leaderboard?period=${nextPeriod}`, { cache: 'no-store' })
+      if (!response.ok) throw new Error('Leaderboard unavailable. Try again.')
+      const data = await response.json()
+      if (!Array.isArray(data.entries) || typeof data.fetchedAt !== 'string') throw new Error('Leaderboard unavailable. Try again.')
+      if (version === leaderboardVersion.current) { setTraders(data.entries); setFetchedAt(data.fetchedAt) }
+    } catch (cause) { if (version === leaderboardVersion.current) setTraderError(cause instanceof Error ? cause.message : 'Leaderboard unavailable.') }
+    finally { if (version === leaderboardVersion.current) setTraderLoading(false) }
   }
 
   const availableMarkets = markets.filter(m => m.active && m.config?.unlocked && Number(m.last_price) > 0).sort((a, b) => Number(b.quote_volume_24h) - Number(a.quote_volume_24h))
@@ -103,6 +123,7 @@ export default function TradingPage() {
       <label>Assumed win rate (%)<input type="number" min="0.01" max="99.99" step="any" value={winRate} onChange={e => setWinRate(e.target.value)} required /></label>
       <label>Assumed fee per side (bps)<input type="number" min="0" max="100" step="any" value={feeBps} onChange={e => setFeeBps(e.target.value)} required /></label>
     </div>{Number(risk) > 2 && <p className={styles.warning}>Risk above 2% per trade. Three losses in a row would cut this plan’s capital by about {(100 * (1 - Math.pow(1 - Number(risk) / 100, 3))).toFixed(1)}%, before slippage.</p>}{Number(capital) > Number(portfolio.summary.free_collateral) && <p className={styles.small}>Capital exceeds current free collateral (${Number(portfolio.summary.free_collateral).toLocaleString()}). This is a hypothetical plan.</p>}<button type="submit">Analyze</button><p className={styles.small}>Fee is an estimate you enter, not a live quote. Funding, slippage and liquidation are not included. No orders or signatures.</p></form>}
+    <section className={styles.panel}><span className={styles.kicker}>TRADER WATCHLIST</span><h2>RISEx top 100</h2><p className={styles.small}>Ranked by notional PnL. A high rank does not mean low risk. Positions and entry times are not available here; this is not a copy signal.</p><div className={styles.row}><label>Period<select aria-label="Leaderboard period" value={period} onChange={e => loadTraders(e.target.value)}><option value="1d">1 day</option><option value="7d">7 days</option><option value="30d">30 days</option><option value="all">All time</option></select></label><button type="button" onClick={() => loadTraders()} disabled={traderLoading}>{traderLoading ? 'Loading...' : traders.length ? 'Refresh top 100' : 'Load top 100'}</button></div>{traderError && <p role="alert" className={styles.error}>{traderError}</p>}{fetchedAt && <p className={styles.small}>{traders.length} traders · fetched {new Date(fetchedAt).toLocaleString()}</p>}<div className={styles.traderList}>{traders.map(trader => <details key={trader.address} className={styles.trader}><summary><strong>#{trader.rank} {trader.address.slice(0, 6)}…{trader.address.slice(-4)}</strong><span>ROI {Number(trader.roi_percent).toFixed(1)}% · {trader.trades} trades</span></summary><p>Notional PnL ${(Number(trader.notional_pnl) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 2 })} · Win rate {Number(trader.win_rate).toFixed(1)}% · Volume ${Number(trader.notional_volume).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p><p className={styles.small}>These figures do not show drawdown, open positions or leverage. Check the trader on RISEx before deciding.</p></details>)}</div><p className={styles.small}>Data: <a href="https://www.rise.trade/en/leaderboard" target="_blank" rel="noopener noreferrer">RISEx leaderboard</a>. No orders or wallet signatures.</p></section>
     {error && <p role="alert" className={styles.error}>{error}</p>}
     {result && <section className={styles.panel} aria-live="polite"><span className={styles.kicker}>RESULT · {availableMarkets.find(m => m.market_id === marketId)?.display_name}</span><h2 className={styles.verdict}>{reasons.length ? 'Plan exceeds limits' : 'Plan fits these limits'}</h2><p className={styles.small}>{reasons.length ? 'Check the reasons below. These are planning limits, not RISEx rules.' : 'This is a calculation, not a forecast or a trade signal.'}</p>{reasons.length > 0 && <ul className={styles.reasons}>{reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>}
       <div className={styles.chart}><div className={styles.chartHead}><span className={styles.kicker}>ENDING BALANCE PATH</span><span>USD · {days} days</span></div><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Illustrative target balance and 3× reward-to-risk scenario over time"><line x1="0" x2="100" y1="90" y2="90" className={styles.axis}/><polyline points={plot('target')} className={styles.targetLine}/>{end?.ceiling != null && <polyline points={plot('ceiling')} className={styles.scenarioLine}/>}</svg><label className={styles.chartInspect}>Inspect day {Math.round(inspected.day)}<input type="range" min="0" max="4" step="1" value={chartStep} onChange={event => setChartStep(Number(event.target.value))} aria-label="Inspect balance path by day" /></label><p className={styles.chartReadout}>Target ${inspected.target.toLocaleString(undefined, { maximumFractionDigits: 2 })} · 3× scenario {inspected.ceiling == null ? 'not representable' : `$${inspected.ceiling.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}</p><div className={styles.chartLegend}><span><i className={styles.targetKey}/> Target ${Number(target).toLocaleString()}</span><span><i className={styles.scenarioKey}/> 3× reward/risk scenario {end?.ceiling == null ? 'not representable' : `$${end.ceiling.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}</span></div><p className={styles.small}>Illustration assumes fixed fractional risk, {winRate}% wins, {trades} trades/day, {stop}% stop and {feeBps} bps/side. The 3× line is an assumed outcome per win, not a return cap, price forecast, or achievable strategy. No slippage, funding, liquidation or trade-order effects.</p></div>
