@@ -3,6 +3,7 @@ import { Vazirmatn } from 'next/font/google'
 import '../styles/globals.css'
 import '../styles/home.css'
 import { AudioProvider } from './lib/AudioContext'
+import GlobalMusicControls from './components/GlobalMusicControls'
 
 const vazirmatn = Vazirmatn({
   subsets: ['latin'],
@@ -39,7 +40,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#00bf63" />
       </head>
       <body className={vazirmatn.className}>
-        <AudioProvider>{children}</AudioProvider>
+        <AudioProvider><GlobalMusicControls />{children}</AudioProvider>
       </body>
     </html>
   )

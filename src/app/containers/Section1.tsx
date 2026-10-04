@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Frame from '../components/Frame'
-import MusicPlayer from '../components/MusicPlayer'
 import AnimatedBeamMultipleOutputDemo from '@/components/AnimatedBeamMultipleOutputDemo'
 import { AnimatedBeam } from '@/components/ui/animated-beam'
 import {
@@ -674,7 +673,7 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
                   <button type="button" onClick={() => onSelect?.('pass')}>Explore collection <span aria-hidden="true">↗</span></button>
                   <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer">Join community <span aria-hidden="true">↗</span></a>
                 </div>
-                <div ref={playerInlineRef} className="shiren-player"><MusicPlayer /></div>
+
               </div>
               <figure className="shiren-feature" ref={nftCardRef}>
                 <img
