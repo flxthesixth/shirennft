@@ -36,7 +36,9 @@ with sync_playwright() as pw:
                     return items.every((item) => Math.abs((item.left + item.right - card.left - card.right) / 2) < 2)
                         && items[1].top - items[0].bottom <= 8
                         && items[2].top - items[1].bottom <= 8
-                        && Math.abs((items[0].top + items[2].bottom - card.top - card.bottom) / 2) < 2;
+                        && card.bottom - items[2].bottom >= 8
+                        && card.bottom - items[2].bottom <= 32
+                        && items[0].top > card.top + card.height / 2;
                 }'''), (width, 'team metadata not compact and centered')
             page.get_by_role('button', name='Back', exact=False).first.click()
             page.get_by_role('button', name='Toggle menu' if width < 768 else 'Collection').first.wait_for(timeout=15000)

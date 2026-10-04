@@ -51,8 +51,8 @@ export default function Section3({ onBack }: Props) {
               {/* dark overlay, will become lighter on hover so image can show fully */}
               <div className="absolute inset-0 overlay transition-colors duration-500" />
 
-              {/* Center the compact name, social link, and role group. */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-white z-10 text-center card-meta">
+              {/* Center horizontally; keep the compact group near the card bottom. */}
+              <div className="absolute left-0 right-0 bottom-6 flex flex-col items-center gap-1 text-white z-10 text-center card-meta">
                 <h3 className="text-3xl font-bold leading-tight">{c.title}</h3>
 
                 <a
