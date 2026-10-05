@@ -16,9 +16,16 @@ def test(base_url):
         }))
         page.goto(f'{base_url}/trading.html')
         page.get_by_role('button', name='Load top 100').click()
-        assert page.get_by_text('100 traders').is_visible()
+        page.get_by_text('100 traders').wait_for()
         assert page.get_by_text('0x0000…0001').is_visible()
-        assert page.get_by_text('Positions and entry times are not available').is_visible()
+        page.route('**/api/trading/portfolio?*', lambda route: route.fulfill(json={
+            'summary': {'total_account_value': '500', 'free_collateral': '300', 'margin_usage': '0.1'},
+            'positions': [{'market_name': 'BTC/USDC', 'size': '0.25', 'side': 0, 'leverage': '3', 'unrealized_pnl': '12.5'}],
+        }))
+        page.get_by_text('0x0000…0001').click()
+        page.get_by_role('button', name='Load open positions').click()
+        page.get_by_text('BTC/USDC').wait_for()
+        assert page.get_by_text('Long', exact=False).is_visible()
         assert not page.evaluate('document.documentElement.scrollWidth > innerWidth')
         browser.close()
 

@@ -21,6 +21,9 @@ export default function WalletTracker() {
   const [snapshots, setSnapshots] = useState<Record<string, Snapshot>>({})
   const [overrides, setOverrides] = useState<Record<string, Category>>({})
   const [error, setError] = useState('')
+  const [failures, setFailures] = useState<Record<string, string>>({})
+  const [selectedWallet, setSelectedWallet] = useState('all')
+  const [retryWallet, setRetryWallet] = useState('')
   const [loading, setLoading] = useState(false)
   const [ready, setReady] = useState(false)
   const [refresh, setRefresh] = useState(0)
@@ -40,35 +43,42 @@ export default function WalletTracker() {
   useEffect(() => {
     const current = ++version.current
     let cancelled = false
-    if (!ready || !addresses.length) { setSnapshots({}); return }
+    if (!ready || !addresses.length) { setSnapshots({}); setFailures({}); return }
     // ponytail: refresh only on demand/address change; add background updates when data limits and caching exist.
     const run = async () => {
-      setLoading(true); setError(''); setSnapshots({})
-      const results = await Promise.allSettled(addresses.map(async address => {
-        const response = await fetch(`/api/wallet-tracker?address=${encodeURIComponent(address)}`)
-        if (!response.ok) throw Error(`Data unavailable for ${short(address)}`)
-        const data = await response.json() as Snapshot
-        if (!Array.isArray(data.assets) || !Array.isArray(data.transactions)) throw Error(`Invalid data for ${short(address)}`)
-        return [address.toLowerCase(), data] as const
+      setLoading(true); setError('')
+      if (!retryWallet) { setSnapshots({}); setFailures({}) }
+      const targets = retryWallet && addresses.includes(retryWallet) ? [retryWallet] : addresses
+      const results = await Promise.all(targets.map(async address => {
+        try {
+          const response = await fetch(`/api/wallet-tracker?address=${encodeURIComponent(address)}`, { cache: 'no-store' })
+          if (!response.ok) throw Error(response.status === 502 ? 'Explorer data unavailable' : `Request failed (${response.status})`)
+          const data = await response.json() as Snapshot
+          if (!Array.isArray(data.assets) || !Array.isArray(data.transactions) || data.address?.toLowerCase() !== address) throw Error('Invalid explorer data')
+          return { address, data }
+        } catch (cause) { return { address, reason: cause instanceof Error ? cause.message : 'Request failed' } }
       }))
       if (cancelled || current !== version.current) return
-      setSnapshots(Object.fromEntries(results.filter((r): r is PromiseFulfilledResult<readonly [string, Snapshot]> => r.status === 'fulfilled').map(r => r.value)))
-      const failed = results.filter(r => r.status === 'rejected')
-      if (failed.length) setError(`${failed.length} wallet(s) could not load. Totals below exclude them.`)
+      const good = Object.fromEntries(results.filter((r): r is { address: string; data: Snapshot } => 'data' in r).map(r => [r.address, r.data]))
+      const bad = Object.fromEntries(results.filter((r): r is { address: string; reason: string } => 'reason' in r).map(r => [r.address, r.reason]))
+      setSnapshots(previous => retryWallet ? { ...previous, ...good } : good)
+      setFailures(previous => retryWallet ? { ...previous, ...bad, ...Object.fromEntries(Object.keys(good).map(a => [a, ''])) } : bad)
       setLoading(false)
     }
     void run()
     return () => { cancelled = true }
-  }, [addresses, ready, refresh])
+  }, [addresses, ready, refresh, retryWallet])
+  function retry(address: string) { setRetryWallet(address); setRefresh(n => n + 1) }
   function addWallet(e: React.FormEvent) {
     e.preventDefault()
     const address = input.trim().toLowerCase()
     if (!addressPattern.test(address)) { setError('Enter a valid Ethereum address.'); return }
     if (addresses.includes(address)) { setError('Wallet already added.'); return }
     if (addresses.length >= 5) { setError('Limit: 5 wallets.'); return }
-    setAddresses([...addresses, address]); setInput(''); setError('')
+    setRetryWallet(''); setAddresses([...addresses, address]); setInput(''); setError('')
   }
-  const loaded = Object.values(snapshots)
+  const loaded = selectedWallet === 'all' ? Object.values(snapshots) : snapshots[selectedWallet] ? [snapshots[selectedWallet]] : []
+  const failedCount = addresses.filter(a => failures[a]).length
   const assets = loaded.flatMap(s => s.assets.map(asset => ({ ...asset, wallet: s.address.toLowerCase(), category: overrides[`${s.address.toLowerCase()}:${asset.id}`] || asset.category })))
   const priced = assets.filter(a => a.usd !== null && Number.isFinite(a.usd))
   const total = priced.reduce((sum, a) => sum + (a.usd || 0), 0)
@@ -88,8 +98,9 @@ export default function WalletTracker() {
     <header><p className={styles.label}>READ-ONLY · ETHEREUM MAINNET</p><h1>Wallet Tracker</h1><p>Balances and activity in one place. No wallet connection or signature.</p></header>
     <section className={styles.panel}><h2>Wallets</h2><form onSubmit={addWallet} className={styles.row}><label htmlFor="address">Ethereum address</label><input id="address" value={input} onChange={e => setInput(e.target.value)} placeholder="0x…" autoComplete="off" spellCheck={false}/><button type="submit">Add wallet</button></form>
       <p className={styles.muted}>Up to 5 addresses. Saved only in this browser. Anyone with an address can view its public on-chain data.</p>
-      {addresses.length > 0 && <button type="button" disabled={loading} onClick={() => setRefresh(n => n + 1)}>Refresh</button>}
-      {addresses.map(a => <div key={a} className={styles.wallet}><span title={a}>{short(a)}</span><a href={`https://eth.blockscout.com/address/${a}`} target="_blank" rel="noopener noreferrer">Explorer</a><button onClick={() => setAddresses(addresses.filter(x => x !== a))} aria-label={`Remove ${a}`}>Remove</button></div>)}
+      {addresses.length > 0 && <><button type="button" disabled={loading} onClick={() => { setRetryWallet(''); setRefresh(n => n + 1) }}>Refresh</button><label className={styles.viewWallet}>View wallet <select aria-label="View wallet" value={selectedWallet} onChange={e => setSelectedWallet(e.target.value)}><option value="all">All wallets</option>{addresses.map(a => <option key={a} value={a}>{short(a)}</option>)}</select></label></>}
+      {addresses.map(a => <div key={a} className={styles.wallet}><span title={a}>{short(a)}</span><a href={`https://eth.blockscout.com/address/${a}`} target="_blank" rel="noopener noreferrer">Explorer</a>{failures[a] && <span className={styles.error}>{failures[a]} <button type="button" disabled={loading} onClick={() => retry(a)} aria-label={`Retry ${a}`}>Retry</button></span>}<button onClick={() => { setRetryWallet(''); if (selectedWallet === a) setSelectedWallet('all'); setAddresses(addresses.filter(x => x !== a)) }} aria-label={`Remove ${a}`}>Remove</button></div>)}
+      {failedCount > 0 && <p role="alert" className={styles.error}>{failedCount} wallet{failedCount === 1 ? '' : 's'} unavailable. Totals exclude unavailable wallets.</p>}
       {error && <p role="alert" className={styles.error}>{error}</p>}{loading && <p role="status">Loading wallet data…</p>}
     </section>
     {loaded.length > 0 && <><section className={styles.panel}><h2>Balance</h2><p className={styles.total}>{money(total)}<span> priced assets only</span></p><p className={styles.muted}>Snapshot · {loaded.map(s => new Date(s.fetchedAt).toLocaleString()).join(' / ')}. Not a complete net worth.</p>

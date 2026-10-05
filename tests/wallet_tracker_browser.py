@@ -8,14 +8,20 @@ def run(url):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page(viewport={"width": 375, "height": 812})
-        page.route('**/api/wallet-tracker?*', lambda route: route.fulfill(json={
+        failures = {'enabled': False}
+        def respond(route):
+            if failures['enabled']:
+                route.fulfill(status=502, json={'error': 'Explorer data unavailable'})
+                return
+            route.fulfill(json={
             'chain': 'Ethereum', 'address': ADDRESS, 'assets': [
                 {'id': 'native', 'symbol': 'ETH', 'name': 'Ether', 'amount': 1, 'usd': 2500, 'category': 'Core'},
                 {'id': '0x2222222222222222222222222222222222222222', 'symbol': 'USDC', 'name': 'USD Coin', 'amount': 2, 'usd': 2, 'category': 'Stablecoin'},
                 {'id': '0x3333333333333333333333333333333333333333', 'symbol': 'UNKNOWN', 'name': 'Unknown', 'amount': 1, 'usd': None, 'category': 'Token'}
             ], 'nftCount': 1, 'nftMore': False, 'tokenMore': False,
             'transactions': [], 'transactionMore': False, 'fetchedAt': '2026-10-04T00:00:00Z'
-        }))
+        })
+        page.route('**/api/wallet-tracker?*', respond)
         page.goto(url + '/wallet-tracker.html')
         assert page.locator('body').evaluate('(el) => getComputedStyle(el).backgroundColor') == 'rgb(12, 18, 16)', 'Tracker page background must be dark'
         page.get_by_label('Ethereum address').fill(ADDRESS)
@@ -35,6 +41,15 @@ def run(url):
         page.set_viewport_size({"width": 1280, "height": 800})
         assert page.locator('body').evaluate('(el) => el.scrollWidth <= window.innerWidth')
         assert chart.evaluate('(el) => el.getBoundingClientRect().width <= 260')
+        page.get_by_label('View wallet').select_option(ADDRESS)
+        assert page.get_by_text('$2,502.00').first.is_visible()
+        failures['enabled'] = True
+        page.get_by_role('button', name='Refresh').click()
+        page.get_by_role('button', name='Retry ' + ADDRESS).wait_for()
+        assert page.get_by_text('Explorer data unavailable').is_visible()
+        failures['enabled'] = False
+        page.get_by_role('button', name='Retry ' + ADDRESS).click()
+        page.get_by_text('$2,502.00').first.wait_for()
         page.get_by_role('button', name='Remove ' + ADDRESS).click()
         page.get_by_text('$2,502.00').wait_for(state='detached')
         browser.close()
