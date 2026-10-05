@@ -17,6 +17,7 @@ def run(url):
             'transactions': [], 'transactionMore': False, 'fetchedAt': '2026-10-04T00:00:00Z'
         }))
         page.goto(url + '/wallet-tracker.html')
+        assert page.locator('body').evaluate('(el) => getComputedStyle(el).backgroundColor') == 'rgb(12, 18, 16)', 'Tracker page background must be dark'
         page.get_by_label('Ethereum address').fill(ADDRESS)
         page.get_by_role('button', name='Add wallet').click()
         page.get_by_text('$2,502.00').first.wait_for()
