@@ -4,6 +4,7 @@ import '../styles/globals.css'
 import '../styles/home.css'
 import { AudioProvider } from './lib/AudioContext'
 import GlobalMusicControls from './components/GlobalMusicControls'
+import SiteNav from './components/SiteNav'
 
 const vazirmatn = Vazirmatn({
   subsets: ['latin'],
@@ -40,7 +41,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#00bf63" />
       </head>
       <body className={vazirmatn.className}>
-        <AudioProvider><GlobalMusicControls />{children}</AudioProvider>
+        <AudioProvider><SiteNav /><GlobalMusicControls />{children}</AudioProvider>
       </body>
     </html>
   )

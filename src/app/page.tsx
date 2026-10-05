@@ -2,7 +2,7 @@
 
 import Section1 from '@/app/containers/Section1'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Section2 from './containers/Section2'
 import Section3 from './containers/Section3'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -12,6 +12,16 @@ const DISCORD_URL = 'https://discord.gg/mDsMXCUDXy'
 
 export default function Home() {
   const [active, setActive] = useState<'home' | 'pass' | 'about'>('home')
+  useEffect(() => {
+    const sync = () => setActive(location.hash === '#collection' ? 'pass' : location.hash === '#team' ? 'about' : 'home')
+    sync()
+    window.addEventListener('hashchange', sync)
+    return () => window.removeEventListener('hashchange', sync)
+  }, [])
+  function select(id: 'home' | 'pass' | 'about') {
+    history.pushState(null, '', id === 'pass' ? '/#collection' : id === 'about' ? '/#team' : '/')
+    setActive(id)
+  }
 
   return (
     <main>
@@ -25,17 +35,15 @@ export default function Home() {
           >
             {active === 'home' && (
               <Section1
-                onSelect={(id) => {
-                  setActive(id === 'pass' ? 'pass' : 'about')
-                }}
+                onSelect={(id) => select(id === 'pass' ? 'pass' : 'about')}
                 discordUrl={DISCORD_URL}
                 skipIntroDelay
               />
             )}
 
-            {active === 'pass' && <Section2 onBack={() => setActive('home')} />}
+            {active === 'pass' && <Section2 onBack={() => select('home')} />}
 
-            {active === 'about' && <Section3 onBack={() => setActive('home')} />}
+            {active === 'about' && <Section3 onBack={() => select('home')} />}
           </motion.div>
         </AnimatePresence>
     </main>

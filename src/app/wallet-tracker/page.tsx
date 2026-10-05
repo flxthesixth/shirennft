@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
 import styles from './page.module.css'
 
 type Category = 'Core' | 'Stablecoin' | 'Token' | 'Meme' | 'DeFi' | 'Other'
@@ -94,7 +93,6 @@ export default function WalletTracker() {
   const allocationLabel = `Priced asset allocation: ${breakdown.map(row => `${row.category} ${(row.usd / total * 100).toFixed(1)} percent`).join(', ')}`
   const activities = loaded.flatMap(s => s.transactions.map(tx => ({ ...tx, wallet: s.address.toLowerCase() }))).sort((a, b) => (b.timestamp || '').localeCompare(a.timestamp || '')).slice(0, 30)
   return <main className={styles.main}>
-    <nav><Link href="/">SHIREN</Link><span> / Personal Wallet Tracker</span></nav>
     <header><p className={styles.label}>READ-ONLY · ETHEREUM MAINNET</p><h1>Wallet Tracker</h1><p>Balances and activity in one place. No wallet connection or signature.</p></header>
     <section className={styles.panel}><h2>Wallets</h2><form onSubmit={addWallet} className={styles.row}><label htmlFor="address">Ethereum address</label><input id="address" value={input} onChange={e => setInput(e.target.value)} placeholder="0x…" autoComplete="off" spellCheck={false}/><button type="submit">Add wallet</button></form>
       <p className={styles.muted}>Up to 5 addresses. Saved only in this browser. Anyone with an address can view its public on-chain data.</p>

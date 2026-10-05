@@ -1,7 +1,6 @@
 'use client'
 
 import { FormEvent, useRef, useState } from 'react'
-import Link from 'next/link'
 import styles from './page.module.css'
 
 type WalletProvider = {
@@ -85,11 +84,6 @@ export default function EligibilityPage() {
   return (
     <main className={styles.page}>
       <div className={styles.shell}>
-        <header className={styles.topbar}>
-          <Link href="/" className={styles.brand} aria-label="SHIREN home">SHIRΞN<span>.</span></Link>
-          <Link href="/" className={styles.back}>← BACK TO HOME</Link>
-        </header>
-
         <div className={styles.content}>
           <section className={styles.terminal} aria-labelledby="checker-title">
             <div className={styles.terminalHead}><span id="checker-title">ELIGIBILITY CHECKER</span><span>SHIREN / 2,222</span></div>

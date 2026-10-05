@@ -1,7 +1,6 @@
 'use client'
 
 import { FormEvent, useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
 import { Market, ceilingPath, plan } from './planner'
 import styles from './page.module.css'
 
@@ -124,7 +123,6 @@ export default function TradingPage() {
     ...(result.options.length === 0 ? ['This market does not fit its minimum order or leverage limit with your risk and stop. Choose another market or adjust the inputs.'] : []),
   ] : []
   return <main className={styles.page}><div className={styles.shell}>
-    <header className={styles.top}><Link href="/" className={styles.brand}>SHIRΞN<span>.</span></Link><Link href="/">← BACK</Link></header>
     <div className={styles.intro}><span>RISEx / READ-ONLY</span><h1>Pre-Trade Desk</h1><p>Plan from your actual account. Examine what a target demands before placing a trade.</p></div>
     <section className={styles.panel}><div className={styles.row}><div><span className={styles.kicker}>CONNECTED ACCOUNT</span><p>{address ? `${address.slice(0, 8)}…${address.slice(-6)}` : 'No wallet connected'}</p></div><button type="button" onClick={connect} disabled={loading}>{loading ? 'LOADING...' : address ? 'REFRESH / CONNECT' : 'CONNECT WALLET'}</button></div>
       {portfolio && <div className={styles.metrics}><div><span>Account value</span><strong>${Number(portfolio.summary.total_account_value).toLocaleString()}</strong></div><div><span>Free collateral</span><strong>${Number(portfolio.summary.free_collateral).toLocaleString()}</strong></div><div><span>Open positions</span><strong>{activePositions.length}</strong></div></div>}

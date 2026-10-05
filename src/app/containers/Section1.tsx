@@ -91,7 +91,6 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
   const [srnCollection, setSrnCollection] = useState<Array<{ tokenId: string; name?: string; image?: string }>>([])
   const [srnCount, setSrnCount] = useState<number | null>(null)
   const [showSrnModal, setShowSrnModal] = useState(false)
-  const [showMobileNav, setShowMobileNav] = useState(false)
   // Artwork list is bundled at build time for static hosting.
   const [featuredImages] = useState<string[]>(featuredArtwork)
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0)
@@ -478,86 +477,6 @@ function Section1({ onSelect, discordUrl, skipIntroDelay = false, isInitialLoad 
 
       <div className="shiren-home-inner">
         <div ref={containerRef} className="shiren-home-main">
-
-          {/* Navigation Bar */}
-          <nav className="border-b border-white/10 relative z-10">
-            <div className="flex justify-between items-center h-16 md:h-20 px-4 md:px-8">
-              <div className="text-3xl md:text-4xl font-bold text-[#ffa0f2]">
-                <a href="https://x.com/shirennft" target="_blank" rel="noopener noreferrer" className="hover:opacity-90 transition-opacity">
-                  SHIRΞN
-                </a>
-              </div>
-
-              {/* Mobile hamburger */}
-              <button className="md:hidden text-white p-2" onClick={() => setShowMobileNav(!showMobileNav)} aria-label="Toggle menu">
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={showMobileNav ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} /></svg>
-              </button>
-
-              {/* Desktop nav */}
-              <div className="hidden md:flex items-center gap-4 md:gap-6">
-                <div className="flex gap-4 md:gap-12 text-white items-center">
-                  <Link href="/" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Home</Link>
-                  <button onClick={() => onSelect?.('pass')} className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Collection</button>
-                  <button onClick={() => onSelect?.('about')} className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Team</button>
-                  <Link href="/eligibility" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Eligibility</Link>
-                  <Link href="/wallet-tracker" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Wallet Tracker</Link>
-                  <Link href="/trading" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Trading Desk</Link>
-                  <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer" className="text-lg md:text-2xl hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Community</a>
-                </div>
-
-                <div className="ml-2 md:ml-6">
-                  {/* <button
-                    ref={openBtnRef}
-                    onClick={() => {
-                      try {
-                        if (openBtnRef.current) {
-                          const r = openBtnRef.current.getBoundingClientRect()
-                          if (containerRef.current) {
-                            const cr = containerRef.current.getBoundingClientRect()
-                            const topPos = Math.max(8, Math.round(cr.top + 8))
-                            setSidebarStartTop(`${topPos}px`)
-                            const preferred = Math.round(cr.height - 8)
-                            const minH = 300
-                            const maxH = Math.max(240, Math.round(window.innerHeight - 32))
-                            const sidebarH = Math.min(maxH, Math.max(minH, preferred))
-                            setSidebarHeight(`${sidebarH}px`)
-                          } else {
-                            const preferredTop = Math.round(Math.max(8, r.top - 16))
-                            const maxTop = Math.max(8, Math.round(window.innerHeight - 48))
-                            const startTop = `${Math.min(preferredTop, maxTop)}px`
-                            setSidebarStartTop(startTop)
-                          }
-                          window.requestAnimationFrame(() => setShowWalletSidebar(true))
-                          return
-                        }
-                      } catch (e) {
-                        // ignore
-                      }
-                      setShowWalletSidebar(true)
-                    }}
-                    className="group text-base md:text-2xl font-medium px-3 py-1 rounded-md transform transition duration-200 ease-out hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[hsl(203,71%,60%)]/30 hover:text-[hsl(203,71%,60%)] inline-flex items-center gap-2"
-                    aria-haspopup="dialog"
-                  >
-                    <span className="transform transition-transform duration-200 group-hover:-translate-y-0.5" aria-hidden />
-                    <span>{connected ? (address ? `${address.slice(0, 6)}...` : 'Connected') : 'Connect'}</span>
-                  </button> */}
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile nav dropdown */}
-            {showMobileNav && (
-              <div className="md:hidden border-t border-white/10 px-4 py-4 flex flex-col gap-3 text-white bg-black/40 backdrop-blur-sm">
-                <Link href="/" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium" onClick={() => setShowMobileNav(false)}>Home</Link>
-                <button onClick={() => { onSelect?.('pass'); setShowMobileNav(false) }} className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium text-left">Collection</button>
-                <button onClick={() => { onSelect?.('about'); setShowMobileNav(false) }} className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium text-left">Team</button>
-                <Link href="/eligibility" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium" onClick={() => setShowMobileNav(false)}>Eligibility</Link>
-                <Link href="/wallet-tracker" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium" onClick={() => setShowMobileNav(false)}>Wallet Tracker</Link>
-                <Link href="/trading" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium" onClick={() => setShowMobileNav(false)}>Trading Desk</Link>
-                <a href={discordUrl ?? '#'} target="_blank" rel="noopener noreferrer" className="text-lg hover:text-[hsl(203,71%,60%)] transition-colors font-medium">Community</a>
-              </div>
-            )}
-          </nav>
 
           {/* Overlay when sidebar is open (lighter so underlying cards remain visible) */}
           <div
