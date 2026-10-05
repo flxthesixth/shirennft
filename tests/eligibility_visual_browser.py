@@ -1,4 +1,4 @@
-"""Visual guard for eligibility geometry, legibility, and reduced motion."""
+"""Visual guard for a restrained eligibility checker layout."""
 import sys
 from playwright.sync_api import sync_playwright
 
@@ -11,23 +11,20 @@ def run(base):
             page.goto(base + '/eligibility')
             panel = page.locator('section[aria-labelledby="checker-title"]')
             panel.wait_for()
-            geometry = page.locator('[data-eligibility-geometry]')
-            assert geometry.count() == 1, 'Missing decorative geometry'
-            assert geometry.get_attribute('aria-hidden') == 'true'
+            assert page.locator('[data-eligibility-geometry]').count() == 0
+            assert page.locator('[class*="geometry"]').count() == 0
+            assert page.locator('[class*="page"]').first.evaluate("(el) => getComputedStyle(el).backgroundImage") == 'none'
+            assert page.locator('[class*="page"]').first.evaluate("(el) => getComputedStyle(el, '::before').content") == 'none'
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), width
             assert page.evaluate("getComputedStyle(document.body).backgroundColor") != 'rgb(255, 255, 255)'
             assert panel.is_visible()
             box = panel.bounding_box()
             assert box is not None
             assert box['x'] >= 0 and box['x'] + box['width'] <= width
-            assert panel.evaluate('(el) => getComputedStyle(el).zIndex') != 'auto'
             assert page.get_by_label('WALLET ADDRESS').is_enabled()
-            assert page.get_by_role('button', name='CHECK STATUS').is_enabled()
+            page.get_by_role('button', name='CHECK STATUS').click()
+            assert page.locator('#wallet-error').is_visible()
             page.close()
-        page = browser.new_page(reduced_motion='reduce')
-        page.goto(base + '/eligibility')
-        shape = page.locator('[data-eligibility-geometry] > span').first
-        assert shape.evaluate('(el) => getComputedStyle(el).animationName') == 'none'
         browser.close()
 
 
