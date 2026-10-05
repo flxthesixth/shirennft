@@ -24,6 +24,13 @@ def run(base):
         page.wait_for_url('**/#team')
         page.locator('.shiren-team').wait_for()
         page.set_viewport_size({'width': 375, 'height': 812})
+        for section in ('collection', 'team'):
+            page.goto(base + '/#' + section)
+            page.locator('.shiren-' + section).wait_for()
+            nav = page.get_by_role('navigation', name='Main navigation')
+            nav.get_by_role('button', name='Toggle menu').click()
+            nav.get_by_role('link', name='Trading Desk').click(timeout=3000)
+            page.wait_for_url('**/trading')
         for route in ROUTES:
             page.goto(base + route)
             nav = page.get_by_role('navigation', name='Main navigation')
