@@ -83,6 +83,7 @@ export default function EligibilityPage() {
 
   return (
     <main className={styles.page}>
+      <div className={styles.geometry} data-eligibility-geometry aria-hidden="true"><span /><span /><span /></div>
       <div className={styles.shell}>
         <div className={styles.content}>
           <section className={styles.terminal} aria-labelledby="checker-title">

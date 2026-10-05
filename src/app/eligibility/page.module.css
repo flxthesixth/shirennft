@@ -13,3 +13,21 @@
 @media(max-width:820px){.content{padding:60px 0 80px}.terminal{box-shadow:8px 8px 0 #0b0d0c}}
 @media(max-width:500px){.topbar{min-height:68px}.brand{font-size:26px}.back{font-size:10px}.content{padding-top:50px}.terminalHead{font-size:9px;padding:15px 18px}.terminalBody{padding:24px 18px}.footer{font-size:9px;flex-wrap:wrap}}
 @media(prefers-reduced-motion:reduce){.page *{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+/* Eligibility geometry: decoration stays behind the checker. */
+.page{--eligibility-line:#aec89f;position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 82% 24%,#263328 0,transparent 45%),radial-gradient(ellipse at 5% 85%,#222a25 0,transparent 40%),#0c100d}
+:global(body):has(.page){background:#0c100d}
+.page::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.26;background:linear-gradient(90deg,transparent calc(100% - 1px),#809882 100%) 0 0/64px 64px,linear-gradient(0deg,transparent calc(100% - 1px),#809882 100%) 0 0/64px 64px;mask-image:linear-gradient(90deg,#000,transparent 70%)}
+.geometry{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.geometry span{position:absolute;display:block;border:1px solid var(--eligibility-line);opacity:.22;animation:eligibilityFloat 18s ease-in-out infinite alternate}
+.geometry span:nth-child(1){width:min(55vw,680px);aspect-ratio:1;top:4%;right:-14%;border-radius:50%;box-shadow:0 0 0 52px #aec89f0a,0 0 0 104px #aec89f08}
+.geometry span:nth-child(2){width:min(28vw,330px);aspect-ratio:1;bottom:4%;left:-8%;transform:rotate(24deg);animation-name:eligibilityTurn;animation-duration:23s}
+.geometry span:nth-child(3){width:170px;height:170px;right:16%;bottom:10%;border-radius:50%;border-style:dashed;animation-duration:12s;animation-delay:-6s}
+.shell{position:relative;z-index:1}
+.terminal{position:relative;z-index:1;border-color:#778b76;background:#141b17f2;box-shadow:0 20px 80px #0009,14px 14px 0 #0b100d;border-radius:3px}
+.terminalHead{background:#aec89f14;color:#d7e4d2}
+.terminal h2{font-size:clamp(27px,3vw,38px)}
+@keyframes eligibilityFloat{to{translate:0 -26px;rotate:12deg}}
+@keyframes eligibilityTurn{to{translate:0 -20px;transform:rotate(37deg)}}
+@media(max-width:600px){.geometry span:nth-child(1){width:90vw;right:-55%;top:3%}.geometry span:nth-child(2){width:55vw;left:-30%;bottom:10%}.geometry span:nth-child(3){width:105px;height:105px;right:2%;bottom:3%}.terminal{box-shadow:0 18px 50px #0008,7px 7px 0 #0b100d}}
+@media(prefers-reduced-motion:reduce){.geometry span{animation:none}}
