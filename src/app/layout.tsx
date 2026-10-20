@@ -1,15 +1,9 @@
 import type { Metadata } from 'next'
-import { Vazirmatn } from 'next/font/google'
 import '../styles/globals.css'
 import '../styles/home.css'
 import { AudioProvider } from './lib/AudioContext'
 import GlobalMusicControls from './components/GlobalMusicControls'
 import SiteNav from './components/SiteNav'
-
-const vazirmatn = Vazirmatn({
-  subsets: ['latin'],
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: {
@@ -40,7 +34,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-256.png" />
         <meta name="theme-color" content="#00bf63" />
       </head>
-      <body className={vazirmatn.className}>
+      <body>
         <AudioProvider><SiteNav /><GlobalMusicControls />{children}</AudioProvider>
       </body>
     </html>

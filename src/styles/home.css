@@ -1,5 +1,5 @@
 /* SHIREN home: artwork-first editorial layout. Other pages retain their current styling. */
-.shiren-home { background: #101112; color: #f4f2ec; min-height: 100vh; font-family: Arial, Helvetica, sans-serif; }
+.shiren-home { background: #101112; color: #f4f2ec; min-height: 100vh; font-family: var(--font-display); }
 .shiren-home-inner { max-width: 1440px; margin: auto; padding: 0 clamp(20px, 4vw, 64px); }
 .shiren-home-main { width: 100%; }
 .shiren-home nav { border-color: #373a38; }
@@ -12,7 +12,7 @@
 .shiren-home .shiren-hero { padding: clamp(48px, 7vw, 104px) 0 clamp(56px, 8vw, 112px); }
 .shiren-home .shiren-hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .82fr); gap: clamp(40px, 7vw, 112px); align-items: center; }
 .shiren-intro { min-width: 0; }
-.shiren-eyebrow, .shiren-feature figcaption, .shiren-bottom > span { font: 600 1.2rem/1.5 Arial, Helvetica, sans-serif; letter-spacing: .15em; text-transform: uppercase; color: #aab2a9; }
+.shiren-eyebrow, .shiren-feature figcaption, .shiren-bottom > span { font: 600 1.2rem/1.5 var(--font-display); letter-spacing: .15em; text-transform: uppercase; color: #aab2a9; }
 .shiren-intro h1 { margin: 25px 0 22px; color: #f4f2ec; font-size: clamp(7rem, 11vw, 17rem); font-weight: 700; line-height: .86; letter-spacing: -.095em; }
 .shiren-period { color: #a9c59a; }
 .shiren-lede { max-width: 44rem; color: #c5c9c2; font-size: clamp(1.8rem, 2vw, 2.4rem); line-height: 1.45; }
@@ -27,7 +27,7 @@
 .shiren-feature figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #454945; }
 .shiren-bottom { display: flex; align-items: start; justify-content: space-between; gap: 32px; border-top: 1px solid #454945; padding: 48px max(20px, calc((100vw - 1312px)/2)) 72px; }
 .shiren-bottom p { margin: 0; color: #f4f2ec; font-size: clamp(2rem, 3.2vw, 4.4rem); line-height: 1.25; letter-spacing: -.04em; font-weight: 500; }
-.shiren-bottom .shiren-typed { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; max-width: 35ch; min-height: 2.5em; overflow-wrap: anywhere; }
+.shiren-bottom .shiren-typed { font-family: var(--font-display); max-width: 35ch; min-height: 2.5em; overflow-wrap: anywhere; }
 .shiren-typed span::after { content: ''; display: inline-block; width: .06em; height: .9em; margin-left: .08em; vertical-align: -.1em; background: #a9c59a; animation: shiren-cursor .8s step-end infinite; }
 @keyframes shiren-cursor { 50% { opacity: 0; } }
 .shiren-bottom a { color: #d2e0cb; font-size: 1.5rem; text-decoration: underline; text-underline-offset: 5px; }
@@ -35,7 +35,7 @@
 .shiren-collection, .shiren-team { position: relative; min-height: 100vh; }
 .shiren-team > div:first-child { padding-bottom: 112px; }
 .shiren-collection .shiren-back, .shiren-team .shiren-back { position: absolute; z-index: 50; bottom: 32px; left: 50%; transform: translateX(-50%); }
-.shiren-collection .shiren-back-button, .shiren-team .shiren-back-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-width: 112px; min-height: 48px; padding: 10px 18px; border: 1px solid #e6e9dc; border-radius: 0; background: #e6e9dc; color: #151a15; font: 600 15px/1 Arial, Helvetica, sans-serif; cursor: pointer; transition: background .18s, border-color .18s; }
+.shiren-collection .shiren-back-button, .shiren-team .shiren-back-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-width: 112px; min-height: 48px; padding: 10px 18px; border: 1px solid #e6e9dc; border-radius: 0; background: #e6e9dc; color: #151a15; font: 600 15px/1 var(--font-display); cursor: pointer; transition: background .18s, border-color .18s; }
 .shiren-collection .shiren-back-button:hover, .shiren-team .shiren-back-button:hover { background: #aec89f; border-color: #aec89f; }
 .shiren-collection .shiren-back-button:focus-visible, .shiren-team .shiren-back-button:focus-visible { outline: 2px solid #aec89f; outline-offset: 4px; }
 @media (max-width: 760px) {
